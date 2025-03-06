@@ -158,7 +158,12 @@
                   <q-item-section> Download </q-item-section>
                 </q-item>
                 <q-item
-                  v-if="item.name.endsWith('.sub') || item.name.endsWith('.ir')"
+                  v-if="
+                    item.name.endsWith('.sub') ||
+                    item.name.endsWith('.ir') ||
+                    item.name.endsWith('.ask.raw') ||
+                    item.name.endsWith('.psk.raw')
+                  "
                   clickable
                   @click="
                     openFileIn({
@@ -449,7 +454,11 @@ const itemIconSwitcher = (item: FlipperModel.File) => {
     return 'flipper:nfc'
   } else if (item.name.endsWith('.rfid')) {
     return 'flipper:rfid'
-  } else if (item.name.endsWith('.sub')) {
+  } else if (
+    item.name.endsWith('.sub') ||
+    item.name.endsWith('.ask.raw') ||
+    item.name.endsWith('.psk.raw')
+  ) {
     return 'flipper:subghz'
   } else if (item.name.endsWith('.u2f')) {
     return 'flipper:u2f'
