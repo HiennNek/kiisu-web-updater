@@ -44,6 +44,12 @@
                     type: 'SHORT'
                   })
                 "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'UP',
+                    type: 'REPEAT'
+                  })
+                "
                 :keys="['ArrowUp', 'KeyW']"
               />
               <FlipperKeypadButton
@@ -62,6 +68,12 @@
                   onInputEvent({
                     key: 'RIGHT',
                     type: 'SHORT'
+                  })
+                "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'UP',
+                    type: 'REPEAT'
                   })
                 "
                 :keys="['ArrowRight', 'KeyD']"
@@ -84,6 +96,12 @@
                     type: 'SHORT'
                   })
                 "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'UP',
+                    type: 'REPEAT'
+                  })
+                "
                 :keys="['ArrowDown', 'KeyS']"
               />
               <FlipperKeypadButton
@@ -102,6 +120,12 @@
                   onInputEvent({
                     key: 'LEFT',
                     type: 'SHORT'
+                  })
+                "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'UP',
+                    type: 'REPEAT'
                   })
                 "
                 :keys="['ArrowLeft', 'KeyA']"
@@ -124,6 +148,12 @@
                     type: 'SHORT'
                   })
                 "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'UP',
+                    type: 'REPEAT'
+                  })
+                "
                 :keys="['Space', 'Enter']"
               />
             </div>
@@ -142,6 +172,12 @@
                 onInputEvent({
                   key: 'BACK',
                   type: 'SHORT'
+                })
+              "
+              @onRepeat="
+                onInputEvent({
+                  key: 'UP',
+                  type: 'REPEAT'
                 })
               "
               :keys="['Backspace']"

@@ -39,13 +39,14 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits(['onShortPress', 'onLongPress'])
+const emit = defineEmits(['onShortPress', 'onLongPress', 'onRepeat'])
 
 const button = ref<HTMLElement>()
 
 const isPressed = ref(false)
 const isLongPress = ref(false)
 const timers = ref<NodeJS.Timeout>()
+const repeatInterval = ref<NodeJS.Timeout>()
 
 const handlePressStart = () => {
   isPressed.value = true
@@ -54,11 +55,17 @@ const handlePressStart = () => {
     isLongPress.value = true
     isPressed.value = false
     emit('onLongPress')
-  }, 350)
+  }, 300)
+  repeatInterval.value = setInterval(() => {
+    if (isLongPress.value && isPressed.value) {
+      emit('onRepeat')
+    }
+  }, 150)
 }
 
 const handlePressEnd = () => {
   clearTimeout(timers.value)
+  clearInterval(repeatInterval.value)
   if (!isLongPress.value) {
     isPressed.value = false
     emit('onShortPress')
