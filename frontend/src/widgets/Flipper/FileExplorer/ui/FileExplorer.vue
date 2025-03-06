@@ -1,6 +1,9 @@
 <template>
   <div>
-    <q-toolbar class="toolbar row justify-between q-mb-md">
+    <q-toolbar
+      class="toolbar row justify-between q-mb-md"
+      :class="blockingOperationDialog ? 'no-pointer-events' : ''"
+    >
       <q-btn
         class="col-auto"
         color="primary"
@@ -80,6 +83,7 @@
     </q-toolbar>
     <q-list
       class="list no-outline"
+      :class="blockingOperationDialog ? 'no-pointer-events' : ''"
       tabindex="0"
       ref="container"
       @keydown="onKeydown"
@@ -426,6 +430,20 @@ const pathList = ref<PathItem[]>([
   }
 ])
 
+watch(fullPath, (newValue) => {
+  localStorage.setItem('flipperFileExplorerPath', newValue)
+})
+watch(
+  pathList,
+  (newValue) => {
+    localStorage.setItem(
+      'flipperFileExplorerPathList',
+      JSON.stringify(newValue)
+    )
+  },
+  { deep: true }
+)
+
 const isHiddenFiles = ref(false)
 
 const dirs = ref<FlipperModel.File[]>([])
@@ -646,6 +664,13 @@ const onBlur = () => {
 
 onMounted(async () => {
   try {
+    const savedFullPath = localStorage.getItem('flipperFileExplorerPath')
+    const savedPathList = localStorage.getItem('flipperFileExplorerPathList')
+    if (savedFullPath && savedPathList) {
+      fullPath.value = savedFullPath
+      pathList.value = JSON.parse(savedPathList!)
+    }
+
     if (flipperStore.flipperReady) {
       if (!flipperStore.rpcActive) {
         await flipperStore.flipper?.startRPCSession()
@@ -983,7 +1008,10 @@ const download = async ({ file }: { file: FlipperModel.File }) => {
       )
 
     if (flipperStore.isElectron) {
+      let downloadPath = localStorage.getItem('flipperFileExplorerDownloadPath')
+
       downloadFile({
+        downloadPath: downloadPath || '',
         file: file,
         rawData: res
       }).then((res) => {
@@ -1000,6 +1028,9 @@ const download = async ({ file }: { file: FlipperModel.File }) => {
             color: 'positive',
             timeout: 5000
           })
+
+          downloadPath = res.path!.split('/').slice(0, -1).join('/')
+          localStorage.setItem('flipperFileExplorerDownloadPath', downloadPath)
         }
       })
     } else {

@@ -60,14 +60,16 @@ const downloadFolderZip = async (
 }
 
 export async function downloadFile({
+  downloadPath,
   file,
   rawData
 }: {
+  downloadPath: string
   file: FlipperModel.File
   rawData: Uint8Array
 }) {
   if (file.type === 0 && file.size) {
-    return await window.fs.downloadFile({ filename: file.name, rawData })
+    return await window.fs.downloadFile({ downloadPath, filename: file.name, rawData })
   }
 }
 

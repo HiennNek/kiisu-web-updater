@@ -7,6 +7,7 @@ import {
   dialog
 } from 'electron'
 import path from 'path'
+import { join } from 'node:path'
 // import os from 'os'
 import fs from 'fs'
 import {
@@ -153,16 +154,21 @@ const filesystem = {
   },
   async downloadFile(event, args) {
     try {
-      const { filename, rawData } = args
-      const result = await dialog.showSaveDialog({
-        defaultPath: filename
-      })
+      const { downloadPath, filename, rawData } = args
+      let filePath
+      if (!downloadPath) {
+        const result = await dialog.showSaveDialog({
+          defaultPath: filename
+        })
 
-      if (result.canceled || !result.filePath) {
-        return { status: 'warning', path: result.filePath || filename }
+        if (result.canceled || !result.filePath) {
+          return { status: 'warning', path: result.filePath || filename }
+        }
+        filePath = result.filePath
+      } else {
+        filePath = join(downloadPath, filename)
       }
 
-      const filePath = result.filePath
       fs.writeFileSync(filePath, rawData)
 
       return { status: 'ok', path: filePath }

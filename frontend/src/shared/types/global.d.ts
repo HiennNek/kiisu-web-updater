@@ -16,33 +16,34 @@ interface Window {
       event?: Event
     ): Promise<
       | {
-          status: string
-          path: string
-          message?: string
-        }
+        status: string
+        path: string
+        message?: string
+      }
       | {
-          status: string
-          message: string
-          path?: string
-        }
+        status: string
+        message: string
+        path?: string
+      }
     >
     downloadFile(
       args: {
+        downloadPath: string
         filename: string
         rawData: Uint8Array
       },
       event?: Event
     ): Promise<
       | {
-          status: string
-          path: string
-          message?: string
-        }
+        status: string
+        path: string
+        message?: string
+      }
       | {
-          status: string
-          message: string
-          path?: string
-        }
+        status: string
+        message: string
+        path?: string
+      }
     >
     downloadFolder(args: {
       basePath?: string
@@ -51,13 +52,13 @@ interface Window {
       event?: Event
     }): Promise<
       | {
-          status: 'error'
-          message: string
-        }
+        status: 'error'
+        message: string
+      }
       | {
-          status: 'ok' | 'warning'
-          path: string
-        }
+        status: 'ok' | 'warning'
+        path: string
+      }
     >
   }
   logger: {
