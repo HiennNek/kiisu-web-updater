@@ -45,8 +45,8 @@ const button = ref<HTMLElement>()
 
 const isPressed = ref(false)
 const isLongPress = ref(false)
-const timers = ref<NodeJS.Timeout>()
-const repeatInterval = ref<NodeJS.Timeout>()
+const timers = ref<ReturnType<typeof setTimeout>>()
+const repeatInterval = ref<ReturnType<typeof setTimeout>>()
 
 const handlePressStart = () => {
   isPressed.value = true
