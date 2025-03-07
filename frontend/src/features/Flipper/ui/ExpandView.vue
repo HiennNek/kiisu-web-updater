@@ -72,7 +72,7 @@
                 "
                 @onRepeat="
                   onInputEvent({
-                    key: 'UP',
+                    key: 'RIGHT',
                     type: 'REPEAT'
                   })
                 "
@@ -98,7 +98,7 @@
                 "
                 @onRepeat="
                   onInputEvent({
-                    key: 'UP',
+                    key: 'DOWN',
                     type: 'REPEAT'
                   })
                 "
@@ -124,7 +124,7 @@
                 "
                 @onRepeat="
                   onInputEvent({
-                    key: 'UP',
+                    key: 'LEFT',
                     type: 'REPEAT'
                   })
                 "
@@ -150,7 +150,7 @@
                 "
                 @onRepeat="
                   onInputEvent({
-                    key: 'UP',
+                    key: 'OK',
                     type: 'REPEAT'
                   })
                 "
@@ -176,7 +176,7 @@
               "
               @onRepeat="
                 onInputEvent({
-                  key: 'UP',
+                  key: 'BACK',
                   type: 'REPEAT'
                 })
               "
@@ -270,10 +270,6 @@ const scaleCalculation = computed(() => {
 })
 
 const onInputEvent = ({ key, type }: FlipperModel.InputEvent) => {
-  // emit('inputEvent', {
-  //   key,
-  //   type
-  // })
   flipperStore.flipper
     ?.RPC('guiSendInputEvent', { key, type: 'PRESS' })
     .catch((error: Error) =>
