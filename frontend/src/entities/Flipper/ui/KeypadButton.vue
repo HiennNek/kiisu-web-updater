@@ -106,6 +106,9 @@ document.addEventListener('keydown', handleKeydown)
 document.addEventListener('keyup', handleKeyup)
 
 onUnmounted(() => {
+  clearTimeout(timers.value)
+  clearInterval(repeatInterval.value)
+
   document.removeEventListener('keydown', handleKeydown)
   document.removeEventListener('keyup', handleKeyup)
 })
