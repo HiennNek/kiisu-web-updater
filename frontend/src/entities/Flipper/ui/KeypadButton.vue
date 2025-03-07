@@ -51,11 +51,12 @@ const repeatInterval = ref<ReturnType<typeof setTimeout>>()
 const handlePressStart = () => {
   isPressed.value = true
   isLongPress.value = false
+
   timers.value = setTimeout(() => {
     isLongPress.value = true
-    isPressed.value = false
     emit('onLongPress')
   }, 300)
+
   repeatInterval.value = setInterval(() => {
     if (isLongPress.value) {
       emit('onRepeat')
@@ -64,10 +65,13 @@ const handlePressStart = () => {
 }
 
 const handlePressEnd = () => {
+  isPressed.value = false
+  isLongPress.value = false
+
   clearTimeout(timers.value)
   clearInterval(repeatInterval.value)
+
   if (!isLongPress.value) {
-    isPressed.value = false
     emit('onShortPress')
   }
 }
