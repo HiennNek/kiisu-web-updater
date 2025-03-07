@@ -94,7 +94,6 @@
           ref="containerItem"
           class="rounded-borders full-width"
           v-bind="item"
-          manual-focus
           :focused="focusedIndex === index"
           clickable
           v-ripple
