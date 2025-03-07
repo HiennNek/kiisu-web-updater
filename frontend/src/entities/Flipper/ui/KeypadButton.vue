@@ -57,7 +57,7 @@ const handlePressStart = () => {
     emit('onLongPress')
   }, 300)
   repeatInterval.value = setInterval(() => {
-    if (isLongPress.value && isPressed.value) {
+    if (isLongPress.value) {
       emit('onRepeat')
     }
   }, 150)
