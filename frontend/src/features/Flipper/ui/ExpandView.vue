@@ -47,6 +47,12 @@
                     type: 'SHORT'
                   })
                 "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'UP',
+                    type: 'REPEAT'
+                  })
+                "
                 :keys="['ArrowUp', 'KeyW']"
               />
               <FlipperKeypadButton
@@ -65,6 +71,12 @@
                   onInputEvent({
                     key: 'RIGHT',
                     type: 'SHORT'
+                  })
+                "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'RIGHT',
+                    type: 'REPEAT'
                   })
                 "
                 :keys="['ArrowRight', 'KeyD']"
@@ -87,6 +99,12 @@
                     type: 'SHORT'
                   })
                 "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'DOWN',
+                    type: 'REPEAT'
+                  })
+                "
                 :keys="['ArrowDown', 'KeyS']"
               />
               <FlipperKeypadButton
@@ -105,6 +123,12 @@
                   onInputEvent({
                     key: 'LEFT',
                     type: 'SHORT'
+                  })
+                "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'LEFT',
+                    type: 'REPEAT'
                   })
                 "
                 :keys="['ArrowLeft', 'KeyA']"
@@ -127,6 +151,12 @@
                     type: 'SHORT'
                   })
                 "
+                @onRepeat="
+                  onInputEvent({
+                    key: 'OK',
+                    type: 'REPEAT'
+                  })
+                "
                 :keys="['Space', 'Enter']"
               />
             </div>
@@ -145,6 +175,12 @@
                 onInputEvent({
                   key: 'BACK',
                   type: 'SHORT'
+                })
+              "
+              @onRepeat="
+                onInputEvent({
+                  key: 'BACK',
+                  type: 'REPEAT'
                 })
               "
               :keys="['Backspace']"
@@ -242,10 +278,6 @@ const scaleCalculation = computed(() => {
 })
 
 const onInputEvent = ({ key, type }: FlipperModel.InputEvent) => {
-  // emit('inputEvent', {
-  //   key,
-  //   type
-  // })
   flipperStore.flipper
     ?.RPC('guiSendInputEvent', { key, type: 'PRESS' })
     .catch((error: Error) =>

@@ -39,28 +39,39 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits(['onShortPress', 'onLongPress'])
+const emit = defineEmits(['onShortPress', 'onLongPress', 'onRepeat'])
 
 const button = ref<HTMLElement>()
 
 const isPressed = ref(false)
 const isLongPress = ref(false)
-const timers = ref<NodeJS.Timeout>()
+const timers = ref<ReturnType<typeof setTimeout>>()
+const repeatInterval = ref<ReturnType<typeof setTimeout>>()
 
 const handlePressStart = () => {
   isPressed.value = true
   isLongPress.value = false
+
   timers.value = setTimeout(() => {
     isLongPress.value = true
-    isPressed.value = false
     emit('onLongPress')
-  }, 350)
+  }, 300)
+
+  repeatInterval.value = setInterval(() => {
+    if (isLongPress.value) {
+      emit('onRepeat')
+    }
+  }, 150)
 }
 
 const handlePressEnd = () => {
+  isPressed.value = false
+  isLongPress.value = false
+
   clearTimeout(timers.value)
+  clearInterval(repeatInterval.value)
+
   if (!isLongPress.value) {
-    isPressed.value = false
     emit('onShortPress')
   }
 }
@@ -99,6 +110,9 @@ document.addEventListener('keydown', handleKeydown)
 document.addEventListener('keyup', handleKeyup)
 
 onUnmounted(() => {
+  clearTimeout(timers.value)
+  clearInterval(repeatInterval.value)
+
   document.removeEventListener('keydown', handleKeydown)
   document.removeEventListener('keyup', handleKeyup)
 })
