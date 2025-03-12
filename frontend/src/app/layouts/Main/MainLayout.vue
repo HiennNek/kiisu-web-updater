@@ -98,6 +98,13 @@
         <FlipperLogCard isDialog />
       </q-dialog>
       <FlipperDownloadPathDialog v-model="flipperStore.dialogs.downloadPath" />
+      <FlipperRecoveryDialog
+        v-model="flipperStore.dialogs.recovery"
+        :persistent="
+          flipperStore.flags.recovering && !flipperStore.recoveryError
+        "
+        @hide="flipperStore.resetRecovery(true)"
+      />
     </q-page-container>
   </q-layout>
 </template>
@@ -115,7 +122,8 @@ import {
   FlipperConnectFlipperDialog,
   FlipperMobileDetectedDialog,
   FlipperUnsupportedBrowserDialog,
-  FlipperDownloadPathDialog
+  FlipperDownloadPathDialog,
+  FlipperRecoveryDialog
 } from 'entity/Flipper'
 import { AppsModel, AppOutdatedFirmwareDialog } from 'entity/Apps'
 const appsStore = AppsModel.useAppsStore()
