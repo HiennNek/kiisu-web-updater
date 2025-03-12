@@ -171,6 +171,8 @@ const getApps = async () => {
 
   let newApps: AppsModel.App[] = []
   if (!fetchEnd.value) {
+    appsStore.flags.catalogIsUnknownSDK = false
+
     await fetchAppsShort({
       limit: limit.value,
       offset: offset.value,
