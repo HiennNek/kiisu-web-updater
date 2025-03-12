@@ -78,7 +78,7 @@
         v-model="isHiddenFiles"
         color="primary"
         label="Hidden files"
-        @update:model-value="() => navigator?.setItems(filteredDirs)"
+        @update:model-value="onHiddenFilesToggle"
       />
     </q-toolbar>
     <q-list
@@ -444,6 +444,13 @@ watch(
 )
 
 const isHiddenFiles = ref(false)
+const onHiddenFilesToggle = () => {
+  navigator.value?.setItems(filteredDirs.value)
+  localStorage.setItem(
+    'flipperFileExplorerHiddenFiles',
+    String(isHiddenFiles.value)
+  )
+}
 
 const dirs = ref<FlipperModel.File[]>([])
 const filteredDirs = computed(() => {
@@ -668,6 +675,13 @@ onMounted(async () => {
     if (savedFullPath && savedPathList) {
       fullPath.value = savedFullPath
       pathList.value = JSON.parse(savedPathList!)
+    }
+
+    const savedHiddenFiles = localStorage.getItem(
+      'flipperFileExplorerHiddenFiles'
+    )
+    if (savedHiddenFiles) {
+      isHiddenFiles.value = savedHiddenFiles === 'true'
     }
 
     if (flipperStore.flipperReady) {
