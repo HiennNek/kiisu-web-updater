@@ -36,19 +36,39 @@
             <q-card-section class="q-pa-none q-ma-md" align="center">
               <template
                 v-if="
-                  flipperStore.flags.isBridgeReady &&
-                  !flipperStore.flags.flipperIsInitialized
+                  !flipperStore.flags.isBridgeReady ||
+                  flipperStore.flags.flipperIsInitialized
                 "
               >
+                <Loading label="Flipper is initialized..." />
+              </template>
+              <template v-else-if="flipperStore.availableDfuFlippers.length">
+                <q-list class="q-gutter-y-md full-width">
+                  <template
+                    v-for="flipper in flipperStore.availableDfuFlippers"
+                    :key="flipper.name"
+                  >
+                    <FlipperDfuItem :flipper>
+                      <template #default="{ flipper }">
+                        <q-btn
+                          unelevated
+                          dense
+                          color="primary"
+                          label="Repair"
+                          @click="flipperStore.recovery(flipper.info)"
+                        />
+                      </template>
+                    </FlipperDfuItem>
+                  </template>
+                </q-list>
+              </template>
+              <template v-else>
                 <q-img
                   src="~assets/flipper_alert.svg"
                   width="70px"
                   no-spinner
                 />
                 <div class="text-h6 q-my-sm">Flipper not connected</div>
-              </template>
-              <template v-else>
-                <Loading label="Flipper is initialized..." />
               </template>
             </q-card-section>
           </q-card>
@@ -123,7 +143,8 @@ import {
   FlipperMobileDetectedDialog,
   FlipperUnsupportedBrowserDialog,
   FlipperDownloadPathDialog,
-  FlipperRecoveryDialog
+  FlipperRecoveryDialog,
+  FlipperDfuItem
 } from 'entity/Flipper'
 import { AppsModel, AppOutdatedFirmwareDialog } from 'entity/Apps'
 const appsStore = AppsModel.useAppsStore()
