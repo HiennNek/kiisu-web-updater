@@ -97,6 +97,7 @@
       <q-dialog v-model="flipperStore.dialogs.logs">
         <FlipperLogCard isDialog />
       </q-dialog>
+      <FlipperDownloadPathDialog v-model="flipperStore.dialogs.downloadPath" />
     </q-page-container>
   </q-layout>
 </template>
@@ -113,7 +114,8 @@ import {
   FlipperMicroSDCard,
   FlipperConnectFlipperDialog,
   FlipperMobileDetectedDialog,
-  FlipperUnsupportedBrowserDialog
+  FlipperUnsupportedBrowserDialog,
+  FlipperDownloadPathDialog
 } from 'entity/Flipper'
 import { AppsModel, AppOutdatedFirmwareDialog } from 'entity/Apps'
 const appsStore = AppsModel.useAppsStore()

@@ -7,6 +7,7 @@ import {
   dialog
 } from 'electron'
 import path from 'path'
+import { join } from 'node:path'
 // import os from 'os'
 import fs from 'fs'
 import {
@@ -151,18 +152,35 @@ const filesystem = {
       return { status: 'error', message: error.message }
     }
   },
+  async updateDownloadPath() {
+    const result = await dialog.showOpenDialog({
+      properties: ['openDirectory']
+    })
+
+    console.log('main: selected paths:', result.filePaths)
+    if (result.canceled || !result.filePaths.length) {
+      return { status: 'warning', message: 'No path selected' }
+    }
+
+    return { status: 'ok', path: result.filePaths[0] }
+  },
   async downloadFile(event, args) {
     try {
-      const { filename, rawData } = args
-      const result = await dialog.showSaveDialog({
-        defaultPath: filename
-      })
+      const { downloadPath, filename, rawData } = args
+      let filePath
+      if (!downloadPath) {
+        const result = await dialog.showSaveDialog({
+          defaultPath: filename
+        })
 
-      if (result.canceled || !result.filePath) {
-        return { status: 'warning', path: result.filePath || filename }
+        if (result.canceled || !result.filePath) {
+          return { status: 'warning', path: result.filePath || filename }
+        }
+        filePath = result.filePath
+      } else {
+        filePath = join(downloadPath, filename)
       }
 
-      const filePath = result.filePath
       fs.writeFileSync(filePath, rawData)
 
       return { status: 'ok', path: filePath }
@@ -327,6 +345,7 @@ app.whenReady().then(() => {
   ipcMain.on('bridge:kill', bridge.kill)
   ipcMain.on('bridge:send', bridge.send)
   ipcMain.handle('fs:saveToTemp', filesystem.saveToTemp)
+  ipcMain.handle('fs:updateDownloadPath', filesystem.updateDownloadPath)
   ipcMain.handle('fs:downloadFile', filesystem.downloadFile)
   ipcMain.handle('fs:downloadFolder', filesystem.downloadFolder)
   ipcMain.on('logger:message', logger.message)

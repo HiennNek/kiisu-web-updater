@@ -6,5 +6,6 @@ export { default as FlipperConnectFlipperDialog } from './Dialogs/ConnectFlipper
 export { default as FlipperMobileDetectedDialog } from './Dialogs/MobileDetected.vue'
 export { default as FlipperUnsupportedBrowserDialog } from './Dialogs/UnsupportedBrowser.vue'
 export { default as FlipperNoInternetConnectionCard } from './Dialogs/NoInternetConnection.vue'
+export { default as FlipperDownloadPathDialog } from './Dialogs/DownloadPath.vue'
 
 export { default as FlipperKeypadButton } from './KeypadButton.vue'
