@@ -1,6 +1,9 @@
 <template>
   <div>
-    <q-toolbar class="toolbar row justify-between q-mb-md">
+    <q-toolbar
+      class="toolbar row justify-between q-mb-md"
+      :class="blockingOperationDialog ? 'no-pointer-events' : ''"
+    >
       <q-btn
         class="col-auto"
         color="primary"
@@ -75,11 +78,12 @@
         v-model="isHiddenFiles"
         color="primary"
         label="Hidden files"
-        @update:model-value="() => navigator?.setItems(filteredDirs)"
+        @update:model-value="onHiddenFilesToggle"
       />
     </q-toolbar>
     <q-list
       class="list no-outline"
+      :class="blockingOperationDialog ? 'no-pointer-events' : ''"
       tabindex="0"
       ref="container"
       @keydown="onKeydown"
@@ -90,7 +94,6 @@
           ref="containerItem"
           class="rounded-borders full-width"
           v-bind="item"
-          manual-focus
           :focused="focusedIndex === index"
           clickable
           v-ripple
@@ -158,7 +161,12 @@
                   <q-item-section> Download </q-item-section>
                 </q-item>
                 <q-item
-                  v-if="item.name.endsWith('.sub') || item.name.endsWith('.ir')"
+                  v-if="
+                    item.name.endsWith('.sub') ||
+                    item.name.endsWith('.ir') ||
+                    item.name.endsWith('.ask.raw') ||
+                    item.name.endsWith('.psk.raw')
+                  "
                   clickable
                   @click="
                     openFileIn({
@@ -421,7 +429,28 @@ const pathList = ref<PathItem[]>([
   }
 ])
 
+watch(fullPath, (newValue) => {
+  localStorage.setItem('flipperFileExplorerPath', newValue)
+})
+watch(
+  pathList,
+  (newValue) => {
+    localStorage.setItem(
+      'flipperFileExplorerPathList',
+      JSON.stringify(newValue)
+    )
+  },
+  { deep: true }
+)
+
 const isHiddenFiles = ref(false)
+const onHiddenFilesToggle = () => {
+  navigator.value?.setItems(filteredDirs.value)
+  localStorage.setItem(
+    'flipperFileExplorerHiddenFiles',
+    String(isHiddenFiles.value)
+  )
+}
 
 const dirs = ref<FlipperModel.File[]>([])
 const filteredDirs = computed(() => {
@@ -449,7 +478,11 @@ const itemIconSwitcher = (item: FlipperModel.File) => {
     return 'flipper:nfc'
   } else if (item.name.endsWith('.rfid')) {
     return 'flipper:rfid'
-  } else if (item.name.endsWith('.sub')) {
+  } else if (
+    item.name.endsWith('.sub') ||
+    item.name.endsWith('.ask.raw') ||
+    item.name.endsWith('.psk.raw')
+  ) {
     return 'flipper:subghz'
   } else if (item.name.endsWith('.u2f')) {
     return 'flipper:u2f'
@@ -637,6 +670,20 @@ const onBlur = () => {
 
 onMounted(async () => {
   try {
+    const savedFullPath = localStorage.getItem('flipperFileExplorerPath')
+    const savedPathList = localStorage.getItem('flipperFileExplorerPathList')
+    if (savedFullPath && savedPathList) {
+      fullPath.value = savedFullPath
+      pathList.value = JSON.parse(savedPathList!)
+    }
+
+    const savedHiddenFiles = localStorage.getItem(
+      'flipperFileExplorerHiddenFiles'
+    )
+    if (savedHiddenFiles) {
+      isHiddenFiles.value = savedHiddenFiles === 'true'
+    }
+
     if (flipperStore.flipperReady) {
       if (!flipperStore.rpcActive) {
         await flipperStore.flipper?.startRPCSession()
@@ -974,7 +1021,10 @@ const download = async ({ file }: { file: FlipperModel.File }) => {
       )
 
     if (flipperStore.isElectron) {
+      let downloadPath = localStorage.getItem('flipperFileExplorerDownloadPath')
+
       downloadFile({
+        downloadPath: downloadPath || '',
         file: file,
         rawData: res
       }).then((res) => {
@@ -987,10 +1037,13 @@ const download = async ({ file }: { file: FlipperModel.File }) => {
 
         if (res?.status === 'ok') {
           showNotif({
-            message: `File «${file.name}» save in «${res.path}»`,
+            message: `File «${file.name}» saved in «${res.path}»`,
             color: 'positive',
             timeout: 5000
           })
+
+          downloadPath = res.path!.split('/').slice(0, -1).join('/')
+          localStorage.setItem('flipperFileExplorerDownloadPath', downloadPath)
         }
       })
     } else {
