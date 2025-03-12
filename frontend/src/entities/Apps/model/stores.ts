@@ -1,6 +1,7 @@
 import { ref, computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import { Platform } from 'quasar'
+import type { AxiosError } from 'axios'
 import { isProd, isDebug } from 'shared/config'
 // import asyncSleep from 'simple-async-sleep'
 import { FlipperModel } from 'entity/Flipper'
@@ -12,6 +13,7 @@ import { showNotif } from 'shared/lib/utils/useShowNotif'
 import { logger } from 'shared/lib/utils/useLog'
 
 // import { instance } from 'boot/axios'
+import type { ApiErrorDetail } from 'shared/types/api'
 import { App, InstalledApp, AppsPostShortParams, ActionType } from './types'
 import { api } from '../api'
 const { fetchAppsVersions, fetchPostAppsShort /* , fetchAppFap */ } = api
@@ -140,6 +142,12 @@ export const useAppsStore = defineStore('apps', () => {
         actualApps = await fetchPostAppsShort({
           ...params,
           applications: installed.map((app) => app.id)
+        }).catch((error: AxiosError<ApiErrorDetail>) => {
+          if (error.response?.data.detail.code === 1001) {
+            flags.catalogIsUnknownSDK = true
+          }
+
+          return error
         })
       } while (actualApps.length === params.limit)
 

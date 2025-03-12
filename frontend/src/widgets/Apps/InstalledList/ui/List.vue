@@ -1,6 +1,8 @@
 <template>
   <div>
-    <template v-if="globalStore.isOnline">
+    <template
+      v-if="globalStore.isOnline && !appsStore.flags.catalogIsUnknownSDK"
+    >
       <div
         v-if="appsStore.updatableApps.length"
         style="width: 140px"

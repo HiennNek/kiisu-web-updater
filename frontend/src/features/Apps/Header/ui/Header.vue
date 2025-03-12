@@ -83,7 +83,6 @@
         icon="flipper:installed"
         label="Installed"
         :to="{ name: 'InstalledApps' }"
-        :disable="appsStore.flags.catalogIsUnknownSDK"
       >
         <q-badge
           v-if="
