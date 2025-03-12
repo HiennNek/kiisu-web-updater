@@ -26,6 +26,20 @@ interface Window {
         path?: string
       }
     >
+    updateDownloadPath(
+      event?: Event
+    ): Promise<
+      | {
+        status: string
+        path: string
+        message?: string
+      }
+      | {
+        status: string
+        message: string
+        path?: string
+      }
+    >
     downloadFile(
       args: {
         downloadPath: string

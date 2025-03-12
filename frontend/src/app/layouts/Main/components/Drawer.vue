@@ -63,6 +63,24 @@
                 label="Install All Apps"
               />
             </q-item>
+
+            <q-item
+              v-if="flipperStore.isElectron"
+              clickable
+              @click="showDownloadPathDialog"
+            >
+              <q-item-section avatar style="min-width: initial">
+                <q-icon name="mdi-folder-arrow-down-outline" />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label
+                  >{{ selectedDownloadPath ? 'Update ' : 'Select ' }}download
+                  path</q-item-label
+                >
+              </q-item-section>
+            </q-item>
+
             <q-item clickable @click="showLogsDialog">
               <q-item-section avatar style="min-width: initial">
                 <q-icon name="flipper:logs" />
@@ -88,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { RouterLink } from 'shared/components/RouterLink'
 import { FlipperConnectWebBtn } from 'features/Flipper'
 import { FlipperSwitch } from 'features/Flipper'
@@ -169,6 +187,21 @@ const toggleCatalogChannel = () => {
 const showLogsDialog = () => {
   flipperStore.dialogs.logs = true
 }
+
+const showDownloadPathDialog = () => {
+  flipperStore.dialogs.downloadPath = true
+}
+
+const selectedDownloadPath = ref('')
+
+onMounted(() => {
+  if (flipperStore.isElectron) {
+    const downloadPath = localStorage.getItem('flipperFileExplorerDownloadPath')
+    if (downloadPath) {
+      selectedDownloadPath.value = downloadPath
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>

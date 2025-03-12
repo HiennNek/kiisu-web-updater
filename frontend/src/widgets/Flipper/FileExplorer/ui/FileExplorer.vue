@@ -1037,7 +1037,7 @@ const download = async ({ file }: { file: FlipperModel.File }) => {
 
         if (res?.status === 'ok') {
           showNotif({
-            message: `File «${file.name}» save in «${res.path}»`,
+            message: `File «${file.name}» saved in «${res.path}»`,
             color: 'positive',
             timeout: 5000
           })

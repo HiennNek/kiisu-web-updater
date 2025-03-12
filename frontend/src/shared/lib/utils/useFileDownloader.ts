@@ -59,6 +59,13 @@ const downloadFolderZip = async (
   }
 }
 
+export async function updateDownloadPath() {
+  if (!Platform.is.electron) {
+    return
+  }
+  await window.fs.updateDownloadPath()
+}
+
 export async function downloadFile({
   downloadPath,
   file,

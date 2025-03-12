@@ -152,6 +152,18 @@ const filesystem = {
       return { status: 'error', message: error.message }
     }
   },
+  async updateDownloadPath() {
+    const result = await dialog.showOpenDialog({
+      properties: ['openDirectory']
+    })
+
+    console.log('main: selected paths:', result.filePaths)
+    if (result.canceled || !result.filePaths.length) {
+      return { status: 'warning', message: 'No path selected' }
+    }
+
+    return { status: 'ok', path: result.filePaths[0] }
+  },
   async downloadFile(event, args) {
     try {
       const { downloadPath, filename, rawData } = args
@@ -333,6 +345,7 @@ app.whenReady().then(() => {
   ipcMain.on('bridge:kill', bridge.kill)
   ipcMain.on('bridge:send', bridge.send)
   ipcMain.handle('fs:saveToTemp', filesystem.saveToTemp)
+  ipcMain.handle('fs:updateDownloadPath', filesystem.updateDownloadPath)
   ipcMain.handle('fs:downloadFile', filesystem.downloadFile)
   ipcMain.handle('fs:downloadFolder', filesystem.downloadFolder)
   ipcMain.on('logger:message', logger.message)
