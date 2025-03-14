@@ -747,16 +747,26 @@ export const useAppsStore = defineStore('apps', () => {
     }
   }
 
-  const openApp = (app: InstalledApp) => {
+  const openApp = (appPath: string) => {
     if (flipper.value) {
       return flipper.value
-        .RPC('applicationStart', { name: app.path })
+        .RPC('applicationStart', { name: appPath })
         .catch((error: Error) => {
-          if (error.toString() === 'ERROR_APP_SYSTEM_LOCKED') {
+          const message = error.toString()
+
+          if (message === 'ERROR_APP_SYSTEM_LOCKED') {
             flipperStore.flags.flipperIsBusy = true
           }
 
-          throw new Error(error.toString())
+          if (message === 'ERROR_APP_CANT_START') {
+            showNotif({
+              message: `App ${appPath} can't start`,
+              color: 'negative',
+              timeout: 2000
+            })
+          }
+
+          throw new Error(message)
         })
     }
   }

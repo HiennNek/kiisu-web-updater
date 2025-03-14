@@ -33,7 +33,7 @@ const router = useRouter()
 const onClick = () => {
   if (props.app) {
     appsStore
-      .openApp(props.app)
+      .openApp(props.app.path)
       .then(() => {
         flipperStore.expandView = true
 
