@@ -23,22 +23,27 @@ jobs:
         config:
         - {
             description: "linux/arm64",
+            artifact_name: "linux-arm",
             runner_os: ubuntu-24.04-arm
           }
         - {
             description: "linux/amd64",
+            artifact_name: "linux-amd",
             runner_os: ubuntu-24.04
           }
         - {
             description: "mac/amd64",
+            artifact_name: "macos-amd",
             runner_os: macos-13
           }
         - {
             description: "mac/arm64",
+            artifact_name: "macos-arm",
             runner_os: macos-14
           }
         - {
             description: "win/amd64",
+            artifact_name: "windows-amd",
             runner_os: windows-2022
           }
 
@@ -102,18 +107,47 @@ jobs:
             PRODUCTION=TRUE yarn run build/electron
           fi
 
-      - name: Upload Artifacts
+      - name: Upload Linux AppImage
+        if: startsWith(matrix.config.runner_os, 'ubuntu-')
         uses: actions/upload-artifact@v4
         with:
-          path: |
-            frontend/dist/electron/Packaged/*.AppImage
-            frontend/dist/electron/Packaged/*.deb
-            frontend/dist/electron/Packaged/*.rpm
-            frontend/dist/electron/Packaged/*.pacman
-            frontend/dist/electron/Packaged/*.exe
-            frontend/dist/electron/Packaged/*.dmg
-          if-no-files-found: warn
-          retention-days: 7
+          name: "${{ matrix.config.artifact_name }}-AppImage"
+          path: "frontend/dist/electron/Packaged/*.AppImage"
+
+      - name: Upload Linux deb
+        if: startsWith(matrix.config.runner_os, 'ubuntu-')
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.config.artifact_name }}-deb"
+          path: "frontend/dist/electron/Packaged/*.deb"
+
+      - name: Upload Linux rpm
+        if: startsWith(matrix.config.runner_os, 'ubuntu-')
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.config.artifact_name }}-rpm"
+          path: "frontend/dist/electron/Packaged/*.rpm"
+
+      - name: Upload Linux pacman
+        if: startsWith(matrix.config.runner_os, 'ubuntu-')
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.config.artifact_name }}-pacman"
+          path: "frontend/dist/electron/Packaged/*.pacman"
+
+      - name: Upload macOS dmg
+        if: startsWith(matrix.config.runner_os, 'macos-')
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.config.artifact_name }}-dmg"
+          path: "frontend/dist/electron/Packaged/*.dmg"
+
+      - name: Upload Windows exe
+        if: startsWith(matrix.config.runner_os, 'windows-')
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.config.artifact_name }}-exe"
+          path: "frontend/dist/electron/Packaged/*.exe"
 
 
   build-docker:
