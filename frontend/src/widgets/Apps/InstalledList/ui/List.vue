@@ -62,7 +62,7 @@
       >
         <AppInstalledCard :app="upToDateApp">
           <template v-slot:button>
-            <AppInstalledBtn />
+            <AppOpenAppBtn :app="upToDateApp" />
           </template>
         </AppInstalledCard>
       </q-intersection>
@@ -101,6 +101,7 @@
 import { onMounted, watch } from 'vue'
 import { ProgressBar } from 'shared/components/ProgressBar'
 import { AppUpdateBtn } from 'features/Apps/UpdateButton'
+import { AppOpenAppBtn } from 'features/Apps/OpenAppButton'
 import { AppInstalledCard } from 'features/Apps/InstalledCard'
 import { AppInstalledBtn, AppsModel } from 'entity/Apps'
 const appsStore = AppsModel.useAppsStore()

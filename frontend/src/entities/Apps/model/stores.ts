@@ -259,7 +259,27 @@ export const useAppsStore = defineStore('apps', () => {
       return 'installed'
     }
 
+    if (
+      unsupportedApps.value.find(
+        (unsupportedApp) => unsupportedApp.id === app.id
+      )
+    ) {
+      return 'unsupported'
+    }
+
     return 'install'
+  }
+
+  const getAppPath = (app: App) => {
+    const installApp = installedApps.value.find(
+      (installedApp) => installedApp.id === app.id
+    )
+
+    if (!installApp) {
+      throw new Error(`App ${app.name} is not installed`)
+    }
+
+    return installApp
   }
 
   const progressColors = (type: App['action']['type']) => {
@@ -727,12 +747,27 @@ export const useAppsStore = defineStore('apps', () => {
     }
   }
 
+  const openApp = (app: InstalledApp) => {
+    if (flipper.value) {
+      return flipper.value
+        .RPC('applicationStart', { name: app.path })
+        .catch((error: Error) => {
+          if (error.toString() === 'ERROR_APP_SYSTEM_LOCKED') {
+            flipperStore.flags.flipperIsBusy = true
+          }
+
+          throw new Error(error.toString())
+        })
+    }
+  }
+
   return {
     flags,
     dialogs,
     onClearInstalledAppsList,
     getInstalledApps,
     getButtonState,
+    getAppPath,
     progressColors,
     flipperInstalledApps,
     installedApps,
@@ -746,6 +781,7 @@ export const useAppsStore = defineStore('apps', () => {
     actionAppList,
     installationBatch,
     batch,
-    batchUpdate
+    batchUpdate,
+    openApp
   }
 })
