@@ -47,7 +47,8 @@ export const useFlipperStore = defineStore('flipper', () => {
     switchFlipper: ref(false),
     flipperIsInitialized: ref(false),
     disableNavigation: ref(false),
-    disableButtonMultiflipper: ref(false)
+    disableButtonMultiflipper: ref(false),
+    flipperIsBusy: ref(false)
   })
 
   const dialogs = reactive({

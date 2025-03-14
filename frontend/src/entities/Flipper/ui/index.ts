@@ -9,5 +9,6 @@ export { default as FlipperUnsupportedBrowserDialog } from './Dialogs/Unsupporte
 export { default as FlipperNoInternetConnectionCard } from './Dialogs/NoInternetConnection.vue'
 export { default as FlipperDownloadPathDialog } from './Dialogs/DownloadPath.vue'
 export { default as FlipperRecoveryDialog } from './Dialogs/Recovery.vue'
+export { default as FlipperBusyDialog } from './Dialogs/Busy.vue'
 
 export { default as FlipperKeypadButton } from './KeypadButton.vue'
