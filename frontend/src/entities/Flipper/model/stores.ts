@@ -725,6 +725,8 @@ export const useFlipperStore = defineStore('flipper', () => {
     })
   }
 
+  const expandView = ref(false)
+
   return {
     isElectron,
 
@@ -760,6 +762,8 @@ export const useFlipperStore = defineStore('flipper', () => {
     recoveryUpdateStage,
     recoveryProgress,
     recoveryError,
-    recoveryLogs
+    recoveryLogs,
+
+    expandView
   }
 })
