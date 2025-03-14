@@ -112,10 +112,10 @@ jobs:
         with:
           name: 'Flipper-Lab-${{ matrix.config.artifact_name }}'
           path: |
-            "frontend/dist/electron/Packaged/*.AppImage"
-            "frontend/dist/electron/Packaged/*.deb"
-            "frontend/dist/electron/Packaged/*.rpm"
-            "frontend/dist/electron/Packaged/*.pacman"
+            frontend/dist/electron/Packaged/*.AppImage
+            frontend/dist/electron/Packaged/*.deb
+            frontend/dist/electron/Packaged/*.rpm
+            frontend/dist/electron/Packaged/*.pacman
 
       - name: Upload macOS dmg
         if: startsWith(matrix.config.runner_os, 'macos-')
