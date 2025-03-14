@@ -102,6 +102,19 @@ jobs:
             PRODUCTION=TRUE yarn run build/electron
           fi
 
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            frontend/dist/electron/Packaged/*.AppImage
+            frontend/dist/electron/Packaged/*.deb
+            frontend/dist/electron/Packaged/*.rpm
+            frontend/dist/electron/Packaged/*.pacman
+            frontend/dist/electron/Packaged/*.exe
+            frontend/dist/electron/Packaged/*.dmg
+          if-no-files-found: warn
+          retention-days: 7
+
 
   build-docker:
     runs-on: ubuntu-24.04
