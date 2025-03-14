@@ -106,7 +106,7 @@ jobs:
             PRODUCTION=TRUE yarn run build/electron
           fi
 
-      - name: Upload Linux AppImage
+      - name: Upload Linux
         if: startsWith(matrix.config.runner_os, 'ubuntu-')
         uses: actions/upload-artifact@v4
         with:
@@ -117,14 +117,14 @@ jobs:
             frontend/dist/electron/Packaged/*.rpm
             frontend/dist/electron/Packaged/*.pacman
 
-      - name: Upload macOS dmg
+      - name: Upload macOS
         if: startsWith(matrix.config.runner_os, 'macos-')
         uses: actions/upload-artifact@v4
         with:
           name: 'Flipper-Lab-${{ matrix.config.artifact_name }}'
           path: 'frontend/dist/electron/Packaged/*.dmg'
 
-      - name: Upload Windows exe
+      - name: Upload Windows
         if: startsWith(matrix.config.runner_os, 'windows-')
         uses: actions/upload-artifact@v4
         with:
