@@ -125,14 +125,25 @@
         "
         @hide="flipperStore.resetRecovery(true)"
       />
+      <FlipperBusyDialog v-model="flipperStore.flags.flipperIsBusy">
+        <q-btn
+          @click="goToDeviceControl"
+          label="Go to Device Control"
+          color="primary"
+          outline
+          no-caps
+          v-close-popup
+        />
+      </FlipperBusyDialog>
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
 
 import { AppHeader, AppDrawer } from './components'
 import { Loading } from 'shared/components/Loading'
@@ -144,6 +155,7 @@ import {
   FlipperUnsupportedBrowserDialog,
   FlipperDownloadPathDialog,
   FlipperRecoveryDialog,
+  FlipperBusyDialog,
   FlipperDfuItem
 } from 'entity/Flipper'
 import { AppsModel, AppOutdatedFirmwareDialog } from 'entity/Apps'
@@ -170,4 +182,9 @@ onMounted(async () => {
     flipperStore.flags.autoReconnect = false
   }
 })
+
+const goToDeviceControl = () => {
+  flipperStore.expandView = true
+  router.push({ name: 'Device' })
+}
 </script>

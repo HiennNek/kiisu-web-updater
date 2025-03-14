@@ -88,9 +88,14 @@
                 />
               </template>
               <template
-                v-else-if="appsStore.getButtonState(app) === 'installed'"
+                v-else-if="appsStore.getButtonState(app) === 'unsupported'"
               >
                 <AppInstalledBtn />
+              </template>
+              <template
+                v-else-if="appsStore.getButtonState(app) === 'installed'"
+              >
+                <AppOpenAppBtn :app="appsStore.getAppPath(app)" />
               </template>
               <template v-else-if="appsStore.getButtonState(app) === 'update'">
                 <AppUpdateBtn
@@ -138,6 +143,7 @@ const appsStore = AppsModel.useAppsStore()
 
 import { AppInstallBtn } from 'features/Apps/InstallButton'
 import { AppUpdateBtn } from 'features/Apps/UpdateButton'
+import { AppOpenAppBtn } from 'features/Apps/OpenAppButton'
 import { AppInstallAll } from 'features/Apps/InstallAll'
 import { FlipperModel } from 'entity/Flipper'
 import { type QInfiniteScroll } from 'quasar'

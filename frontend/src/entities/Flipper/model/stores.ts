@@ -47,7 +47,8 @@ export const useFlipperStore = defineStore('flipper', () => {
     switchFlipper: ref(false),
     flipperIsInitialized: ref(false),
     disableNavigation: ref(false),
-    disableButtonMultiflipper: ref(false)
+    disableButtonMultiflipper: ref(false),
+    flipperIsBusy: ref(false)
   })
 
   const dialogs = reactive({
@@ -725,6 +726,8 @@ export const useFlipperStore = defineStore('flipper', () => {
     })
   }
 
+  const expandView = ref(false)
+
   return {
     isElectron,
 
@@ -760,6 +763,8 @@ export const useFlipperStore = defineStore('flipper', () => {
     recoveryUpdateStage,
     recoveryProgress,
     recoveryError,
-    recoveryLogs
+    recoveryLogs,
+
+    expandView
   }
 })

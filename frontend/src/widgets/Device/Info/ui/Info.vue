@@ -42,7 +42,7 @@
         </div>
 
         <FlipperExpandView
-          v-model="expand"
+          v-model="flipperStore.expandView"
           ref="refFlipperExpandView"
           :isScreenStream="isScreenStream"
           :orientation="orientation"
@@ -160,9 +160,8 @@ const screenStreamExpandCanvas = computed<HTMLCanvasElement>(
   () => refFlipperExpandView.value?.screenStreamExpandCanvas
 )
 
-const expand = ref(false)
 const expandView = async () => {
-  expand.value = true
+  flipperStore.expandView = true
 }
 
 const unbindFrame = ref()

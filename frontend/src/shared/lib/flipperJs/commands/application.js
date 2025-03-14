@@ -1,33 +1,39 @@
 import { /* RPC_TIMEOUT, */ createRPCPromise } from '../util'
 
-function start ({ name, args }) {
-  return createRPCPromise.bind(this)('applicationStartRequest', { name, args })
+function start({ name, args }) {
+  return createRPCPromise.bind(this)('appStartRequest', { name, args })
 }
 
-function lockStatus () {
-  return createRPCPromise.bind(this)('applicationLockStatusRequest', {}, (chunks) => chunks[0].locked)
+function lockStatus() {
+  return createRPCPromise.bind(this)(
+    'appLockStatusRequest',
+    {},
+    (chunks) => chunks[0].locked
+  )
 }
 
-function appExit () {
-  return createRPCPromise.bind(this)('applicationAppExitRequest')
+function appExit() {
+  return createRPCPromise.bind(this)('appExitRequest')
 }
 
-function appLoadFile ({ path }) {
-  return createRPCPromise.bind(this)('applicationAppLoadFileRequest', { path })
+function appLoadFile({ path }) {
+  return createRPCPromise.bind(this)('appLoadFileRequest', { path })
 }
 
-function appButtonPress ({ args }) {
-  return createRPCPromise.bind(this)('applicationAppButtonPressRequest', { args })
+function appButtonPress({ args }) {
+  return createRPCPromise.bind(this)('appButtonPressRequest', {
+    args
+  })
 }
 
-function appButtonRelease () {
-  return createRPCPromise.bind(this)('applicationAppButtonReleaseRequest')
+function appButtonRelease() {
+  return createRPCPromise.bind(this)('appButtonReleaseRequest')
 }
 
 // TODO: AppStateResponse
 
-function getErrorRequest () {
-  return createRPCPromise.bind(this)('applicationGetErrorRequest')
+function getErrorRequest() {
+  return createRPCPromise.bind(this)('appGetErrorRequest')
 }
 
 // TODO: DataExchangeRequest
