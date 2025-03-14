@@ -8,11 +8,10 @@ on:
       - '*'
 
 env:
-  IMAGE_NAME: "ghcr.io/flipperdevices/lab.flipper.net"
+  IMAGE_NAME: 'ghcr.io/flipperdevices/lab.flipper.net'
   USE_SYSTEM_FPM: true
 
 jobs:
-
   build-electron:
     name: ${{ matrix.config.description }} build
     runs-on: ${{ matrix.config.runner_os }}
@@ -21,31 +20,31 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - {
-            description: "linux/arm64",
-            artifact_name: "linux-arm",
-            runner_os: ubuntu-24.04-arm
-          }
-        - {
-            description: "linux/amd64",
-            artifact_name: "linux-amd",
-            runner_os: ubuntu-24.04
-          }
-        - {
-            description: "mac/amd64",
-            artifact_name: "macos-amd",
-            runner_os: macos-13
-          }
-        - {
-            description: "mac/arm64",
-            artifact_name: "macos-arm",
-            runner_os: macos-14
-          }
-        - {
-            description: "win/amd64",
-            artifact_name: "windows-amd",
-            runner_os: windows-2022
-          }
+          - {
+              description: 'linux/arm64',
+              artifact_name: 'Linux-arm',
+              runner_os: ubuntu-24.04-arm
+            }
+          - {
+              description: 'linux/amd64',
+              artifact_name: 'Linux-amd',
+              runner_os: ubuntu-24.04
+            }
+          - {
+              description: 'mac/amd64',
+              artifact_name: 'Macos-amd',
+              runner_os: macos-13
+            }
+          - {
+              description: 'mac/arm64',
+              artifact_name: 'Macos-arm',
+              runner_os: macos-14
+            }
+          - {
+              description: 'win/amd64',
+              artifact_name: 'Windows-amd',
+              runner_os: windows-2022
+            }
 
     steps:
       - name: 'Checkout code'
@@ -58,8 +57,8 @@ jobs:
       - name: install fpm & bsdtar
         if: startsWith(matrix.config.runner_os,'ubuntu-')
         run: |
-            sudo gem install fpm
-            sudo apt update && sudo apt install libarchive-tools
+          sudo gem install fpm
+          sudo apt update && sudo apt install libarchive-tools
 
       - name: 'Set image tag and name'
         id: tag
@@ -111,44 +110,26 @@ jobs:
         if: startsWith(matrix.config.runner_os, 'ubuntu-')
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ matrix.config.artifact_name }}-AppImage"
-          path: "frontend/dist/electron/Packaged/*.AppImage"
-
-      - name: Upload Linux deb
-        if: startsWith(matrix.config.runner_os, 'ubuntu-')
-        uses: actions/upload-artifact@v4
-        with:
-          name: "${{ matrix.config.artifact_name }}-deb"
-          path: "frontend/dist/electron/Packaged/*.deb"
-
-      - name: Upload Linux rpm
-        if: startsWith(matrix.config.runner_os, 'ubuntu-')
-        uses: actions/upload-artifact@v4
-        with:
-          name: "${{ matrix.config.artifact_name }}-rpm"
-          path: "frontend/dist/electron/Packaged/*.rpm"
-
-      - name: Upload Linux pacman
-        if: startsWith(matrix.config.runner_os, 'ubuntu-')
-        uses: actions/upload-artifact@v4
-        with:
-          name: "${{ matrix.config.artifact_name }}-pacman"
-          path: "frontend/dist/electron/Packaged/*.pacman"
+          name: 'Flipper-Lab-${{ matrix.config.artifact_name }}'
+          path: |
+            "frontend/dist/electron/Packaged/*.AppImage"
+            "frontend/dist/electron/Packaged/*.deb"
+            "frontend/dist/electron/Packaged/*.rpm"
+            "frontend/dist/electron/Packaged/*.pacman"
 
       - name: Upload macOS dmg
         if: startsWith(matrix.config.runner_os, 'macos-')
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ matrix.config.artifact_name }}-dmg"
-          path: "frontend/dist/electron/Packaged/*.dmg"
+          name: 'Flipper-Lab-${{ matrix.config.artifact_name }}'
+          path: 'frontend/dist/electron/Packaged/*.dmg'
 
       - name: Upload Windows exe
         if: startsWith(matrix.config.runner_os, 'windows-')
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ matrix.config.artifact_name }}-exe"
-          path: "frontend/dist/electron/Packaged/*.exe"
-
+          name: 'Flipper-Lab-${{ matrix.config.artifact_name }}'
+          path: 'frontend/dist/electron/Packaged/*.exe'
 
   build-docker:
     runs-on: ubuntu-24.04
@@ -175,7 +156,6 @@ jobs:
           echo "image_tag_dev=${IMAGE_TAG_DEV}" >> $GITHUB_OUTPUT
           echo "image_name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
 
-
       - name: 'Login to Docker Hub'
         uses: docker/login-action@v2
         with:
@@ -196,7 +176,6 @@ jobs:
           tags: |
             ${{steps.tag.outputs.image_name}}:${{steps.tag.outputs.image_tag}}
             ${{steps.tag.outputs.image_name}}:${{steps.tag.outputs.image_tag_dev}}
-
 
       - name: 'Build and push prod'
         if: ${{ steps.tag.outputs.image_tag != '0.0.0' }}
