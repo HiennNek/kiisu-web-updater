@@ -130,6 +130,18 @@
             >
               <q-list style="min-width: 100px">
                 <q-item
+                  v-if="item.name.endsWith('.fap')"
+                  clickable
+                  @click="openApp(item)"
+                >
+                  <q-item-section avatar>
+                    <q-icon name="mdi-open-in-app" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Open</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item
                   v-if="
                     item.name.endsWith('.sub') ||
                     item.name.endsWith('.ir') ||
@@ -396,7 +408,8 @@ import {
   useTemplateRef
 } from 'vue'
 import { exportFile, debounce, type QList, type QItem } from 'quasar'
-import { type RouteLocationRaw } from 'vue-router'
+import { type RouteLocationRaw, useRouter } from 'vue-router'
+const router = useRouter()
 
 import { FileEditor } from 'features/FileEditor'
 import { FileEditorModel } from 'entity/FileEditor'
@@ -413,6 +426,9 @@ import { ProgressBar } from 'shared/components/ProgressBar'
 
 import { FlipperModel, FlipperLib } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
+
+import { AppsModel } from 'entity/Apps'
+const appsStore = AppsModel.useAppsStore()
 
 const componentName = 'FlipperFileExplorer'
 
@@ -1182,6 +1198,21 @@ const saveFile = (doc: string) => {
         refreshList()
       })
   }
+}
+
+const openApp = (app: FlipperModel.File) => {
+  const path = `${fullPath.value}/${app.name}`
+
+  appsStore
+    .openApp(path)
+    .then(() => {
+      flipperStore.expandView = true
+
+      router.push({ name: 'Device' })
+    })
+    .catch(() => {
+      console.log('error')
+    })
 }
 </script>
 
