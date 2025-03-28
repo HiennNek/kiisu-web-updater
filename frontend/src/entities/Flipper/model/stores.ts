@@ -115,6 +115,10 @@ export const useFlipperStore = defineStore('flipper', () => {
       //   console.log(flippers.value)
       // })
 
+      if (flipper.value.connected) {
+        return
+      }
+
       const currentAutoReconnectFlag = unref(flags.autoReconnect)
       await flipper.value
         .connect({
@@ -746,6 +750,7 @@ export const useFlipperStore = defineStore('flipper', () => {
     target,
     onUpdateStage,
     onAutoReconnect,
+    reconnectInterval,
 
     fileToPass,
     openFileIn,

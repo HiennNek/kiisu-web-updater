@@ -129,6 +129,8 @@ export default class FlipperWeb extends Flipper {
                 async () => {
                   unbindWritable()
 
+                  this.connected = true
+
                   if (type === 'RPC') {
                     await this.startRPCSession()
                     await this.getInfo()
@@ -151,7 +153,6 @@ export default class FlipperWeb extends Flipper {
                   }
 
                   this.flipperReady = true
-                  this.connected = true
 
                   this.emitter.on('portDisconnectStatus', () => {
                     if (this.flipperReady) {
