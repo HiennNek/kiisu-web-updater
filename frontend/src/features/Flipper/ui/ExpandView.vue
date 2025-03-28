@@ -1,12 +1,13 @@
 <template>
   <q-dialog class="expandView" @show="showDialog" @hide="hideDialog">
     <q-card
+      ref="expandViewCard"
       class="fit column expandView__wrapper"
       style="min-width: min(100vw, 1000px)"
     >
       <span class="scanLine absolute fit" />
       <canvas
-        id="gridBackground"
+        ref="gridBackground"
         class="absolute-center"
         style="opacity: 0.15"
       />
@@ -227,6 +228,7 @@
 <script setup lang="ts">
 import { ref, nextTick, computed } from 'vue'
 import { exportFile } from 'quasar'
+import type { QCard } from 'quasar'
 import { FlipperKeypadButton } from 'entity/Flipper'
 import { FlipperModel } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
@@ -332,19 +334,21 @@ const saveImage = (isClipboard = false) => {
   }
 }
 
+const expandViewCard = ref<QCard>()
+const gridBackground = ref<HTMLCanvasElement>()
 const resizeCanvas = () => {
-  const gridBackground: HTMLCanvasElement = document.getElementById(
-    'gridBackground'
-  ) as HTMLCanvasElement
+  if (gridBackground.value && expandViewCard.value) {
+    const QCardDOMRect =
+      expandViewCard.value.$el.getBoundingClientRect() as DOMRect
 
-  if (gridBackground) {
-    const width = (gridBackground.width = window.innerWidth)
-    const height = (gridBackground.height = window.innerHeight)
+    const width = (gridBackground.value.width = QCardDOMRect.width)
+    const height = (gridBackground.value.height = QCardDOMRect.height)
 
-    const numCells = 40
-    const cellSize = width / numCells
+    // const numCells = 40
+    // const cellSize = width / numCells
+    const cellSize = 35
 
-    const ctx = gridBackground.getContext('2d')
+    const ctx = gridBackground.value.getContext('2d')
 
     if (ctx) {
       ctx.strokeStyle = '#aa5115'

@@ -40,6 +40,7 @@
             <q-space />
             <q-item>
               <q-toggle
+                v-if="!flipperStore.isElectron"
                 v-model="flipperStore.flags.autoReconnect"
                 dense
                 label="Auto reconnect"
@@ -174,6 +175,14 @@ const toggleAutoReconnect = () => {
     'autoReconnect',
     String(flipperStore.flags.autoReconnect)
   )
+
+  if (!flipperStore.flags.autoReconnect) {
+    clearInterval(flipperStore.reconnectInterval)
+  } else {
+    if (!flipperStore.flipper?.connected) {
+      flipperStore.onAutoReconnect()
+    }
+  }
 }
 
 const toggleCatalogChannel = () => {

@@ -93,7 +93,7 @@ export default class FlipperWeb extends Flipper {
   }
 
   async connect({ type = 'CLI', autoReconnect = false }) {
-    const ports = await this.findKnownDevices()
+    let ports = await this.findKnownDevices()
 
     if (ports.length) {
       this.serialWorker.postMessage({
@@ -104,14 +104,17 @@ export default class FlipperWeb extends Flipper {
         .requestPort({
           filters: this.filters
         })
+        .then(async () => {
+          ports = await this.findKnownDevices()
+
+          this.serialWorker.postMessage({
+            operation: 'connect'
+          })
+        })
         .catch((e) => {
           console.error(e)
           throw e
         })
-
-      this.serialWorker.postMessage({
-        operation: 'connect'
-      })
     }
 
     if (ports.length) {
@@ -125,6 +128,8 @@ export default class FlipperWeb extends Flipper {
                 'getWritableStream',
                 async () => {
                   unbindWritable()
+
+                  this.connected = true
 
                   if (type === 'RPC') {
                     await this.startRPCSession()
@@ -148,7 +153,6 @@ export default class FlipperWeb extends Flipper {
                   }
 
                   this.flipperReady = true
-                  this.connected = true
 
                   this.emitter.on('portDisconnectStatus', () => {
                     if (this.flipperReady) {
