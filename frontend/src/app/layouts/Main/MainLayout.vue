@@ -181,6 +181,10 @@ onMounted(async () => {
   } else {
     flipperStore.flags.autoReconnect = false
   }
+
+  if (!flipperStore.isElectron && flipperStore.flags.autoReconnect) {
+    flipperStore.onAutoReconnect()
+  }
 })
 
 const goToDeviceControl = () => {
