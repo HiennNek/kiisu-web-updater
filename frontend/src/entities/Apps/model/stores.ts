@@ -271,15 +271,15 @@ export const useAppsStore = defineStore('apps', () => {
   }
 
   const getAppPath = (app: App) => {
-    const installApp = installedApps.value.find(
-      (installedApp) => installedApp.id === app.id
+    const upToDateApp = upToDateApps.value.find(
+      (upToDateApp) => upToDateApp.id === app.id
     )
 
-    if (!installApp) {
+    if (!upToDateApp) {
       throw new Error(`App ${app.name} is not installed`)
     }
 
-    return installApp
+    return upToDateApp
   }
 
   const progressColors = (type: App['action']['type']) => {
