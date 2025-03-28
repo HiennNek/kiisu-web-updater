@@ -79,9 +79,18 @@
           <template v-else>
             <div class="col-auto" :class="{ 'q-mr-md': isInstalledOrUpdate }">
               <template
-                v-if="appsStore.getButtonState(currentApp) === 'installed'"
+                v-if="appsStore.getButtonState(currentApp) === 'unsupported'"
               >
                 <AppInstalledBtn size="22px" padding="15px 60px" />
+              </template>
+              <template
+                v-else-if="appsStore.getButtonState(currentApp) === 'installed'"
+              >
+                <AppOpenAppBtn
+                  :app="appsStore.getAppPath(currentApp)"
+                  size="22px"
+                  padding="15px 60px"
+                />
               </template>
               <template
                 v-else-if="appsStore.getButtonState(currentApp) === 'update'"
@@ -280,6 +289,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { AppInstallBtn } from 'features/Apps/InstallButton'
+import { AppOpenAppBtn } from 'features/Apps/OpenAppButton'
 import { AppUpdateBtn } from 'features/Apps/UpdateButton'
 import { AppDeleteBtn } from 'features/Apps/DeleteButton'
 import { ProgressBar } from 'shared/components/ProgressBar'
