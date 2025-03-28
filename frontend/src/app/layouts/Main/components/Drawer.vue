@@ -40,6 +40,7 @@
             <q-space />
             <q-item>
               <q-toggle
+                v-if="!flipperStore.isElectron"
                 v-model="flipperStore.flags.autoReconnect"
                 dense
                 label="Auto reconnect"
