@@ -207,10 +207,11 @@
         <div class="column items-end">
           <q-btn flat padding="sm" icon="flipper:info-big" color="primary">
             <q-tooltip
-              anchor="top left"
-              self="bottom left"
-              class="bg-black"
-              style="border: 1px solid #662c00"
+              class="controlHelp"
+              anchor="bottom right"
+              self="top right"
+              :offset="[16, 20]"
+              style="border: 1px solid #662c00; background: #210f00"
             >
               <q-icon
                 name="flipper:steaming-help-mac"
