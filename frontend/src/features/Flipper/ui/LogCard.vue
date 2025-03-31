@@ -7,12 +7,6 @@
     </q-card-section>
 
     <q-card-section>
-      <p>
-        You can report bugs
-        <a href="https://forum.flipperzero.one/c/web-app/22" target="blank_"
-          >here</a
-        >. Attached logs may be helpful.
-      </p>
       <div
         style="height: 300px; min-width: 280px; width: 100%"
         class="bg-grey-12 q-pa-xs rounded-borders"
