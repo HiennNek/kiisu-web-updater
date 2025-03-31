@@ -2,8 +2,8 @@
   <q-dialog class="expandView" @show="showDialog" @hide="hideDialog">
     <q-card
       ref="expandViewCard"
-      class="fit column expandView__wrapper"
-      style="min-width: min(100vw, 1000px)"
+      class="expandView__wrapper full-width column"
+      style="min-width: fit-content"
     >
       <span class="scanLine absolute fit" />
       <canvas
