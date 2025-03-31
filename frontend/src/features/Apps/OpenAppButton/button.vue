@@ -11,8 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-
 import { AppsModel } from 'entity/Apps'
 const appsStore = AppsModel.useAppsStore()
 
@@ -28,16 +26,14 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false
 })
 
-const router = useRouter()
-
 const onClick = () => {
   if (props.app) {
     appsStore
       .openApp(props.app.path)
       .then(() => {
-        flipperStore.expandView = true
+        flipperStore.flipper!.frameData = undefined
 
-        router.push({ name: 'Device' })
+        flipperStore.expandView = true
       })
       .catch(() => {
         console.log('error')

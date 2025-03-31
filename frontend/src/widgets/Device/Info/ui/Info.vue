@@ -8,7 +8,7 @@
             ref="refFlipperBody"
             v-bind="flipperBody"
             :showScreenUpdating="flipperStore.flags.updateInProgress"
-            :isScreenStream="isScreenStream"
+            :isScreenStream="flipperStore.isScreenStream"
             :orientation="orientation"
             @expandView="expandView"
           />
@@ -40,13 +40,6 @@
             </div>
           </div>
         </div>
-
-        <FlipperExpandView
-          v-model="flipperStore.expandView"
-          ref="refFlipperExpandView"
-          :isScreenStream="isScreenStream"
-          :orientation="orientation"
-        />
       </template>
     </template>
     <template v-else>
@@ -70,17 +63,15 @@ import { logger } from 'shared/lib/utils/useLog'
 import { rpcErrorHandler } from 'shared/lib/utils/useRpcUtils'
 
 import { Loading } from 'shared/components/Loading'
-import {
-  FlipperUpdate,
-  FlipperExpandView,
-  FlipperDetailInfo
-} from 'features/Flipper'
+import { FlipperUpdate, FlipperDetailInfo } from 'features/Flipper'
 import { FlipperBody, FlipperInfo, FlipperModel } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
 
+flipperStore.pageWithScreenStream = true
+
 import { bytesToSize } from 'shared/lib/utils/bytesToSize'
 
-// import { FlipperElectron } from 'src/shared/lib/flipperJs'
+import { FlipperFrameRenderer } from 'shared/lib/flipperJs'
 
 // onBeforeMount(() => {
 //   if (flipperStore.isElectron) {
@@ -154,109 +145,65 @@ const refFlipperBody = ref<typeof FlipperBody>()
 const screenStreamCanvas = computed<HTMLCanvasElement>(
   () => refFlipperBody.value?.screenStreamCanvas
 )
-
-const refFlipperExpandView = ref<typeof FlipperExpandView>()
-const screenStreamExpandCanvas = computed<HTMLCanvasElement>(
-  () => refFlipperExpandView.value?.screenStreamExpandCanvas
-)
+const frameRenderer = ref<FlipperFrameRenderer>()
 
 const expandView = async () => {
   flipperStore.expandView = true
 }
 
 const unbindFrame = ref()
-const isScreenStream = ref(false)
 const orientation = ref(0)
 
-const renderToCanvas = ({
-  targetCanvas,
-  sourceCanvas,
-  scale
-}: {
-  targetCanvas: HTMLCanvasElement
-  sourceCanvas: HTMLCanvasElement
-  scale: number
-}) => {
-  const targetCtx = targetCanvas.getContext('2d')!
-  targetCtx.imageSmoothingEnabled = false
-  targetCtx.clearRect(0, 0, targetCanvas.width, targetCanvas.height)
-
-  targetCtx.drawImage(
-    sourceCanvas,
-    0,
-    0,
-    targetCanvas.width,
-    targetCanvas.height,
-    0,
-    0,
-    targetCanvas.width * scale,
-    targetCanvas.height * scale
-  )
-}
-
-const startScreenStream = async (attempts = 0) => {
-  await flipperStore.flipper
-    ?.RPC('guiStartScreenStream')
-    .catch((error: Error) => {
-      rpcErrorHandler({ componentName, error, command: 'guiStartScreenStream' })
-      if (attempts < 3) {
-        return startScreenStream(attempts + 1)
-      } /* else {
-        location.reload()
-      } */
-    })
+const startScreenStream = async () => {
+  await flipperStore
+    .startScreenStream()
     .then(() => {
       logger.debug({
         context: componentName,
         message: 'guiStartScreenStream: OK'
       })
 
-      console.log('Started screen streaming')
+      unbindFrame.value = flipperStore.flipper?.emitter.on(
+        'screenStream/frame',
+        (data: Uint8Array, frameOrientation: string) => {
+          orientation.value = Number(frameOrientation)
+
+          if (screenStreamCanvas.value) {
+            if (frameRenderer.value) {
+              frameRenderer.value.renderFrame({ data })
+            }
+          }
+        }
+      )
     })
-  isScreenStream.value = true
-
-  unbindFrame.value = flipperStore.flipper?.emitter.on(
-    'screenStream/frame',
-    (frameCanvas: HTMLCanvasElement, frameOrientation: string) => {
-      orientation.value = Number(frameOrientation)
-
-      if (screenStreamCanvas.value) {
-        renderToCanvas({
-          targetCanvas: screenStreamCanvas.value,
-          sourceCanvas: frameCanvas,
-          scale: 1
-        })
-      }
-
-      if (screenStreamExpandCanvas.value) {
-        renderToCanvas({
-          targetCanvas: screenStreamExpandCanvas.value,
-          sourceCanvas: frameCanvas,
-          scale: 4
-        })
-      }
-    }
-  )
+    .catch((error: Error) => {
+      rpcErrorHandler({
+        componentName,
+        error,
+        command: 'guiStartScreenStream'
+      })
+    })
 }
 
 const stopScreenStream = async () => {
-  await flipperStore.flipper
-    ?.RPC('guiStopScreenStream')
-    .catch((error: Error) => {
-      rpcErrorHandler({ componentName, error, command: 'guiStopScreenStream' })
-      throw new Error(`Stop screen stream RPC error: ${error.message || error}`)
-    })
-    .then((/* value */) => {
+  await flipperStore
+    .stopScreenStream()
+    .then(() => {
       logger.debug({
         context: componentName,
-        message: 'guiStartScreenStream: OK'
+        message: 'guiStopScreenStream: OK'
       })
+
       if (unbindFrame.value) {
         unbindFrame.value()
       }
-      isScreenStream.value = false
-
-      console.log('Stopped screen streaming')
+    })
+    .catch((error: Error) => {
+      rpcErrorHandler({
+        componentName,
+        error,
+        command: 'guiStopScreenStream'
+      })
     })
 }
 
@@ -277,10 +224,18 @@ onMounted(async () => {
     }
 
     if (flipperStore.rpcActive) {
-      if (!isScreenStream.value) {
+      if (!flipperStore.isScreenStream) {
         await startScreenStream()
       }
     }
+  }
+
+  frameRenderer.value = new FlipperFrameRenderer(screenStreamCanvas.value)
+
+  if (flipperStore.flipper?.frameData) {
+    frameRenderer.value.renderFrame({
+      data: flipperStore.flipper.frameData
+    })
   }
 })
 
@@ -288,7 +243,7 @@ watch(
   () => flipperStore.flipperReady,
   async (newValue) => {
     if (newValue) {
-      if (!isScreenStream.value) {
+      if (!flipperStore.isScreenStream) {
         await startScreenStream()
       }
     }
@@ -301,5 +256,7 @@ onBeforeUnmount(async () => {
       console.error(error)
     })
   }
+
+  flipperStore.pageWithScreenStream = false
 })
 </script>

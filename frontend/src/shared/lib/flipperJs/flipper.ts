@@ -75,6 +75,9 @@ export default class Flipper {
   installedApps: FlipperModel.App[]
   emitter: Emitter<DefaultEvents>
 
+  frameData?: Uint8Array
+  frameOrientation?: string
+
   constructor(emitter: Emitter<DefaultEvents>) {
     this.filters = [{ usbVendorId: 0x0483, usbProductId: 0x5740 }]
     this.config = {

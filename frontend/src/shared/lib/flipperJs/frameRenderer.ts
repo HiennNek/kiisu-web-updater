@@ -9,8 +9,12 @@ export default class FrameRenderer {
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
 
-  constructor(width = config.width, height = config.height) {
-    this.canvas = document.createElement('canvas')
+  constructor(
+    canvas: HTMLCanvasElement,
+    width = config.width,
+    height = config.height
+  ) {
+    this.canvas = canvas
     this.canvas.width = width
     this.canvas.height = height
     this.ctx = this.canvas.getContext('2d')!
@@ -29,10 +33,12 @@ export default class FrameRenderer {
 
   public renderFrame({
     data,
+    scale = 1,
     activeColor = config.activeColor,
     inactiveColor = config.inactiveColor
   }: {
     data: Uint8Array
+    scale?: number
     activeColor?: string
     inactiveColor?: string
   }) {
@@ -52,7 +58,7 @@ export default class FrameRenderer {
           this.ctx.fillStyle = inactiveColor
         }
 
-        this.ctx.fillRect(x, y, 1, 1)
+        this.ctx.fillRect(x * scale, y * scale, scale, scale)
       }
     }
   }
