@@ -731,6 +731,43 @@ export const useFlipperStore = defineStore('flipper', () => {
   }
 
   const expandView = ref(false)
+  const isScreenStream = ref(false)
+  const startScreenStream = async (attempts = 0) => {
+    return await flipper.value
+      ?.RPC('guiStartScreenStream')
+      .then(() => {
+        console.log('Started screen streaming')
+
+        isScreenStream.value = true
+      })
+      .catch((error: Error) => {
+        if (attempts < 3) {
+          return startScreenStream(attempts + 1)
+        } else {
+          isScreenStream.value = false
+
+          throw new Error(
+            `Start screen stream RPC error: ${error.message || error}`
+          )
+        }
+      })
+  }
+
+  const stopScreenStream = async () => {
+    return await flipper.value
+      ?.RPC('guiStopScreenStream')
+      .then(() => {
+        console.log('Stopped screen streaming')
+      })
+      .catch((error: Error) => {
+        throw new Error(
+          `Stop screen stream RPC error: ${error.message || error}`
+        )
+      })
+      .finally(() => {
+        isScreenStream.value = false
+      })
+  }
 
   return {
     isElectron,
@@ -770,6 +807,9 @@ export const useFlipperStore = defineStore('flipper', () => {
     recoveryError,
     recoveryLogs,
 
-    expandView
+    expandView,
+    isScreenStream,
+    startScreenStream,
+    stopScreenStream
   }
 })

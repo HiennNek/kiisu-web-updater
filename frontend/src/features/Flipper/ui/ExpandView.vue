@@ -18,7 +18,6 @@
             style="border: 3px solid #9e5823"
           >
             <canvas
-              v-show="isScreenStream"
               :width="128 * screenScale"
               :height="64 * screenScale"
               style="image-rendering: pixelated"
@@ -233,25 +232,24 @@ import { FlipperKeypadButton } from 'entity/Flipper'
 import { FlipperModel } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
 
+import { logger } from 'shared/lib/utils/useLog'
 import { rpcErrorHandler } from 'shared/lib/utils/useRpcUtils'
 import { showNotif } from 'shared/lib/utils/useShowNotif'
 
-type Props = {
-  isScreenStream?: boolean
-  orientation?: number
-  screenScale?: number
+import { FlipperFrameRenderer } from 'shared/lib/flipperJs'
+
+interface Props {
+  isScreenStreamActive?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  isScreenStream: false,
-  orientation: 0,
-  screenScale: 4
-})
+const { isScreenStreamActive = false } = defineProps<Props>()
 
 const componentName = 'ExpandView'
 
+const orientation = ref(0)
+const screenScale = ref(4)
 const rotationCalculation = computed(() => {
-  switch (props.orientation) {
+  switch (orientation.value) {
     case 1:
       return 2
 
@@ -267,7 +265,7 @@ const rotationCalculation = computed(() => {
 })
 
 const scaleCalculation = computed(() => {
-  switch (props.orientation) {
+  switch (orientation.value) {
     case 2:
       return 0.5
 
@@ -299,12 +297,8 @@ const onInputEvent = ({ key, type }: FlipperModel.InputEvent) => {
     )
 }
 
-const hideDialog = () => {
-  window.removeEventListener('resize', resizeCanvas)
-  document.removeEventListener('keydown', copyToClipboard)
-}
-
 const screenStreamExpandCanvas = ref<HTMLCanvasElement>()
+const frameRenderer = ref<FlipperFrameRenderer>()
 defineExpose({
   screenStreamExpandCanvas
 })
@@ -377,11 +371,107 @@ const copyToClipboard = (event: KeyboardEvent) => {
   }
 }
 
+const unbindFrame = ref()
+const startScreenStreamFrame = () => {
+  if (flipperStore.flipper) {
+    unbindFrame.value = flipperStore.flipper.emitter.on(
+      'screenStream/frame',
+      (data: Uint8Array, frameOrientation: string) => {
+        orientation.value = Number(frameOrientation)
+
+        if (screenStreamExpandCanvas.value) {
+          if (frameRenderer.value) {
+            frameRenderer.value.renderFrame({
+              data,
+              scale: screenScale.value
+            })
+          }
+        }
+      }
+    )
+  }
+}
+
+const startScreenStream = async () => {
+  await flipperStore
+    .startScreenStream()
+    .then(() => {
+      logger.debug({
+        context: componentName,
+        message: 'guiStartScreenStream: OK'
+      })
+
+      startScreenStreamFrame()
+    })
+    .catch((error: Error) => {
+      rpcErrorHandler({
+        componentName,
+        error,
+        command: 'guiStartScreenStream'
+      })
+    })
+}
+const stopScreenStream = async () => {
+  await flipperStore
+    .stopScreenStream()
+    .then(() => {
+      logger.debug({
+        context: componentName,
+        message: 'guiStopScreenStream: OK'
+      })
+    })
+    .catch((error: Error) => {
+      rpcErrorHandler({
+        componentName,
+        error,
+        command: 'guiStopScreenStream'
+      })
+    })
+}
+
 const showDialog = async () => {
+  if (screenStreamExpandCanvas.value) {
+    frameRenderer.value = new FlipperFrameRenderer(
+      screenStreamExpandCanvas.value,
+      128 * screenScale.value,
+      64 * screenScale.value
+    )
+
+    if (flipperStore.flipper?.frameData) {
+      frameRenderer.value.renderFrame({
+        data: flipperStore.flipper.frameData,
+        scale: screenScale.value
+      })
+    }
+  }
+
+  if (flipperStore.flipperReady) {
+    if (flipperStore.rpcActive) {
+      if (!flipperStore.isScreenStream) {
+        await startScreenStream()
+      } else {
+        startScreenStreamFrame()
+      }
+    }
+  }
+
   await nextTick()
   resizeCanvas()
   window.addEventListener('resize', resizeCanvas)
   document.addEventListener('keydown', copyToClipboard)
+}
+
+const hideDialog = () => {
+  if (!isScreenStreamActive) {
+    stopScreenStream()
+  }
+
+  if (unbindFrame.value) {
+    unbindFrame.value()
+  }
+
+  window.removeEventListener('resize', resizeCanvas)
+  document.removeEventListener('keydown', copyToClipboard)
 }
 </script>
 
