@@ -135,6 +135,8 @@
           v-close-popup
         />
       </FlipperBusyDialog>
+
+      <FlipperExpandView v-model="flipperStore.expandView" />
     </q-page-container>
   </q-layout>
 </template>
@@ -161,7 +163,11 @@ import {
 import { AppsModel, AppOutdatedFirmwareDialog } from 'entity/Apps'
 const appsStore = AppsModel.useAppsStore()
 
-import { FlipperConnectWebBtn, FlipperLogCard } from 'features/Flipper'
+import {
+  FlipperConnectWebBtn,
+  FlipperLogCard,
+  FlipperExpandView
+} from 'features/Flipper'
 import { FlipperModel } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
 

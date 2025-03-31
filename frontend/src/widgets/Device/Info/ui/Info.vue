@@ -40,8 +40,6 @@
             </div>
           </div>
         </div>
-
-        <FlipperExpandView v-model="flipperStore.expandView" />
       </template>
     </template>
     <template v-else>
@@ -65,11 +63,7 @@ import { logger } from 'shared/lib/utils/useLog'
 import { rpcErrorHandler } from 'shared/lib/utils/useRpcUtils'
 
 import { Loading } from 'shared/components/Loading'
-import {
-  FlipperUpdate,
-  FlipperExpandView,
-  FlipperDetailInfo
-} from 'features/Flipper'
+import { FlipperUpdate, FlipperDetailInfo } from 'features/Flipper'
 import { FlipperBody, FlipperInfo, FlipperModel } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
 
