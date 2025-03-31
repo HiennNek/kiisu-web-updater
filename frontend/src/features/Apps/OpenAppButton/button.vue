@@ -31,6 +31,8 @@ const onClick = () => {
     appsStore
       .openApp(props.app.path)
       .then(() => {
+        flipperStore.flipper!.frameData = undefined
+
         flipperStore.expandView = true
       })
       .catch(() => {
