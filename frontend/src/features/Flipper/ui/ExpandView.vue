@@ -2,7 +2,7 @@
   <q-dialog class="expandView" @show="showDialog" @hide="hideDialog">
     <q-card
       ref="expandViewCard"
-      class="expandView__wrapper full-width column"
+      class="expandView__wrapper full-width column rounded-borders"
       style="min-width: fit-content"
     >
       <span class="scanLine absolute fit" />
@@ -11,7 +11,7 @@
         class="absolute-center"
         style="opacity: 0.15"
       />
-      <q-card-section class="row col items-center justify-center">
+      <q-card-section class="row col items-center justify-center q-pa-xl">
         <div class="row justify-center items-center">
           <div
             class="relative-position bg-primary q-pa-sm rounded-borders q-mr-lg"
@@ -188,7 +188,7 @@
           </div>
         </div>
       </q-card-section>
-      <q-card-actions class="items-end" align="between">
+      <q-card-actions class="items-end q-pa-md" align="between">
         <q-btn
           outline
           label="Back"
