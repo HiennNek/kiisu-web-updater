@@ -1,5 +1,14 @@
 <template>
-  <q-card class="installed-card row no-wrap items-center" flat>
+  <q-card
+    class="installed-card row no-wrap items-center"
+    :class="{
+      'cursor-pointer installed-card--supported':
+        !unsupported && globalStore.isOnline
+    }"
+    flat
+    :tabindex="unsupported && !globalStore.isOnline ? -1 : 0"
+    @click="onClick"
+  >
     <q-card-section class="row col items-center">
       <div class="installed-card__icon-wrapper q-mr-md">
         <q-img
@@ -59,14 +68,22 @@ import { ProgressBar } from 'shared/components/ProgressBar'
 import { AppsModel } from 'entity/Apps'
 const appsStore = AppsModel.useAppsStore()
 
+import { useGlobalStore } from 'shared/stores/global-store'
+const globalStore = useGlobalStore()
+
 interface Props {
   app: AppsModel.InstalledApp
   unsupported?: boolean
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   unsupported: false
 })
+
+interface Emits {
+  click: [alias: Props['app']['alias']]
+}
+const emit = defineEmits<Emits>()
 
 const getAppAction = (app: AppsModel.InstalledApp) => {
   const actionApp = appsStore.actionAppList.find((_app) => {
@@ -84,6 +101,12 @@ const getAppAction = (app: AppsModel.InstalledApp) => {
   }
 
   return false
+}
+
+const onClick = () => {
+  if (globalStore.isOnline) {
+    emit('click', props.app.alias)
+  }
 }
 </script>
 

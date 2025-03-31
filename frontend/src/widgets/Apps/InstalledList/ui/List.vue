@@ -42,7 +42,7 @@
         once
         transition="scale"
       >
-        <AppInstalledCard :app="updatableApp">
+        <AppInstalledCard :app="updatableApp" @click="goAppPage">
           <template v-slot:button>
             <AppUpdateBtn :app="updatableApp" />
           </template>
@@ -60,7 +60,7 @@
         once
         transition="scale"
       >
-        <AppInstalledCard :app="upToDateApp">
+        <AppInstalledCard :app="upToDateApp" @click="goAppPage">
           <template v-slot:button>
             <AppOpenAppBtn :app="upToDateApp" />
           </template>
@@ -87,7 +87,7 @@
         once
         transition="scale"
       >
-        <AppInstalledCard :app="installedApps">
+        <AppInstalledCard :app="installedApps" @click="goAppPage">
           <template v-slot:button>
             <AppInstalledBtn />
           </template>
@@ -99,6 +99,9 @@
 
 <script setup lang="ts">
 import { onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
 import { ProgressBar } from 'shared/components/ProgressBar'
 import { AppUpdateBtn } from 'features/Apps/UpdateButton'
 import { AppOpenAppBtn } from 'features/Apps/OpenAppButton'
@@ -131,6 +134,10 @@ const getCategories = async () => {
       target: flipperStore.target
     })
   }
+}
+
+const goAppPage = (appAlias: AppsModel.App['alias']) => {
+  router.push({ name: 'AppsPath', params: { path: appAlias } })
 }
 
 const reLoad = async () => {
