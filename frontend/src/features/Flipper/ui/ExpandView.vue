@@ -239,12 +239,6 @@ import { showNotif } from 'shared/lib/utils/useShowNotif'
 
 import { FlipperFrameRenderer } from 'shared/lib/flipperJs'
 
-interface Props {
-  isScreenStreamActive?: boolean
-}
-
-const { isScreenStreamActive = false } = defineProps<Props>()
-
 const componentName = 'ExpandView'
 
 const orientation = ref(0)
@@ -463,7 +457,7 @@ const showDialog = async () => {
 }
 
 const hideDialog = () => {
-  if (!isScreenStreamActive) {
+  if (!flipperStore.pageWithScreenStream) {
     stopScreenStream()
   }
 

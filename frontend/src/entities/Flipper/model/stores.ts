@@ -732,6 +732,7 @@ export const useFlipperStore = defineStore('flipper', () => {
 
   const expandView = ref(false)
   const isScreenStream = ref(false)
+  const pageWithScreenStream = ref(false)
   const startScreenStream = async (attempts = 0) => {
     return await flipper.value
       ?.RPC('guiStartScreenStream')
@@ -809,6 +810,7 @@ export const useFlipperStore = defineStore('flipper', () => {
 
     expandView,
     isScreenStream,
+    pageWithScreenStream,
     startScreenStream,
     stopScreenStream
   }

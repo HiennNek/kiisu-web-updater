@@ -41,11 +41,7 @@
           </div>
         </div>
 
-        <FlipperExpandView
-          v-model="flipperStore.expandView"
-          ref="refFlipperExpandView"
-          :isScreenStreamActive="true"
-        />
+        <FlipperExpandView v-model="flipperStore.expandView" />
       </template>
     </template>
     <template v-else>
@@ -76,6 +72,8 @@ import {
 } from 'features/Flipper'
 import { FlipperBody, FlipperInfo, FlipperModel } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
+
+flipperStore.pageWithScreenStream = true
 
 import { bytesToSize } from 'shared/lib/utils/bytesToSize'
 
@@ -264,5 +262,7 @@ onBeforeUnmount(async () => {
       console.error(error)
     })
   }
+
+  flipperStore.pageWithScreenStream = false
 })
 </script>
