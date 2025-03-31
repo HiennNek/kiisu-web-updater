@@ -289,7 +289,11 @@ export default defineConfig((ctx) => {
         },
         mac: {
           category: 'public.app-category.utilities',
-          notarize: process.env.MACOS_NOTARIZATION_SKIP ? false : true,
+          notarize: process.env.MACOS_NOTARIZATION_SKIP
+            ? false
+            : {
+                teamId: process.env.APPLE_TEAM_ID || ''
+              },
 
           target: ['dmg']
         }
