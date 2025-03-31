@@ -6,7 +6,7 @@
       <q-btn
         color="black"
         icon="tune"
-        class="absolute-top-right q-ma-sm z-top shadow-2"
+        class="absolute-top-right q-ma-sm z-top shadow-2 q-mr-lg"
       >
         <q-menu dark :offset="[0, 10]">
           <q-list
