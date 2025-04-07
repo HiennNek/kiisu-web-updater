@@ -226,7 +226,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, computed } from 'vue'
+import { ref, nextTick, computed, watch } from 'vue'
 import { exportFile } from 'quasar'
 import type { QCard } from 'quasar'
 import { FlipperKeypadButton } from 'entity/Flipper'
@@ -422,7 +422,23 @@ const stopScreenStream = async () => {
         command: 'guiStopScreenStream'
       })
     })
+    .finally(() => {
+      flipperStore.expandView = false
+    })
 }
+
+watch(
+  () => flipperStore.flipperReady,
+  async (newValue) => {
+    if (!newValue) {
+      if (flipperStore.isScreenStream) {
+        await stopScreenStream()
+      } else {
+        flipperStore.expandView = false
+      }
+    }
+  }
+)
 
 const showDialog = async () => {
   if (screenStreamExpandCanvas.value) {
