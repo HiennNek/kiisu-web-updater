@@ -755,19 +755,20 @@ export const useFlipperStore = defineStore('flipper', () => {
   }
 
   const stopScreenStream = async () => {
-    return await flipper.value
-      ?.RPC('guiStopScreenStream')
-      .then(() => {
-        console.log('Stopped screen streaming')
-      })
-      .catch((error: Error) => {
-        throw new Error(
-          `Stop screen stream RPC error: ${error.message || error}`
-        )
-      })
-      .finally(() => {
-        isScreenStream.value = false
-      })
+    try {
+      if (!flipper.value) {
+        return
+      }
+
+      await flipper.value?.RPC('guiStopScreenStream')
+      console.log('Stopped screen streaming')
+    } catch (error) {
+      throw new Error(
+        `Stop screen stream RPC error: ${error instanceof Error ? error.message : String(error)}`
+      )
+    } finally {
+      isScreenStream.value = false
+    }
   }
 
   return {
