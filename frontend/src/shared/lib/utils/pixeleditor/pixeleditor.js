@@ -189,9 +189,9 @@ export default class PixelEditor {
   }
 
   setData (data) {
+    this.save()
     this.data = data
     this.dataChanged = true
-    this.save()
     this.draw()
     this.updated()
   }
