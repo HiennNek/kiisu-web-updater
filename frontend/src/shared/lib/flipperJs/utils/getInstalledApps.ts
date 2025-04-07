@@ -8,11 +8,22 @@ const componentName = 'FlipperJS Util GetInstalled'
 
 let installedApps: FlipperModel.App[] = []
 
-const onClearInstalledAppsList = () => {
+function onClearInstalledAppsList(this: Flipper) {
   installedApps = []
+  this.applicationQuantity = 0
+  this.numberOfApplicationManifests = 0
 }
 
-async function getInstalledApps(this: Flipper) {
+interface Args {
+  callbackProgress?: (percent: number) => void
+}
+
+async function getInstalledApps(this: Flipper, args: Args) {
+  let { callbackProgress } = args
+  if (!callbackProgress) {
+    callbackProgress = () => {}
+  }
+
   if (this.flipperReady) {
     await this.RPC('systemPing', { timeout: 1000 }).catch((error: Error) => {
       throw error
@@ -31,6 +42,8 @@ async function getInstalledApps(this: Flipper) {
     })
 
     if (manifestsList?.length) {
+      this.applicationQuantity = manifestsList.length
+
       try {
         for await (const file of manifestsList) {
           await this.RPC('systemPing', { timeout: 1000 }).catch(
@@ -39,12 +52,24 @@ async function getInstalledApps(this: Flipper) {
             }
           )
 
-          const app: FlipperModel.App | undefined =
-            await readManifest.bind(this)(file)
+          const app: FlipperModel.App | undefined = await readManifest
+            .bind(this)(file)
+            .catch((error: Error) => {
+              throw error
+            })
 
           if (app) {
             installedApps.push(app)
           }
+
+          this.numberOfApplicationManifests++
+
+          callbackProgress(
+            Math.round(
+              (this.numberOfApplicationManifests / this.applicationQuantity) *
+                100
+            )
+          )
         }
 
         return installedApps
