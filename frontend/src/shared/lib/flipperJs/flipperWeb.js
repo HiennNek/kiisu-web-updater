@@ -200,6 +200,8 @@ export default class FlipperWeb extends Flipper {
         this.info = null
         this.name = null
         this.installedApps = []
+        this.applicationQuantity = 0
+        this.numberOfApplicationManifests = 0
         this.flipperReady = false
       }
       this.connected = false

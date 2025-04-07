@@ -78,6 +78,9 @@ export default class Flipper {
   frameData?: Uint8Array
   frameOrientation?: string
 
+  applicationQuantity: number
+  numberOfApplicationManifests: number
+
   constructor(emitter: Emitter<DefaultEvents>) {
     this.filters = [{ usbVendorId: 0x0483, usbProductId: 0x5740 }]
     this.config = {
@@ -106,6 +109,8 @@ export default class Flipper {
     this.rpcActive = false
 
     this.installedApps = []
+    this.applicationQuantity = 0
+    this.numberOfApplicationManifests = 0
 
     this.emitter = emitter
   }
@@ -125,15 +130,19 @@ export default class Flipper {
       })
     this.loadingInfo = false
   }
-  async getInstalledApps() {
-    onClearInstalledAppsList()
+  async getInstalledApps(callbackProgress?: (percent: number) => void) {
+    onClearInstalledAppsList.bind(this)
     await getInstalledApps
-      .bind(this)()
+      .bind(this)({
+        callbackProgress
+      })
       .then((apps) => {
         this.installedApps = apps
       })
       .catch((error: Error) => {
         this.installedApps = []
+        this.applicationQuantity = 0
+        this.numberOfApplicationManifests = 0
         throw error
       })
   }
