@@ -25,11 +25,21 @@ export const usePaintStore = defineStore('paint', () => {
   const setMirror = (element: HTMLCanvasElement) => {
     mirror.value = element
   }
+
+  const callbackFrame = ref<() => void>()
+  const setCallbackFrame = (callback: () => void) => {
+    callbackFrame.value = callback
+  }
+
   const updateMirror = () => {
     const mirror = document.querySelector('.mirror') as HTMLCanvasElement
     const imageData = pe.value?.toImageData()
     if (imageData) {
       mirror.getContext('2d')?.putImageData(imageData, 0, 0)
+    }
+
+    if (callbackFrame.value) {
+      callbackFrame.value()
     }
   }
 
@@ -43,6 +53,7 @@ export const usePaintStore = defineStore('paint', () => {
 
     mirror,
     setMirror,
+    setCallbackFrame,
 
     zoomLevel,
     uploadedImage

@@ -6,16 +6,17 @@
     class="relative-position"
   >
     <div class="column fit">
-      <div
-        class="col fit column items-center paint"
-        @mouseup="mouseUp"
-        @mousemove="enableBacklight"
-      >
+      <div class="col fit column items-center paint">
         <q-page-sticky position="bottom" :offset="[16, 40]">
           <PaintPixelControls />
         </q-page-sticky>
 
-        <PaintPixelEditor class="col" @keydown="enableBacklight" />
+        <PaintPixelEditor
+          class="col"
+          @keydown="handleInteraction"
+          @mouseup="mouseUp"
+          @mousemove="handleInteraction"
+        />
 
         <q-page-sticky position="bottom-right" :offset="[8, 8]">
           <PaintMirror />
@@ -53,7 +54,8 @@
 
 <script setup lang="ts">
 import { GenericPageLayout } from 'shared/components/GenericPageLayout'
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { throttle } from 'quasar'
 
 import { showNotif } from 'shared/lib/utils/useShowNotif'
 import { rpcErrorHandler } from 'shared/lib/utils/useRpcUtils'
@@ -110,16 +112,6 @@ const drawImage = (imageData: ImageData) => {
   pe.value?.setData(pixelData)
 }
 
-const autoStreaming = ref<{
-  enabled: boolean
-  interval: NodeJS.Timeout | undefined
-  delay: number
-}>({
-  enabled: true,
-  interval: undefined,
-  delay: 500
-})
-
 const startVirtualDisplay = async () => {
   await flipperStore.flipper
     ?.RPC('guiStartVirtualDisplay')
@@ -138,16 +130,8 @@ const startVirtualDisplay = async () => {
       })
       throw error
     })
-
-  if (autoStreaming.value.enabled) {
-    autoStream()
-  }
 }
 const stopVirtualDisplay = async () => {
-  if (autoStreaming.value.interval) {
-    clearInterval(autoStreaming.value.interval)
-  }
-
   // if (flipperStore.isElectron) {
   //   for (let index = 0; index < flipperStore.availableFlippers.length; index++) {
   //     const flipper = flipperStore.availableFlippers[index];
@@ -176,7 +160,34 @@ const stopVirtualDisplay = async () => {
     )
   // }
 }
-const enableBacklight = async (event: MouseEvent | KeyboardEvent) => {
+const enableBacklight = throttle(async () => {
+  await flipperStore.flipper
+    ?.RPC('guiSendInputEvent', { key: 'OK', type: 'PRESS' })
+    .catch((error: Error) =>
+      rpcErrorHandler({ componentName, error, command: 'guiSendInputEvent' })
+    )
+  await flipperStore.flipper
+    ?.RPC('guiSendInputEvent', { key: 'OK', type: 'SHORT' })
+    .catch((error: Error) =>
+      rpcErrorHandler({ componentName, error, command: 'guiSendInputEvent' })
+    )
+  await flipperStore.flipper
+    ?.RPC('guiSendInputEvent', { key: 'OK', type: 'RELEASE' })
+    .catch((error: Error) =>
+      rpcErrorHandler({ componentName, error, command: 'guiSendInputEvent' })
+    )
+}, 1000)
+const sendFrame = throttle(async () => {
+  if (pe.value) {
+    const imageData = pe.value.toImageData()
+    const xbmBytes = imageDataToXBM(imageData)
+    await flipperStore.flipper?.RPC('guiScreenFrame', {
+      data: new Uint8Array(xbmBytes)
+    })
+  }
+}, 100)
+
+const handleInteraction = (event: MouseEvent | KeyboardEvent) => {
   if (
     (event instanceof MouseEvent && event.buttons) ||
     (event instanceof KeyboardEvent &&
@@ -186,43 +197,15 @@ const enableBacklight = async (event: MouseEvent | KeyboardEvent) => {
         event.code === 'ArrowUp') &&
       pe.value?.drawing)
   ) {
-    await flipperStore.flipper
-      ?.RPC('guiSendInputEvent', { key: 'OK', type: 'PRESS' })
-      .catch((error: Error) =>
-        rpcErrorHandler({ componentName, error, command: 'guiSendInputEvent' })
-      )
-    await flipperStore.flipper
-      ?.RPC('guiSendInputEvent', { key: 'OK', type: 'SHORT' })
-      .catch((error: Error) =>
-        rpcErrorHandler({ componentName, error, command: 'guiSendInputEvent' })
-      )
-    await flipperStore.flipper
-      ?.RPC('guiSendInputEvent', { key: 'OK', type: 'RELEASE' })
-      .catch((error: Error) =>
-        rpcErrorHandler({ componentName, error, command: 'guiSendInputEvent' })
-      )
+    enableBacklight()
+    sendFrame()
   }
 }
-const sendFrame = async () => {
-  if (pe.value) {
-    const imageData = pe.value.toImageData()
-    const xbmBytes = imageDataToXBM(imageData)
-    await flipperStore.flipper?.RPC('guiScreenFrame', {
-      data: new Uint8Array(xbmBytes)
-    })
-  }
-}
-const autoStream = () => {
-  if (autoStreaming.value.enabled) {
-    clearInterval(autoStreaming.value.interval)
-    autoStreaming.value.interval = setInterval(
-      sendFrame,
-      autoStreaming.value.delay
-    )
-  } else {
-    clearInterval(autoStreaming.value.interval)
-  }
-}
+
+paintStore.setCallbackFrame(() => {
+  enableBacklight()
+  sendFrame()
+})
 
 onMounted(async () => {
   if (flipperStore.flipperReady) {
