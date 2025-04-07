@@ -51,6 +51,15 @@ export const useAppsStore = defineStore('apps', () => {
   const categories = computed(() => categoryStore.categories)
 
   const flipperInstalledApps = computed(() => flipper.value?.installedApps)
+  const flipperApplicationQuantity = computed(
+    () => flipper.value?.applicationQuantity
+  )
+  const flipperNumberOfApplicationManifests = computed(
+    () => flipper.value?.numberOfApplicationManifests
+  )
+
+  // this.applicationQuantity = 0
+  // this.numberOfApplicationManifests = 0
   const installedApps = ref<InstalledApp[]>([])
   const updatableApps = ref<InstalledApp[]>([])
   const upToDateApps = ref<InstalledApp[]>([])
@@ -84,12 +93,50 @@ export const useAppsStore = defineStore('apps', () => {
     }
 
     if (refreshInstalledApps) {
-      // onClearInstalledAppsList()
-      await flipper.value.getInstalledApps().catch((/* error: Error */) => {
-        loadingInstalledApps.value = false
-        // throw error
-        return
+      const manifestLoadingNotif = showNotif({
+        isStayOpen: true,
+        group: false, // required to be updatable
+        timeout: 0, // we want to be in control when it gets dismissed
+        spinner: true,
+        message: 'Getting installed applications...',
+        caption: `${flipperNumberOfApplicationManifests.value} / ${flipperApplicationQuantity.value} (0%)`
       })
+
+      // onClearInstalledAppsList()
+      const callback = (percent: number) => {
+        if (percent < 100) {
+          manifestLoadingNotif({
+            caption: `${flipperNumberOfApplicationManifests.value} / ${flipperApplicationQuantity.value} (${percent}%)`
+          })
+        } else {
+          manifestLoadingNotif({
+            icon: 'done',
+            color: 'positive',
+            spinner: false, // we reset the spinner setting so the icon can be displayed
+            message: `Successfully got all installed applications!`,
+            caption: '',
+            timeout: 500 // we will timeout it in 0.5s
+          })
+        }
+      }
+
+      await flipper.value
+        .getInstalledApps(callback)
+        .catch((/* error: Error */) => {
+          console.log('test 16')
+          loadingInstalledApps.value = false
+          // throw error
+
+          manifestLoadingNotif({
+            icon: 'error_outline',
+            color: 'negative',
+            spinner: false, // we reset the spinner setting so the icon can be displayed
+            actions: [{ icon: 'close', color: 'white', class: 'q-px-sm' }],
+            message: 'Failed to get the installed applications',
+            caption: ''
+          })
+          return
+        })
     }
 
     try {
