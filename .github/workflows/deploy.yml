@@ -6,6 +6,7 @@ on:
       - dev
     tags:
       - '*'
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: 'ghcr.io/flipperdevices/lab.flipper.net'
@@ -92,7 +93,7 @@ jobs:
           WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CERT_P12_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
         run: |
           if [ -z "$CSC_LINK" ] ; then unset CSC_LINK ; fi
           if [ -z "$CSC_KEY_PASSWORD" ] ; then unset CSC_KEY_PASSWORD ; fi
