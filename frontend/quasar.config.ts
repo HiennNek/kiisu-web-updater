@@ -268,7 +268,7 @@ export default defineConfig((ctx) => {
         },
         publish: {
           provider: 'github',
-          publishAutoUpdate: false
+          publishAutoUpdate: true
         },
         extraFiles: [
           {
