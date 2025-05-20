@@ -260,7 +260,7 @@ export default defineConfig((ctx) => {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'com.flipperdevices.flipper-lab',
+        appId: 'com.flipperdevices.lab',
         artifactName: '${productName}-${version}-${arch}.${ext}',
         compression: ctx.dev ? 'store' : 'maximum',
         dmg: {
