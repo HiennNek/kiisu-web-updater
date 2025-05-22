@@ -6,6 +6,34 @@ async function fetchChannels(/* target: string */) {
   return await instance
     .get('https://update.flipperzero.one/firmware/directory.json')
     .then(({ data }) => {
+      const params = new URLSearchParams(location.search)
+      const customSource = {
+        url: params.get('url'),
+        channel: params.get('channel'),
+        version: params.get('version'),
+        target: params.get('target')
+      }
+
+      if (customSource.url) {
+        data.channels.push({
+          id: 'custom',
+          title: customSource.channel || 'Custom',
+          versions: [
+            {
+              version: customSource.version || 'unknown',
+              timestamp: Date.now(),
+              files: [
+                {
+                  url: customSource.url,
+                  type: 'update_tgz',
+                  target: customSource.target
+                }
+              ]
+            }
+          ]
+        })
+      }
+
       return data.channels
     })
     .catch((err) => {

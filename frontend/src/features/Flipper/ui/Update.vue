@@ -32,10 +32,13 @@
           </span>
         </p>
       </template>
-      <!-- <p v-if="channels.custom">
-        Detected custom firmware <b>"{{ channels.custom.channel }}"</b>
-        <span v-if="!channels.custom.url.endsWith('tgz')"> with <b>unsupported</b> filetype</span>
-      </p> -->
+      <p v-if="getChannel('custom')">
+        Detected custom firmware <b>"{{ getChannel('custom')!.title }}"</b>
+        <span v-if="!isTgzCustomFile || !isTargetCustomFile"> with </span>
+        <span v-if="!isTgzCustomFile"> <b>unsupported</b> filetype </span>
+        <span v-if="!isTgzCustomFile && !isTargetCustomFile"> and </span>
+        <span v-if="!isTargetCustomFile"> <b>unsupported</b> target </span>
+      </p>
       <div class="column full-width">
         <div class="flex no-wrap justify-between items-center">
           <p class="q-mb-none">Update Channel</p>
@@ -241,6 +244,8 @@ const getChannel = (channelId: string) => {
 
   return undefined
 }
+const isTgzCustomFile = ref(false)
+const isTargetCustomFile = ref(false)
 
 const fwOptions = ref([
   {
@@ -270,9 +275,6 @@ const fwOptions = ref([
     changelog: '',
     color: 'negative'
   }
-  // {
-  //   label: 'Custom', value: 'custom', version: '', color: 'dark'
-  // }
 ])
 const fwModel = ref(fwOptions.value[0]!)
 
@@ -317,6 +319,38 @@ onMounted(async () => {
     fwOptions.value[2]!.changelog = replaceGitHubLinksInMarkdown(
       getChannel('development')?.versions[0]!.changelog || ''
     )
+
+    const customChannel = getChannel('custom')
+    const customFile = customChannel?.versions[0]?.files.find((_file) =>
+      _file.url.endsWith('tgz')
+    )
+    if (customFile) {
+      isTgzCustomFile.value = true
+
+      if (customFile.target === flipperStore.target) {
+        isTargetCustomFile.value = true
+      } else {
+        isTargetCustomFile.value = false
+      }
+    } else {
+      isTgzCustomFile.value = false
+    }
+    if (
+      customChannel &&
+      customFile &&
+      isTgzCustomFile.value &&
+      isTargetCustomFile.value
+    ) {
+      fwOptions.value.push({
+        label: customChannel.title,
+        selectLabel: customChannel.title,
+        selectDescription: '',
+        value: 'custom',
+        version: customChannel.versions[0]!.version,
+        changelog: '',
+        color: 'dark'
+      })
+    }
   }
 
   compareVersions()
