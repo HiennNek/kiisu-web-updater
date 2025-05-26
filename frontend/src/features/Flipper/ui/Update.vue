@@ -353,6 +353,8 @@ onMounted(async () => {
         changelog: '',
         color: 'dark'
       }
+
+      fwModel.value = fwOptions.value.custom
     }
   }
 
