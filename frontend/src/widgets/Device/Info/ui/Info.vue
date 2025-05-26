@@ -56,7 +56,8 @@ import {
   computed,
   /* onBeforeMount, */ onMounted,
   onBeforeUnmount,
-  watch
+  watch,
+  nextTick
 } from 'vue'
 
 import { logger } from 'shared/lib/utils/useLog'
@@ -230,12 +231,14 @@ onMounted(async () => {
     }
   }
 
-  frameRenderer.value = new FlipperFrameRenderer(screenStreamCanvas.value)
+  if (screenStreamCanvas.value) {
+    frameRenderer.value = new FlipperFrameRenderer(screenStreamCanvas.value)
 
-  if (flipperStore.flipper?.frameData) {
-    frameRenderer.value.renderFrame({
-      data: flipperStore.flipper.frameData
-    })
+    if (flipperStore.flipper?.frameData) {
+      frameRenderer.value.renderFrame({
+        data: flipperStore.flipper.frameData
+      })
+    }
   }
 })
 
@@ -246,6 +249,17 @@ watch(
       if (!flipperStore.isScreenStream) {
         await startScreenStream()
       }
+    }
+  }
+)
+
+watch(
+  () => flipperStore.flags.updateInProgress,
+  async (newValue) => {
+    if (!newValue) {
+      nextTick(() => {
+        frameRenderer.value = new FlipperFrameRenderer(screenStreamCanvas.value)
+      })
     }
   }
 )
