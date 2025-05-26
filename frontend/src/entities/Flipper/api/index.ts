@@ -26,7 +26,7 @@ async function fetchChannels(/* target: string */) {
                 {
                   url: customSource.url,
                   type: 'update_tgz',
-                  target: customSource.target
+                  target: customSource.target || 'f7'
                 }
               ]
             }
