@@ -33,7 +33,10 @@
         </p>
       </template>
       <p v-if="getChannel('custom')">
-        Detected custom firmware <b>"{{ getChannel('custom')!.title }}"</b>
+        Detected custom firmware
+        <b v-if="getChannel('custom')!.title !== 'Custom'">
+          "{{ getChannel('custom')!.title }}"
+        </b>
         <span v-if="!isTgzCustomFile || !isTargetCustomFile"> with </span>
         <span v-if="!isTgzCustomFile"> <b>unsupported</b> filetype </span>
         <span v-if="!isTgzCustomFile && !isTargetCustomFile"> and </span>
@@ -44,7 +47,7 @@
           <p class="q-mb-none">Update Channel</p>
           <q-select
             v-model="fwModel"
-            :options="fwOptions"
+            :options="Object.values(fwOptions)"
             borderless
             dense
             :disable="flipperStore.flags.updateInProgress"
@@ -247,8 +250,8 @@ const getChannel = (channelId: string) => {
 const isTgzCustomFile = ref(false)
 const isTargetCustomFile = ref(false)
 
-const fwOptions = ref([
-  {
+const fwOptions = ref<FlipperModel.FwOptions>({
+  release: {
     label: 'Release',
     selectLabel: 'Release',
     selectDescription: 'Stable release (recommended)',
@@ -257,7 +260,7 @@ const fwOptions = ref([
     changelog: '',
     color: 'positive'
   },
-  {
+  rc: {
     label: 'RC',
     selectLabel: 'Release-Candidate',
     selectDescription: 'Pre-release under testing',
@@ -266,7 +269,7 @@ const fwOptions = ref([
     changelog: '',
     color: 'accent'
   },
-  {
+  dev: {
     label: 'Dev',
     selectLabel: 'Development',
     selectDescription: 'Daily unstable build, lots of bugs',
@@ -275,8 +278,8 @@ const fwOptions = ref([
     changelog: '',
     color: 'negative'
   }
-])
-const fwModel = ref(fwOptions.value[0]!)
+})
+const fwModel = ref(fwOptions.value.release)
 
 const emit = defineEmits<{ (event: 'updateInProgress'): Promise<void> }>()
 
@@ -303,20 +306,20 @@ onMounted(async () => {
   })
 
   if (channels.value.length) {
-    fwOptions.value[0]!.version =
+    fwOptions.value.release.version =
       getChannel('release')?.versions[0]!.version || ''
-    fwOptions.value[1]!.version =
+    fwOptions.value.rc.version =
       getChannel('release-candidate')?.versions[0]!.version || ''
-    fwOptions.value[2]!.version =
+    fwOptions.value.dev.version =
       getChannel('development')?.versions[0]!.version || ''
 
-    fwOptions.value[0]!.changelog = replaceGitHubLinksInMarkdown(
+    fwOptions.value.release.changelog = replaceGitHubLinksInMarkdown(
       getChannel('release')?.versions[0]!.changelog || ''
     )
-    fwOptions.value[1]!.changelog = replaceGitHubLinksInMarkdown(
+    fwOptions.value.rc.changelog = replaceGitHubLinksInMarkdown(
       getChannel('release-candidate')?.versions[0]!.changelog || ''
     )
-    fwOptions.value[2]!.changelog = replaceGitHubLinksInMarkdown(
+    fwOptions.value.dev.changelog = replaceGitHubLinksInMarkdown(
       getChannel('development')?.versions[0]!.changelog || ''
     )
 
@@ -341,7 +344,7 @@ onMounted(async () => {
       isTgzCustomFile.value &&
       isTargetCustomFile.value
     ) {
-      fwOptions.value.push({
+      fwOptions.value.custom = {
         label: customChannel.title,
         selectLabel: customChannel.title,
         selectDescription: '',
@@ -349,7 +352,7 @@ onMounted(async () => {
         version: customChannel.versions[0]!.version,
         changelog: '',
         color: 'dark'
-      })
+      }
     }
   }
 

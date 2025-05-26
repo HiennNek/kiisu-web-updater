@@ -199,6 +199,23 @@ export type Channel = {
   versions: FirmwareVersion[]
 }
 
+type FwOptionValue = {
+  label: string
+  selectLabel: string
+  selectDescription: string
+  value: string
+  version: string
+  changelog: string
+  color: string
+}
+
+export type FwOptions = {
+  release: FwOptionValue
+  rc: FwOptionValue
+  dev: FwOptionValue
+  custom?: FwOptionValue
+}
+
 type Band = {
   [key: string]: {
     duty_cycle: number
