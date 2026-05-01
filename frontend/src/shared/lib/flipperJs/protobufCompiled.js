@@ -14,7 +14,7 @@ export const PB_App = $root.PB_App = (() => {
         function StartRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -39,12 +39,18 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StartRequest.decode = function decode(reader, length) {
+        StartRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.StartRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.name = reader.string();
@@ -55,7 +61,7 @@ export const PB_App = $root.PB_App = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -68,9 +74,13 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StartRequest.verify = function verify(message) {
+        StartRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.name != null && message.hasOwnProperty("name"))
                 if (!$util.isString(message.name))
                     return "name: string expected";
@@ -80,9 +90,13 @@ export const PB_App = $root.PB_App = (() => {
             return null;
         };
 
-        StartRequest.fromObject = function fromObject(object) {
+        StartRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.StartRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_App.StartRequest();
             if (object.name != null)
                 message.name = String(object.name);
@@ -125,7 +139,7 @@ export const PB_App = $root.PB_App = (() => {
         function LockStatusRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -143,15 +157,21 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        LockStatusRequest.decode = function decode(reader, length) {
+        LockStatusRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.LockStatusRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -164,15 +184,23 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        LockStatusRequest.verify = function verify(message) {
+        LockStatusRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        LockStatusRequest.fromObject = function fromObject(object) {
+        LockStatusRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.LockStatusRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_App.LockStatusRequest();
         };
 
@@ -199,7 +227,7 @@ export const PB_App = $root.PB_App = (() => {
         function LockStatusResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -221,19 +249,25 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        LockStatusResponse.decode = function decode(reader, length) {
+        LockStatusResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.LockStatusResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.locked = reader.bool();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -246,18 +280,26 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        LockStatusResponse.verify = function verify(message) {
+        LockStatusResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.locked != null && message.hasOwnProperty("locked"))
                 if (typeof message.locked !== "boolean")
                     return "locked: boolean expected";
             return null;
         };
 
-        LockStatusResponse.fromObject = function fromObject(object) {
+        LockStatusResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.LockStatusResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_App.LockStatusResponse();
             if (object.locked != null)
                 message.locked = Boolean(object.locked);
@@ -294,7 +336,7 @@ export const PB_App = $root.PB_App = (() => {
         function AppExitRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -312,15 +354,21 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppExitRequest.decode = function decode(reader, length) {
+        AppExitRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppExitRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -333,15 +381,23 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        AppExitRequest.verify = function verify(message) {
+        AppExitRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        AppExitRequest.fromObject = function fromObject(object) {
+        AppExitRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.AppExitRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_App.AppExitRequest();
         };
 
@@ -368,7 +424,7 @@ export const PB_App = $root.PB_App = (() => {
         function AppLoadFileRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -390,19 +446,25 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppLoadFileRequest.decode = function decode(reader, length) {
+        AppLoadFileRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppLoadFileRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -415,18 +477,26 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        AppLoadFileRequest.verify = function verify(message) {
+        AppLoadFileRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
             return null;
         };
 
-        AppLoadFileRequest.fromObject = function fromObject(object) {
+        AppLoadFileRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.AppLoadFileRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_App.AppLoadFileRequest();
             if (object.path != null)
                 message.path = String(object.path);
@@ -463,7 +533,7 @@ export const PB_App = $root.PB_App = (() => {
         function AppButtonPressRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -488,12 +558,18 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppButtonPressRequest.decode = function decode(reader, length) {
+        AppButtonPressRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppButtonPressRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.args = reader.string();
@@ -504,7 +580,7 @@ export const PB_App = $root.PB_App = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -517,9 +593,13 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        AppButtonPressRequest.verify = function verify(message) {
+        AppButtonPressRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.args != null && message.hasOwnProperty("args"))
                 if (!$util.isString(message.args))
                     return "args: string expected";
@@ -529,9 +609,13 @@ export const PB_App = $root.PB_App = (() => {
             return null;
         };
 
-        AppButtonPressRequest.fromObject = function fromObject(object) {
+        AppButtonPressRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.AppButtonPressRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_App.AppButtonPressRequest();
             if (object.args != null)
                 message.args = String(object.args);
@@ -574,7 +658,7 @@ export const PB_App = $root.PB_App = (() => {
         function AppButtonReleaseRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -592,15 +676,21 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppButtonReleaseRequest.decode = function decode(reader, length) {
+        AppButtonReleaseRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppButtonReleaseRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -613,15 +703,23 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        AppButtonReleaseRequest.verify = function verify(message) {
+        AppButtonReleaseRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        AppButtonReleaseRequest.fromObject = function fromObject(object) {
+        AppButtonReleaseRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.AppButtonReleaseRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_App.AppButtonReleaseRequest();
         };
 
@@ -648,7 +746,7 @@ export const PB_App = $root.PB_App = (() => {
         function AppButtonPressReleaseRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -673,12 +771,18 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppButtonPressReleaseRequest.decode = function decode(reader, length) {
+        AppButtonPressReleaseRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppButtonPressReleaseRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.args = reader.string();
@@ -689,7 +793,7 @@ export const PB_App = $root.PB_App = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -702,9 +806,13 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        AppButtonPressReleaseRequest.verify = function verify(message) {
+        AppButtonPressReleaseRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.args != null && message.hasOwnProperty("args"))
                 if (!$util.isString(message.args))
                     return "args: string expected";
@@ -714,9 +822,13 @@ export const PB_App = $root.PB_App = (() => {
             return null;
         };
 
-        AppButtonPressReleaseRequest.fromObject = function fromObject(object) {
+        AppButtonPressReleaseRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.AppButtonPressReleaseRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_App.AppButtonPressReleaseRequest();
             if (object.args != null)
                 message.args = String(object.args);
@@ -766,7 +878,7 @@ export const PB_App = $root.PB_App = (() => {
         function AppStateResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -788,19 +900,25 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppStateResponse.decode = function decode(reader, length) {
+        AppStateResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppStateResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.state = reader.int32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -813,9 +931,13 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        AppStateResponse.verify = function verify(message) {
+        AppStateResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.state != null && message.hasOwnProperty("state"))
                 switch (message.state) {
                 default:
@@ -827,9 +949,13 @@ export const PB_App = $root.PB_App = (() => {
             return null;
         };
 
-        AppStateResponse.fromObject = function fromObject(object) {
+        AppStateResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.AppStateResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_App.AppStateResponse();
             switch (object.state) {
             default:
@@ -880,7 +1006,7 @@ export const PB_App = $root.PB_App = (() => {
         function GetErrorRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -898,15 +1024,21 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetErrorRequest.decode = function decode(reader, length) {
+        GetErrorRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.GetErrorRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -919,15 +1051,23 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetErrorRequest.verify = function verify(message) {
+        GetErrorRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        GetErrorRequest.fromObject = function fromObject(object) {
+        GetErrorRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.GetErrorRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_App.GetErrorRequest();
         };
 
@@ -954,7 +1094,7 @@ export const PB_App = $root.PB_App = (() => {
         function GetErrorResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -979,12 +1119,18 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetErrorResponse.decode = function decode(reader, length) {
+        GetErrorResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.GetErrorResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.code = reader.uint32();
@@ -995,7 +1141,7 @@ export const PB_App = $root.PB_App = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1008,9 +1154,13 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetErrorResponse.verify = function verify(message) {
+        GetErrorResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.code != null && message.hasOwnProperty("code"))
                 if (!$util.isInteger(message.code))
                     return "code: integer expected";
@@ -1020,9 +1170,13 @@ export const PB_App = $root.PB_App = (() => {
             return null;
         };
 
-        GetErrorResponse.fromObject = function fromObject(object) {
+        GetErrorResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.GetErrorResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_App.GetErrorResponse();
             if (object.code != null)
                 message.code = object.code >>> 0;
@@ -1065,7 +1219,7 @@ export const PB_App = $root.PB_App = (() => {
         function DataExchangeRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1087,19 +1241,25 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DataExchangeRequest.decode = function decode(reader, length) {
+        DataExchangeRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.DataExchangeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.data = reader.bytes();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1112,18 +1272,26 @@ export const PB_App = $root.PB_App = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        DataExchangeRequest.verify = function verify(message) {
+        DataExchangeRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.data != null && message.hasOwnProperty("data"))
                 if (!(message.data && typeof message.data.length === "number" || $util.isString(message.data)))
                     return "data: buffer expected";
             return null;
         };
 
-        DataExchangeRequest.fromObject = function fromObject(object) {
+        DataExchangeRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_App.DataExchangeRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_App.DataExchangeRequest();
             if (object.data != null)
                 if (typeof object.data === "string")
@@ -1176,7 +1344,7 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
         function IsLockedRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1194,15 +1362,21 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        IsLockedRequest.decode = function decode(reader, length) {
+        IsLockedRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.IsLockedRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1215,15 +1389,23 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        IsLockedRequest.verify = function verify(message) {
+        IsLockedRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        IsLockedRequest.fromObject = function fromObject(object) {
+        IsLockedRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Desktop.IsLockedRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_Desktop.IsLockedRequest();
         };
 
@@ -1250,7 +1432,7 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
         function UnlockRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1268,15 +1450,21 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        UnlockRequest.decode = function decode(reader, length) {
+        UnlockRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.UnlockRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1289,15 +1477,23 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        UnlockRequest.verify = function verify(message) {
+        UnlockRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        UnlockRequest.fromObject = function fromObject(object) {
+        UnlockRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Desktop.UnlockRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_Desktop.UnlockRequest();
         };
 
@@ -1324,7 +1520,7 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
         function StatusSubscribeRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1342,15 +1538,21 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StatusSubscribeRequest.decode = function decode(reader, length) {
+        StatusSubscribeRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.StatusSubscribeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1363,15 +1565,23 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StatusSubscribeRequest.verify = function verify(message) {
+        StatusSubscribeRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        StatusSubscribeRequest.fromObject = function fromObject(object) {
+        StatusSubscribeRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Desktop.StatusSubscribeRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_Desktop.StatusSubscribeRequest();
         };
 
@@ -1398,7 +1608,7 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
         function StatusUnsubscribeRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1416,15 +1626,21 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StatusUnsubscribeRequest.decode = function decode(reader, length) {
+        StatusUnsubscribeRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.StatusUnsubscribeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1437,15 +1653,23 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StatusUnsubscribeRequest.verify = function verify(message) {
+        StatusUnsubscribeRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        StatusUnsubscribeRequest.fromObject = function fromObject(object) {
+        StatusUnsubscribeRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Desktop.StatusUnsubscribeRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_Desktop.StatusUnsubscribeRequest();
         };
 
@@ -1472,7 +1696,7 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
         function Status(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1494,19 +1718,25 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Status.decode = function decode(reader, length) {
+        Status.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.Status();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.locked = reader.bool();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1519,18 +1749,26 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        Status.verify = function verify(message) {
+        Status.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.locked != null && message.hasOwnProperty("locked"))
                 if (typeof message.locked !== "boolean")
                     return "locked: boolean expected";
             return null;
         };
 
-        Status.fromObject = function fromObject(object) {
+        Status.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Desktop.Status)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Desktop.Status();
             if (object.locked != null)
                 message.locked = Boolean(object.locked);
@@ -1604,7 +1842,7 @@ export const PB = $root.PB = (() => {
         function Empty(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1622,15 +1860,21 @@ export const PB = $root.PB = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Empty.decode = function decode(reader, length) {
+        Empty.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.Empty();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1643,15 +1887,23 @@ export const PB = $root.PB = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        Empty.verify = function verify(message) {
+        Empty.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        Empty.fromObject = function fromObject(object) {
+        Empty.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB.Empty)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB.Empty();
         };
 
@@ -1678,7 +1930,7 @@ export const PB = $root.PB = (() => {
         function StopSession(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -1696,15 +1948,21 @@ export const PB = $root.PB = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StopSession.decode = function decode(reader, length) {
+        StopSession.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.StopSession();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -1717,15 +1975,23 @@ export const PB = $root.PB = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StopSession.verify = function verify(message) {
+        StopSession.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        StopSession.fromObject = function fromObject(object) {
+        StopSession.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB.StopSession)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB.StopSession();
         };
 
@@ -1752,7 +2018,7 @@ export const PB = $root.PB = (() => {
         function Main(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -2003,12 +2269,18 @@ export const PB = $root.PB = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Main.decode = function decode(reader, length) {
+        Main.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.Main();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.commandId = reader.uint32();
@@ -2023,295 +2295,295 @@ export const PB = $root.PB = (() => {
                         break;
                     }
                 case 4: {
-                        message.empty = $root.PB.Empty.decode(reader, reader.uint32());
+                        message.empty = $root.PB.Empty.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 19: {
-                        message.stopSession = $root.PB.StopSession.decode(reader, reader.uint32());
+                        message.stopSession = $root.PB.StopSession.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 5: {
-                        message.systemPingRequest = $root.PB_System.PingRequest.decode(reader, reader.uint32());
+                        message.systemPingRequest = $root.PB_System.PingRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 6: {
-                        message.systemPingResponse = $root.PB_System.PingResponse.decode(reader, reader.uint32());
+                        message.systemPingResponse = $root.PB_System.PingResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 31: {
-                        message.systemRebootRequest = $root.PB_System.RebootRequest.decode(reader, reader.uint32());
+                        message.systemRebootRequest = $root.PB_System.RebootRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 32: {
-                        message.systemDeviceInfoRequest = $root.PB_System.DeviceInfoRequest.decode(reader, reader.uint32());
+                        message.systemDeviceInfoRequest = $root.PB_System.DeviceInfoRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 33: {
-                        message.systemDeviceInfoResponse = $root.PB_System.DeviceInfoResponse.decode(reader, reader.uint32());
+                        message.systemDeviceInfoResponse = $root.PB_System.DeviceInfoResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 34: {
-                        message.systemFactoryResetRequest = $root.PB_System.FactoryResetRequest.decode(reader, reader.uint32());
+                        message.systemFactoryResetRequest = $root.PB_System.FactoryResetRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 35: {
-                        message.systemGetDatetimeRequest = $root.PB_System.GetDateTimeRequest.decode(reader, reader.uint32());
+                        message.systemGetDatetimeRequest = $root.PB_System.GetDateTimeRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 36: {
-                        message.systemGetDatetimeResponse = $root.PB_System.GetDateTimeResponse.decode(reader, reader.uint32());
+                        message.systemGetDatetimeResponse = $root.PB_System.GetDateTimeResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 37: {
-                        message.systemSetDatetimeRequest = $root.PB_System.SetDateTimeRequest.decode(reader, reader.uint32());
+                        message.systemSetDatetimeRequest = $root.PB_System.SetDateTimeRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 38: {
-                        message.systemPlayAudiovisualAlertRequest = $root.PB_System.PlayAudiovisualAlertRequest.decode(reader, reader.uint32());
+                        message.systemPlayAudiovisualAlertRequest = $root.PB_System.PlayAudiovisualAlertRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 39: {
-                        message.systemProtobufVersionRequest = $root.PB_System.ProtobufVersionRequest.decode(reader, reader.uint32());
+                        message.systemProtobufVersionRequest = $root.PB_System.ProtobufVersionRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 40: {
-                        message.systemProtobufVersionResponse = $root.PB_System.ProtobufVersionResponse.decode(reader, reader.uint32());
+                        message.systemProtobufVersionResponse = $root.PB_System.ProtobufVersionResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 41: {
-                        message.systemUpdateRequest = $root.PB_System.UpdateRequest.decode(reader, reader.uint32());
+                        message.systemUpdateRequest = $root.PB_System.UpdateRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 46: {
-                        message.systemUpdateResponse = $root.PB_System.UpdateResponse.decode(reader, reader.uint32());
+                        message.systemUpdateResponse = $root.PB_System.UpdateResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 44: {
-                        message.systemPowerInfoRequest = $root.PB_System.PowerInfoRequest.decode(reader, reader.uint32());
+                        message.systemPowerInfoRequest = $root.PB_System.PowerInfoRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 45: {
-                        message.systemPowerInfoResponse = $root.PB_System.PowerInfoResponse.decode(reader, reader.uint32());
+                        message.systemPowerInfoResponse = $root.PB_System.PowerInfoResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 28: {
-                        message.storageInfoRequest = $root.PB_Storage.InfoRequest.decode(reader, reader.uint32());
+                        message.storageInfoRequest = $root.PB_Storage.InfoRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 29: {
-                        message.storageInfoResponse = $root.PB_Storage.InfoResponse.decode(reader, reader.uint32());
+                        message.storageInfoResponse = $root.PB_Storage.InfoResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 59: {
-                        message.storageTimestampRequest = $root.PB_Storage.TimestampRequest.decode(reader, reader.uint32());
+                        message.storageTimestampRequest = $root.PB_Storage.TimestampRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 60: {
-                        message.storageTimestampResponse = $root.PB_Storage.TimestampResponse.decode(reader, reader.uint32());
+                        message.storageTimestampResponse = $root.PB_Storage.TimestampResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 24: {
-                        message.storageStatRequest = $root.PB_Storage.StatRequest.decode(reader, reader.uint32());
+                        message.storageStatRequest = $root.PB_Storage.StatRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 25: {
-                        message.storageStatResponse = $root.PB_Storage.StatResponse.decode(reader, reader.uint32());
+                        message.storageStatResponse = $root.PB_Storage.StatResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 7: {
-                        message.storageListRequest = $root.PB_Storage.ListRequest.decode(reader, reader.uint32());
+                        message.storageListRequest = $root.PB_Storage.ListRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 8: {
-                        message.storageListResponse = $root.PB_Storage.ListResponse.decode(reader, reader.uint32());
+                        message.storageListResponse = $root.PB_Storage.ListResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 9: {
-                        message.storageReadRequest = $root.PB_Storage.ReadRequest.decode(reader, reader.uint32());
+                        message.storageReadRequest = $root.PB_Storage.ReadRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 10: {
-                        message.storageReadResponse = $root.PB_Storage.ReadResponse.decode(reader, reader.uint32());
+                        message.storageReadResponse = $root.PB_Storage.ReadResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 11: {
-                        message.storageWriteRequest = $root.PB_Storage.WriteRequest.decode(reader, reader.uint32());
+                        message.storageWriteRequest = $root.PB_Storage.WriteRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 12: {
-                        message.storageDeleteRequest = $root.PB_Storage.DeleteRequest.decode(reader, reader.uint32());
+                        message.storageDeleteRequest = $root.PB_Storage.DeleteRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 13: {
-                        message.storageMkdirRequest = $root.PB_Storage.MkdirRequest.decode(reader, reader.uint32());
+                        message.storageMkdirRequest = $root.PB_Storage.MkdirRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 14: {
-                        message.storageMd5sumRequest = $root.PB_Storage.Md5sumRequest.decode(reader, reader.uint32());
+                        message.storageMd5sumRequest = $root.PB_Storage.Md5sumRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 15: {
-                        message.storageMd5sumResponse = $root.PB_Storage.Md5sumResponse.decode(reader, reader.uint32());
+                        message.storageMd5sumResponse = $root.PB_Storage.Md5sumResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 30: {
-                        message.storageRenameRequest = $root.PB_Storage.RenameRequest.decode(reader, reader.uint32());
+                        message.storageRenameRequest = $root.PB_Storage.RenameRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 42: {
-                        message.storageBackupCreateRequest = $root.PB_Storage.BackupCreateRequest.decode(reader, reader.uint32());
+                        message.storageBackupCreateRequest = $root.PB_Storage.BackupCreateRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 43: {
-                        message.storageBackupRestoreRequest = $root.PB_Storage.BackupRestoreRequest.decode(reader, reader.uint32());
+                        message.storageBackupRestoreRequest = $root.PB_Storage.BackupRestoreRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 71: {
-                        message.storageTarExtractRequest = $root.PB_Storage.TarExtractRequest.decode(reader, reader.uint32());
+                        message.storageTarExtractRequest = $root.PB_Storage.TarExtractRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 16: {
-                        message.appStartRequest = $root.PB_App.StartRequest.decode(reader, reader.uint32());
+                        message.appStartRequest = $root.PB_App.StartRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 17: {
-                        message.appLockStatusRequest = $root.PB_App.LockStatusRequest.decode(reader, reader.uint32());
+                        message.appLockStatusRequest = $root.PB_App.LockStatusRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 18: {
-                        message.appLockStatusResponse = $root.PB_App.LockStatusResponse.decode(reader, reader.uint32());
+                        message.appLockStatusResponse = $root.PB_App.LockStatusResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 47: {
-                        message.appExitRequest = $root.PB_App.AppExitRequest.decode(reader, reader.uint32());
+                        message.appExitRequest = $root.PB_App.AppExitRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 48: {
-                        message.appLoadFileRequest = $root.PB_App.AppLoadFileRequest.decode(reader, reader.uint32());
+                        message.appLoadFileRequest = $root.PB_App.AppLoadFileRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 49: {
-                        message.appButtonPressRequest = $root.PB_App.AppButtonPressRequest.decode(reader, reader.uint32());
+                        message.appButtonPressRequest = $root.PB_App.AppButtonPressRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 50: {
-                        message.appButtonReleaseRequest = $root.PB_App.AppButtonReleaseRequest.decode(reader, reader.uint32());
+                        message.appButtonReleaseRequest = $root.PB_App.AppButtonReleaseRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 75: {
-                        message.appButtonPressReleaseRequest = $root.PB_App.AppButtonPressReleaseRequest.decode(reader, reader.uint32());
+                        message.appButtonPressReleaseRequest = $root.PB_App.AppButtonPressReleaseRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 63: {
-                        message.appGetErrorRequest = $root.PB_App.GetErrorRequest.decode(reader, reader.uint32());
+                        message.appGetErrorRequest = $root.PB_App.GetErrorRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 64: {
-                        message.appGetErrorResponse = $root.PB_App.GetErrorResponse.decode(reader, reader.uint32());
+                        message.appGetErrorResponse = $root.PB_App.GetErrorResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 65: {
-                        message.appDataExchangeRequest = $root.PB_App.DataExchangeRequest.decode(reader, reader.uint32());
+                        message.appDataExchangeRequest = $root.PB_App.DataExchangeRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 20: {
-                        message.guiStartScreenStreamRequest = $root.PB_Gui.StartScreenStreamRequest.decode(reader, reader.uint32());
+                        message.guiStartScreenStreamRequest = $root.PB_Gui.StartScreenStreamRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 21: {
-                        message.guiStopScreenStreamRequest = $root.PB_Gui.StopScreenStreamRequest.decode(reader, reader.uint32());
+                        message.guiStopScreenStreamRequest = $root.PB_Gui.StopScreenStreamRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 22: {
-                        message.guiScreenFrame = $root.PB_Gui.ScreenFrame.decode(reader, reader.uint32());
+                        message.guiScreenFrame = $root.PB_Gui.ScreenFrame.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 23: {
-                        message.guiSendInputEventRequest = $root.PB_Gui.SendInputEventRequest.decode(reader, reader.uint32());
+                        message.guiSendInputEventRequest = $root.PB_Gui.SendInputEventRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 26: {
-                        message.guiStartVirtualDisplayRequest = $root.PB_Gui.StartVirtualDisplayRequest.decode(reader, reader.uint32());
+                        message.guiStartVirtualDisplayRequest = $root.PB_Gui.StartVirtualDisplayRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 27: {
-                        message.guiStopVirtualDisplayRequest = $root.PB_Gui.StopVirtualDisplayRequest.decode(reader, reader.uint32());
+                        message.guiStopVirtualDisplayRequest = $root.PB_Gui.StopVirtualDisplayRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 51: {
-                        message.gpioSetPinMode = $root.PB_Gpio.SetPinMode.decode(reader, reader.uint32());
+                        message.gpioSetPinMode = $root.PB_Gpio.SetPinMode.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 52: {
-                        message.gpioSetInputPull = $root.PB_Gpio.SetInputPull.decode(reader, reader.uint32());
+                        message.gpioSetInputPull = $root.PB_Gpio.SetInputPull.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 53: {
-                        message.gpioGetPinMode = $root.PB_Gpio.GetPinMode.decode(reader, reader.uint32());
+                        message.gpioGetPinMode = $root.PB_Gpio.GetPinMode.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 54: {
-                        message.gpioGetPinModeResponse = $root.PB_Gpio.GetPinModeResponse.decode(reader, reader.uint32());
+                        message.gpioGetPinModeResponse = $root.PB_Gpio.GetPinModeResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 55: {
-                        message.gpioReadPin = $root.PB_Gpio.ReadPin.decode(reader, reader.uint32());
+                        message.gpioReadPin = $root.PB_Gpio.ReadPin.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 56: {
-                        message.gpioReadPinResponse = $root.PB_Gpio.ReadPinResponse.decode(reader, reader.uint32());
+                        message.gpioReadPinResponse = $root.PB_Gpio.ReadPinResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 57: {
-                        message.gpioWritePin = $root.PB_Gpio.WritePin.decode(reader, reader.uint32());
+                        message.gpioWritePin = $root.PB_Gpio.WritePin.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 72: {
-                        message.gpioGetOtgMode = $root.PB_Gpio.GetOtgMode.decode(reader, reader.uint32());
+                        message.gpioGetOtgMode = $root.PB_Gpio.GetOtgMode.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 73: {
-                        message.gpioGetOtgModeResponse = $root.PB_Gpio.GetOtgModeResponse.decode(reader, reader.uint32());
+                        message.gpioGetOtgModeResponse = $root.PB_Gpio.GetOtgModeResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 74: {
-                        message.gpioSetOtgMode = $root.PB_Gpio.SetOtgMode.decode(reader, reader.uint32());
+                        message.gpioSetOtgMode = $root.PB_Gpio.SetOtgMode.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 58: {
-                        message.appStateResponse = $root.PB_App.AppStateResponse.decode(reader, reader.uint32());
+                        message.appStateResponse = $root.PB_App.AppStateResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 61: {
-                        message.propertyGetRequest = $root.PB_Property.GetRequest.decode(reader, reader.uint32());
+                        message.propertyGetRequest = $root.PB_Property.GetRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 62: {
-                        message.propertyGetResponse = $root.PB_Property.GetResponse.decode(reader, reader.uint32());
+                        message.propertyGetResponse = $root.PB_Property.GetResponse.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 66: {
-                        message.desktopIsLockedRequest = $root.PB_Desktop.IsLockedRequest.decode(reader, reader.uint32());
+                        message.desktopIsLockedRequest = $root.PB_Desktop.IsLockedRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 67: {
-                        message.desktopUnlockRequest = $root.PB_Desktop.UnlockRequest.decode(reader, reader.uint32());
+                        message.desktopUnlockRequest = $root.PB_Desktop.UnlockRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 68: {
-                        message.desktopStatusSubscribeRequest = $root.PB_Desktop.StatusSubscribeRequest.decode(reader, reader.uint32());
+                        message.desktopStatusSubscribeRequest = $root.PB_Desktop.StatusSubscribeRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 69: {
-                        message.desktopStatusUnsubscribeRequest = $root.PB_Desktop.StatusUnsubscribeRequest.decode(reader, reader.uint32());
+                        message.desktopStatusUnsubscribeRequest = $root.PB_Desktop.StatusUnsubscribeRequest.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 70: {
-                        message.desktopStatus = $root.PB_Desktop.Status.decode(reader, reader.uint32());
+                        message.desktopStatus = $root.PB_Desktop.Status.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -2324,9 +2596,13 @@ export const PB = $root.PB = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        Main.verify = function verify(message) {
+        Main.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             let properties = {};
             if (message.commandId != null && message.hasOwnProperty("commandId"))
                 if (!$util.isInteger(message.commandId))
@@ -2368,7 +2644,7 @@ export const PB = $root.PB = (() => {
             if (message.empty != null && message.hasOwnProperty("empty")) {
                 properties.content = 1;
                 {
-                    let error = $root.PB.Empty.verify(message.empty);
+                    let error = $root.PB.Empty.verify(message.empty, long + 1);
                     if (error)
                         return "empty." + error;
                 }
@@ -2378,7 +2654,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB.StopSession.verify(message.stopSession);
+                    let error = $root.PB.StopSession.verify(message.stopSession, long + 1);
                     if (error)
                         return "stopSession." + error;
                 }
@@ -2388,7 +2664,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.PingRequest.verify(message.systemPingRequest);
+                    let error = $root.PB_System.PingRequest.verify(message.systemPingRequest, long + 1);
                     if (error)
                         return "systemPingRequest." + error;
                 }
@@ -2398,7 +2674,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.PingResponse.verify(message.systemPingResponse);
+                    let error = $root.PB_System.PingResponse.verify(message.systemPingResponse, long + 1);
                     if (error)
                         return "systemPingResponse." + error;
                 }
@@ -2408,7 +2684,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.RebootRequest.verify(message.systemRebootRequest);
+                    let error = $root.PB_System.RebootRequest.verify(message.systemRebootRequest, long + 1);
                     if (error)
                         return "systemRebootRequest." + error;
                 }
@@ -2418,7 +2694,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.DeviceInfoRequest.verify(message.systemDeviceInfoRequest);
+                    let error = $root.PB_System.DeviceInfoRequest.verify(message.systemDeviceInfoRequest, long + 1);
                     if (error)
                         return "systemDeviceInfoRequest." + error;
                 }
@@ -2428,7 +2704,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.DeviceInfoResponse.verify(message.systemDeviceInfoResponse);
+                    let error = $root.PB_System.DeviceInfoResponse.verify(message.systemDeviceInfoResponse, long + 1);
                     if (error)
                         return "systemDeviceInfoResponse." + error;
                 }
@@ -2438,7 +2714,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.FactoryResetRequest.verify(message.systemFactoryResetRequest);
+                    let error = $root.PB_System.FactoryResetRequest.verify(message.systemFactoryResetRequest, long + 1);
                     if (error)
                         return "systemFactoryResetRequest." + error;
                 }
@@ -2448,7 +2724,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.GetDateTimeRequest.verify(message.systemGetDatetimeRequest);
+                    let error = $root.PB_System.GetDateTimeRequest.verify(message.systemGetDatetimeRequest, long + 1);
                     if (error)
                         return "systemGetDatetimeRequest." + error;
                 }
@@ -2458,7 +2734,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.GetDateTimeResponse.verify(message.systemGetDatetimeResponse);
+                    let error = $root.PB_System.GetDateTimeResponse.verify(message.systemGetDatetimeResponse, long + 1);
                     if (error)
                         return "systemGetDatetimeResponse." + error;
                 }
@@ -2468,7 +2744,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.SetDateTimeRequest.verify(message.systemSetDatetimeRequest);
+                    let error = $root.PB_System.SetDateTimeRequest.verify(message.systemSetDatetimeRequest, long + 1);
                     if (error)
                         return "systemSetDatetimeRequest." + error;
                 }
@@ -2478,7 +2754,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.PlayAudiovisualAlertRequest.verify(message.systemPlayAudiovisualAlertRequest);
+                    let error = $root.PB_System.PlayAudiovisualAlertRequest.verify(message.systemPlayAudiovisualAlertRequest, long + 1);
                     if (error)
                         return "systemPlayAudiovisualAlertRequest." + error;
                 }
@@ -2488,7 +2764,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.ProtobufVersionRequest.verify(message.systemProtobufVersionRequest);
+                    let error = $root.PB_System.ProtobufVersionRequest.verify(message.systemProtobufVersionRequest, long + 1);
                     if (error)
                         return "systemProtobufVersionRequest." + error;
                 }
@@ -2498,7 +2774,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.ProtobufVersionResponse.verify(message.systemProtobufVersionResponse);
+                    let error = $root.PB_System.ProtobufVersionResponse.verify(message.systemProtobufVersionResponse, long + 1);
                     if (error)
                         return "systemProtobufVersionResponse." + error;
                 }
@@ -2508,7 +2784,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.UpdateRequest.verify(message.systemUpdateRequest);
+                    let error = $root.PB_System.UpdateRequest.verify(message.systemUpdateRequest, long + 1);
                     if (error)
                         return "systemUpdateRequest." + error;
                 }
@@ -2518,7 +2794,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.UpdateResponse.verify(message.systemUpdateResponse);
+                    let error = $root.PB_System.UpdateResponse.verify(message.systemUpdateResponse, long + 1);
                     if (error)
                         return "systemUpdateResponse." + error;
                 }
@@ -2528,7 +2804,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.PowerInfoRequest.verify(message.systemPowerInfoRequest);
+                    let error = $root.PB_System.PowerInfoRequest.verify(message.systemPowerInfoRequest, long + 1);
                     if (error)
                         return "systemPowerInfoRequest." + error;
                 }
@@ -2538,7 +2814,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_System.PowerInfoResponse.verify(message.systemPowerInfoResponse);
+                    let error = $root.PB_System.PowerInfoResponse.verify(message.systemPowerInfoResponse, long + 1);
                     if (error)
                         return "systemPowerInfoResponse." + error;
                 }
@@ -2548,7 +2824,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.InfoRequest.verify(message.storageInfoRequest);
+                    let error = $root.PB_Storage.InfoRequest.verify(message.storageInfoRequest, long + 1);
                     if (error)
                         return "storageInfoRequest." + error;
                 }
@@ -2558,7 +2834,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.InfoResponse.verify(message.storageInfoResponse);
+                    let error = $root.PB_Storage.InfoResponse.verify(message.storageInfoResponse, long + 1);
                     if (error)
                         return "storageInfoResponse." + error;
                 }
@@ -2568,7 +2844,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.TimestampRequest.verify(message.storageTimestampRequest);
+                    let error = $root.PB_Storage.TimestampRequest.verify(message.storageTimestampRequest, long + 1);
                     if (error)
                         return "storageTimestampRequest." + error;
                 }
@@ -2578,7 +2854,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.TimestampResponse.verify(message.storageTimestampResponse);
+                    let error = $root.PB_Storage.TimestampResponse.verify(message.storageTimestampResponse, long + 1);
                     if (error)
                         return "storageTimestampResponse." + error;
                 }
@@ -2588,7 +2864,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.StatRequest.verify(message.storageStatRequest);
+                    let error = $root.PB_Storage.StatRequest.verify(message.storageStatRequest, long + 1);
                     if (error)
                         return "storageStatRequest." + error;
                 }
@@ -2598,7 +2874,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.StatResponse.verify(message.storageStatResponse);
+                    let error = $root.PB_Storage.StatResponse.verify(message.storageStatResponse, long + 1);
                     if (error)
                         return "storageStatResponse." + error;
                 }
@@ -2608,7 +2884,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.ListRequest.verify(message.storageListRequest);
+                    let error = $root.PB_Storage.ListRequest.verify(message.storageListRequest, long + 1);
                     if (error)
                         return "storageListRequest." + error;
                 }
@@ -2618,7 +2894,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.ListResponse.verify(message.storageListResponse);
+                    let error = $root.PB_Storage.ListResponse.verify(message.storageListResponse, long + 1);
                     if (error)
                         return "storageListResponse." + error;
                 }
@@ -2628,7 +2904,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.ReadRequest.verify(message.storageReadRequest);
+                    let error = $root.PB_Storage.ReadRequest.verify(message.storageReadRequest, long + 1);
                     if (error)
                         return "storageReadRequest." + error;
                 }
@@ -2638,7 +2914,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.ReadResponse.verify(message.storageReadResponse);
+                    let error = $root.PB_Storage.ReadResponse.verify(message.storageReadResponse, long + 1);
                     if (error)
                         return "storageReadResponse." + error;
                 }
@@ -2648,7 +2924,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.WriteRequest.verify(message.storageWriteRequest);
+                    let error = $root.PB_Storage.WriteRequest.verify(message.storageWriteRequest, long + 1);
                     if (error)
                         return "storageWriteRequest." + error;
                 }
@@ -2658,7 +2934,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.DeleteRequest.verify(message.storageDeleteRequest);
+                    let error = $root.PB_Storage.DeleteRequest.verify(message.storageDeleteRequest, long + 1);
                     if (error)
                         return "storageDeleteRequest." + error;
                 }
@@ -2668,7 +2944,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.MkdirRequest.verify(message.storageMkdirRequest);
+                    let error = $root.PB_Storage.MkdirRequest.verify(message.storageMkdirRequest, long + 1);
                     if (error)
                         return "storageMkdirRequest." + error;
                 }
@@ -2678,7 +2954,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.Md5sumRequest.verify(message.storageMd5sumRequest);
+                    let error = $root.PB_Storage.Md5sumRequest.verify(message.storageMd5sumRequest, long + 1);
                     if (error)
                         return "storageMd5sumRequest." + error;
                 }
@@ -2688,7 +2964,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.Md5sumResponse.verify(message.storageMd5sumResponse);
+                    let error = $root.PB_Storage.Md5sumResponse.verify(message.storageMd5sumResponse, long + 1);
                     if (error)
                         return "storageMd5sumResponse." + error;
                 }
@@ -2698,7 +2974,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.RenameRequest.verify(message.storageRenameRequest);
+                    let error = $root.PB_Storage.RenameRequest.verify(message.storageRenameRequest, long + 1);
                     if (error)
                         return "storageRenameRequest." + error;
                 }
@@ -2708,7 +2984,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.BackupCreateRequest.verify(message.storageBackupCreateRequest);
+                    let error = $root.PB_Storage.BackupCreateRequest.verify(message.storageBackupCreateRequest, long + 1);
                     if (error)
                         return "storageBackupCreateRequest." + error;
                 }
@@ -2718,7 +2994,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.BackupRestoreRequest.verify(message.storageBackupRestoreRequest);
+                    let error = $root.PB_Storage.BackupRestoreRequest.verify(message.storageBackupRestoreRequest, long + 1);
                     if (error)
                         return "storageBackupRestoreRequest." + error;
                 }
@@ -2728,7 +3004,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Storage.TarExtractRequest.verify(message.storageTarExtractRequest);
+                    let error = $root.PB_Storage.TarExtractRequest.verify(message.storageTarExtractRequest, long + 1);
                     if (error)
                         return "storageTarExtractRequest." + error;
                 }
@@ -2738,7 +3014,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.StartRequest.verify(message.appStartRequest);
+                    let error = $root.PB_App.StartRequest.verify(message.appStartRequest, long + 1);
                     if (error)
                         return "appStartRequest." + error;
                 }
@@ -2748,7 +3024,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.LockStatusRequest.verify(message.appLockStatusRequest);
+                    let error = $root.PB_App.LockStatusRequest.verify(message.appLockStatusRequest, long + 1);
                     if (error)
                         return "appLockStatusRequest." + error;
                 }
@@ -2758,7 +3034,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.LockStatusResponse.verify(message.appLockStatusResponse);
+                    let error = $root.PB_App.LockStatusResponse.verify(message.appLockStatusResponse, long + 1);
                     if (error)
                         return "appLockStatusResponse." + error;
                 }
@@ -2768,7 +3044,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.AppExitRequest.verify(message.appExitRequest);
+                    let error = $root.PB_App.AppExitRequest.verify(message.appExitRequest, long + 1);
                     if (error)
                         return "appExitRequest." + error;
                 }
@@ -2778,7 +3054,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.AppLoadFileRequest.verify(message.appLoadFileRequest);
+                    let error = $root.PB_App.AppLoadFileRequest.verify(message.appLoadFileRequest, long + 1);
                     if (error)
                         return "appLoadFileRequest." + error;
                 }
@@ -2788,7 +3064,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.AppButtonPressRequest.verify(message.appButtonPressRequest);
+                    let error = $root.PB_App.AppButtonPressRequest.verify(message.appButtonPressRequest, long + 1);
                     if (error)
                         return "appButtonPressRequest." + error;
                 }
@@ -2798,7 +3074,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.AppButtonReleaseRequest.verify(message.appButtonReleaseRequest);
+                    let error = $root.PB_App.AppButtonReleaseRequest.verify(message.appButtonReleaseRequest, long + 1);
                     if (error)
                         return "appButtonReleaseRequest." + error;
                 }
@@ -2808,7 +3084,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.AppButtonPressReleaseRequest.verify(message.appButtonPressReleaseRequest);
+                    let error = $root.PB_App.AppButtonPressReleaseRequest.verify(message.appButtonPressReleaseRequest, long + 1);
                     if (error)
                         return "appButtonPressReleaseRequest." + error;
                 }
@@ -2818,7 +3094,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.GetErrorRequest.verify(message.appGetErrorRequest);
+                    let error = $root.PB_App.GetErrorRequest.verify(message.appGetErrorRequest, long + 1);
                     if (error)
                         return "appGetErrorRequest." + error;
                 }
@@ -2828,7 +3104,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.GetErrorResponse.verify(message.appGetErrorResponse);
+                    let error = $root.PB_App.GetErrorResponse.verify(message.appGetErrorResponse, long + 1);
                     if (error)
                         return "appGetErrorResponse." + error;
                 }
@@ -2838,7 +3114,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.DataExchangeRequest.verify(message.appDataExchangeRequest);
+                    let error = $root.PB_App.DataExchangeRequest.verify(message.appDataExchangeRequest, long + 1);
                     if (error)
                         return "appDataExchangeRequest." + error;
                 }
@@ -2848,7 +3124,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gui.StartScreenStreamRequest.verify(message.guiStartScreenStreamRequest);
+                    let error = $root.PB_Gui.StartScreenStreamRequest.verify(message.guiStartScreenStreamRequest, long + 1);
                     if (error)
                         return "guiStartScreenStreamRequest." + error;
                 }
@@ -2858,7 +3134,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gui.StopScreenStreamRequest.verify(message.guiStopScreenStreamRequest);
+                    let error = $root.PB_Gui.StopScreenStreamRequest.verify(message.guiStopScreenStreamRequest, long + 1);
                     if (error)
                         return "guiStopScreenStreamRequest." + error;
                 }
@@ -2868,7 +3144,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gui.ScreenFrame.verify(message.guiScreenFrame);
+                    let error = $root.PB_Gui.ScreenFrame.verify(message.guiScreenFrame, long + 1);
                     if (error)
                         return "guiScreenFrame." + error;
                 }
@@ -2878,7 +3154,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gui.SendInputEventRequest.verify(message.guiSendInputEventRequest);
+                    let error = $root.PB_Gui.SendInputEventRequest.verify(message.guiSendInputEventRequest, long + 1);
                     if (error)
                         return "guiSendInputEventRequest." + error;
                 }
@@ -2888,7 +3164,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gui.StartVirtualDisplayRequest.verify(message.guiStartVirtualDisplayRequest);
+                    let error = $root.PB_Gui.StartVirtualDisplayRequest.verify(message.guiStartVirtualDisplayRequest, long + 1);
                     if (error)
                         return "guiStartVirtualDisplayRequest." + error;
                 }
@@ -2898,7 +3174,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gui.StopVirtualDisplayRequest.verify(message.guiStopVirtualDisplayRequest);
+                    let error = $root.PB_Gui.StopVirtualDisplayRequest.verify(message.guiStopVirtualDisplayRequest, long + 1);
                     if (error)
                         return "guiStopVirtualDisplayRequest." + error;
                 }
@@ -2908,7 +3184,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.SetPinMode.verify(message.gpioSetPinMode);
+                    let error = $root.PB_Gpio.SetPinMode.verify(message.gpioSetPinMode, long + 1);
                     if (error)
                         return "gpioSetPinMode." + error;
                 }
@@ -2918,7 +3194,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.SetInputPull.verify(message.gpioSetInputPull);
+                    let error = $root.PB_Gpio.SetInputPull.verify(message.gpioSetInputPull, long + 1);
                     if (error)
                         return "gpioSetInputPull." + error;
                 }
@@ -2928,7 +3204,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.GetPinMode.verify(message.gpioGetPinMode);
+                    let error = $root.PB_Gpio.GetPinMode.verify(message.gpioGetPinMode, long + 1);
                     if (error)
                         return "gpioGetPinMode." + error;
                 }
@@ -2938,7 +3214,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.GetPinModeResponse.verify(message.gpioGetPinModeResponse);
+                    let error = $root.PB_Gpio.GetPinModeResponse.verify(message.gpioGetPinModeResponse, long + 1);
                     if (error)
                         return "gpioGetPinModeResponse." + error;
                 }
@@ -2948,7 +3224,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.ReadPin.verify(message.gpioReadPin);
+                    let error = $root.PB_Gpio.ReadPin.verify(message.gpioReadPin, long + 1);
                     if (error)
                         return "gpioReadPin." + error;
                 }
@@ -2958,7 +3234,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.ReadPinResponse.verify(message.gpioReadPinResponse);
+                    let error = $root.PB_Gpio.ReadPinResponse.verify(message.gpioReadPinResponse, long + 1);
                     if (error)
                         return "gpioReadPinResponse." + error;
                 }
@@ -2968,7 +3244,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.WritePin.verify(message.gpioWritePin);
+                    let error = $root.PB_Gpio.WritePin.verify(message.gpioWritePin, long + 1);
                     if (error)
                         return "gpioWritePin." + error;
                 }
@@ -2978,7 +3254,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.GetOtgMode.verify(message.gpioGetOtgMode);
+                    let error = $root.PB_Gpio.GetOtgMode.verify(message.gpioGetOtgMode, long + 1);
                     if (error)
                         return "gpioGetOtgMode." + error;
                 }
@@ -2988,7 +3264,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.GetOtgModeResponse.verify(message.gpioGetOtgModeResponse);
+                    let error = $root.PB_Gpio.GetOtgModeResponse.verify(message.gpioGetOtgModeResponse, long + 1);
                     if (error)
                         return "gpioGetOtgModeResponse." + error;
                 }
@@ -2998,7 +3274,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Gpio.SetOtgMode.verify(message.gpioSetOtgMode);
+                    let error = $root.PB_Gpio.SetOtgMode.verify(message.gpioSetOtgMode, long + 1);
                     if (error)
                         return "gpioSetOtgMode." + error;
                 }
@@ -3008,7 +3284,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_App.AppStateResponse.verify(message.appStateResponse);
+                    let error = $root.PB_App.AppStateResponse.verify(message.appStateResponse, long + 1);
                     if (error)
                         return "appStateResponse." + error;
                 }
@@ -3018,7 +3294,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Property.GetRequest.verify(message.propertyGetRequest);
+                    let error = $root.PB_Property.GetRequest.verify(message.propertyGetRequest, long + 1);
                     if (error)
                         return "propertyGetRequest." + error;
                 }
@@ -3028,7 +3304,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Property.GetResponse.verify(message.propertyGetResponse);
+                    let error = $root.PB_Property.GetResponse.verify(message.propertyGetResponse, long + 1);
                     if (error)
                         return "propertyGetResponse." + error;
                 }
@@ -3038,7 +3314,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Desktop.IsLockedRequest.verify(message.desktopIsLockedRequest);
+                    let error = $root.PB_Desktop.IsLockedRequest.verify(message.desktopIsLockedRequest, long + 1);
                     if (error)
                         return "desktopIsLockedRequest." + error;
                 }
@@ -3048,7 +3324,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Desktop.UnlockRequest.verify(message.desktopUnlockRequest);
+                    let error = $root.PB_Desktop.UnlockRequest.verify(message.desktopUnlockRequest, long + 1);
                     if (error)
                         return "desktopUnlockRequest." + error;
                 }
@@ -3058,7 +3334,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Desktop.StatusSubscribeRequest.verify(message.desktopStatusSubscribeRequest);
+                    let error = $root.PB_Desktop.StatusSubscribeRequest.verify(message.desktopStatusSubscribeRequest, long + 1);
                     if (error)
                         return "desktopStatusSubscribeRequest." + error;
                 }
@@ -3068,7 +3344,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Desktop.StatusUnsubscribeRequest.verify(message.desktopStatusUnsubscribeRequest);
+                    let error = $root.PB_Desktop.StatusUnsubscribeRequest.verify(message.desktopStatusUnsubscribeRequest, long + 1);
                     if (error)
                         return "desktopStatusUnsubscribeRequest." + error;
                 }
@@ -3078,7 +3354,7 @@ export const PB = $root.PB = (() => {
                     return "content: multiple values";
                 properties.content = 1;
                 {
-                    let error = $root.PB_Desktop.Status.verify(message.desktopStatus);
+                    let error = $root.PB_Desktop.Status.verify(message.desktopStatus, long + 1);
                     if (error)
                         return "desktopStatus." + error;
                 }
@@ -3086,9 +3362,13 @@ export const PB = $root.PB = (() => {
             return null;
         };
 
-        Main.fromObject = function fromObject(object) {
+        Main.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB.Main)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB.Main();
             if (object.commandId != null)
                 message.commandId = object.commandId >>> 0;
@@ -3205,362 +3485,362 @@ export const PB = $root.PB = (() => {
             if (object.empty != null) {
                 if (typeof object.empty !== "object")
                     throw TypeError(".PB.Main.empty: object expected");
-                message.empty = $root.PB.Empty.fromObject(object.empty);
+                message.empty = $root.PB.Empty.fromObject(object.empty, long + 1);
             }
             if (object.stopSession != null) {
                 if (typeof object.stopSession !== "object")
                     throw TypeError(".PB.Main.stopSession: object expected");
-                message.stopSession = $root.PB.StopSession.fromObject(object.stopSession);
+                message.stopSession = $root.PB.StopSession.fromObject(object.stopSession, long + 1);
             }
             if (object.systemPingRequest != null) {
                 if (typeof object.systemPingRequest !== "object")
                     throw TypeError(".PB.Main.systemPingRequest: object expected");
-                message.systemPingRequest = $root.PB_System.PingRequest.fromObject(object.systemPingRequest);
+                message.systemPingRequest = $root.PB_System.PingRequest.fromObject(object.systemPingRequest, long + 1);
             }
             if (object.systemPingResponse != null) {
                 if (typeof object.systemPingResponse !== "object")
                     throw TypeError(".PB.Main.systemPingResponse: object expected");
-                message.systemPingResponse = $root.PB_System.PingResponse.fromObject(object.systemPingResponse);
+                message.systemPingResponse = $root.PB_System.PingResponse.fromObject(object.systemPingResponse, long + 1);
             }
             if (object.systemRebootRequest != null) {
                 if (typeof object.systemRebootRequest !== "object")
                     throw TypeError(".PB.Main.systemRebootRequest: object expected");
-                message.systemRebootRequest = $root.PB_System.RebootRequest.fromObject(object.systemRebootRequest);
+                message.systemRebootRequest = $root.PB_System.RebootRequest.fromObject(object.systemRebootRequest, long + 1);
             }
             if (object.systemDeviceInfoRequest != null) {
                 if (typeof object.systemDeviceInfoRequest !== "object")
                     throw TypeError(".PB.Main.systemDeviceInfoRequest: object expected");
-                message.systemDeviceInfoRequest = $root.PB_System.DeviceInfoRequest.fromObject(object.systemDeviceInfoRequest);
+                message.systemDeviceInfoRequest = $root.PB_System.DeviceInfoRequest.fromObject(object.systemDeviceInfoRequest, long + 1);
             }
             if (object.systemDeviceInfoResponse != null) {
                 if (typeof object.systemDeviceInfoResponse !== "object")
                     throw TypeError(".PB.Main.systemDeviceInfoResponse: object expected");
-                message.systemDeviceInfoResponse = $root.PB_System.DeviceInfoResponse.fromObject(object.systemDeviceInfoResponse);
+                message.systemDeviceInfoResponse = $root.PB_System.DeviceInfoResponse.fromObject(object.systemDeviceInfoResponse, long + 1);
             }
             if (object.systemFactoryResetRequest != null) {
                 if (typeof object.systemFactoryResetRequest !== "object")
                     throw TypeError(".PB.Main.systemFactoryResetRequest: object expected");
-                message.systemFactoryResetRequest = $root.PB_System.FactoryResetRequest.fromObject(object.systemFactoryResetRequest);
+                message.systemFactoryResetRequest = $root.PB_System.FactoryResetRequest.fromObject(object.systemFactoryResetRequest, long + 1);
             }
             if (object.systemGetDatetimeRequest != null) {
                 if (typeof object.systemGetDatetimeRequest !== "object")
                     throw TypeError(".PB.Main.systemGetDatetimeRequest: object expected");
-                message.systemGetDatetimeRequest = $root.PB_System.GetDateTimeRequest.fromObject(object.systemGetDatetimeRequest);
+                message.systemGetDatetimeRequest = $root.PB_System.GetDateTimeRequest.fromObject(object.systemGetDatetimeRequest, long + 1);
             }
             if (object.systemGetDatetimeResponse != null) {
                 if (typeof object.systemGetDatetimeResponse !== "object")
                     throw TypeError(".PB.Main.systemGetDatetimeResponse: object expected");
-                message.systemGetDatetimeResponse = $root.PB_System.GetDateTimeResponse.fromObject(object.systemGetDatetimeResponse);
+                message.systemGetDatetimeResponse = $root.PB_System.GetDateTimeResponse.fromObject(object.systemGetDatetimeResponse, long + 1);
             }
             if (object.systemSetDatetimeRequest != null) {
                 if (typeof object.systemSetDatetimeRequest !== "object")
                     throw TypeError(".PB.Main.systemSetDatetimeRequest: object expected");
-                message.systemSetDatetimeRequest = $root.PB_System.SetDateTimeRequest.fromObject(object.systemSetDatetimeRequest);
+                message.systemSetDatetimeRequest = $root.PB_System.SetDateTimeRequest.fromObject(object.systemSetDatetimeRequest, long + 1);
             }
             if (object.systemPlayAudiovisualAlertRequest != null) {
                 if (typeof object.systemPlayAudiovisualAlertRequest !== "object")
                     throw TypeError(".PB.Main.systemPlayAudiovisualAlertRequest: object expected");
-                message.systemPlayAudiovisualAlertRequest = $root.PB_System.PlayAudiovisualAlertRequest.fromObject(object.systemPlayAudiovisualAlertRequest);
+                message.systemPlayAudiovisualAlertRequest = $root.PB_System.PlayAudiovisualAlertRequest.fromObject(object.systemPlayAudiovisualAlertRequest, long + 1);
             }
             if (object.systemProtobufVersionRequest != null) {
                 if (typeof object.systemProtobufVersionRequest !== "object")
                     throw TypeError(".PB.Main.systemProtobufVersionRequest: object expected");
-                message.systemProtobufVersionRequest = $root.PB_System.ProtobufVersionRequest.fromObject(object.systemProtobufVersionRequest);
+                message.systemProtobufVersionRequest = $root.PB_System.ProtobufVersionRequest.fromObject(object.systemProtobufVersionRequest, long + 1);
             }
             if (object.systemProtobufVersionResponse != null) {
                 if (typeof object.systemProtobufVersionResponse !== "object")
                     throw TypeError(".PB.Main.systemProtobufVersionResponse: object expected");
-                message.systemProtobufVersionResponse = $root.PB_System.ProtobufVersionResponse.fromObject(object.systemProtobufVersionResponse);
+                message.systemProtobufVersionResponse = $root.PB_System.ProtobufVersionResponse.fromObject(object.systemProtobufVersionResponse, long + 1);
             }
             if (object.systemUpdateRequest != null) {
                 if (typeof object.systemUpdateRequest !== "object")
                     throw TypeError(".PB.Main.systemUpdateRequest: object expected");
-                message.systemUpdateRequest = $root.PB_System.UpdateRequest.fromObject(object.systemUpdateRequest);
+                message.systemUpdateRequest = $root.PB_System.UpdateRequest.fromObject(object.systemUpdateRequest, long + 1);
             }
             if (object.systemUpdateResponse != null) {
                 if (typeof object.systemUpdateResponse !== "object")
                     throw TypeError(".PB.Main.systemUpdateResponse: object expected");
-                message.systemUpdateResponse = $root.PB_System.UpdateResponse.fromObject(object.systemUpdateResponse);
+                message.systemUpdateResponse = $root.PB_System.UpdateResponse.fromObject(object.systemUpdateResponse, long + 1);
             }
             if (object.systemPowerInfoRequest != null) {
                 if (typeof object.systemPowerInfoRequest !== "object")
                     throw TypeError(".PB.Main.systemPowerInfoRequest: object expected");
-                message.systemPowerInfoRequest = $root.PB_System.PowerInfoRequest.fromObject(object.systemPowerInfoRequest);
+                message.systemPowerInfoRequest = $root.PB_System.PowerInfoRequest.fromObject(object.systemPowerInfoRequest, long + 1);
             }
             if (object.systemPowerInfoResponse != null) {
                 if (typeof object.systemPowerInfoResponse !== "object")
                     throw TypeError(".PB.Main.systemPowerInfoResponse: object expected");
-                message.systemPowerInfoResponse = $root.PB_System.PowerInfoResponse.fromObject(object.systemPowerInfoResponse);
+                message.systemPowerInfoResponse = $root.PB_System.PowerInfoResponse.fromObject(object.systemPowerInfoResponse, long + 1);
             }
             if (object.storageInfoRequest != null) {
                 if (typeof object.storageInfoRequest !== "object")
                     throw TypeError(".PB.Main.storageInfoRequest: object expected");
-                message.storageInfoRequest = $root.PB_Storage.InfoRequest.fromObject(object.storageInfoRequest);
+                message.storageInfoRequest = $root.PB_Storage.InfoRequest.fromObject(object.storageInfoRequest, long + 1);
             }
             if (object.storageInfoResponse != null) {
                 if (typeof object.storageInfoResponse !== "object")
                     throw TypeError(".PB.Main.storageInfoResponse: object expected");
-                message.storageInfoResponse = $root.PB_Storage.InfoResponse.fromObject(object.storageInfoResponse);
+                message.storageInfoResponse = $root.PB_Storage.InfoResponse.fromObject(object.storageInfoResponse, long + 1);
             }
             if (object.storageTimestampRequest != null) {
                 if (typeof object.storageTimestampRequest !== "object")
                     throw TypeError(".PB.Main.storageTimestampRequest: object expected");
-                message.storageTimestampRequest = $root.PB_Storage.TimestampRequest.fromObject(object.storageTimestampRequest);
+                message.storageTimestampRequest = $root.PB_Storage.TimestampRequest.fromObject(object.storageTimestampRequest, long + 1);
             }
             if (object.storageTimestampResponse != null) {
                 if (typeof object.storageTimestampResponse !== "object")
                     throw TypeError(".PB.Main.storageTimestampResponse: object expected");
-                message.storageTimestampResponse = $root.PB_Storage.TimestampResponse.fromObject(object.storageTimestampResponse);
+                message.storageTimestampResponse = $root.PB_Storage.TimestampResponse.fromObject(object.storageTimestampResponse, long + 1);
             }
             if (object.storageStatRequest != null) {
                 if (typeof object.storageStatRequest !== "object")
                     throw TypeError(".PB.Main.storageStatRequest: object expected");
-                message.storageStatRequest = $root.PB_Storage.StatRequest.fromObject(object.storageStatRequest);
+                message.storageStatRequest = $root.PB_Storage.StatRequest.fromObject(object.storageStatRequest, long + 1);
             }
             if (object.storageStatResponse != null) {
                 if (typeof object.storageStatResponse !== "object")
                     throw TypeError(".PB.Main.storageStatResponse: object expected");
-                message.storageStatResponse = $root.PB_Storage.StatResponse.fromObject(object.storageStatResponse);
+                message.storageStatResponse = $root.PB_Storage.StatResponse.fromObject(object.storageStatResponse, long + 1);
             }
             if (object.storageListRequest != null) {
                 if (typeof object.storageListRequest !== "object")
                     throw TypeError(".PB.Main.storageListRequest: object expected");
-                message.storageListRequest = $root.PB_Storage.ListRequest.fromObject(object.storageListRequest);
+                message.storageListRequest = $root.PB_Storage.ListRequest.fromObject(object.storageListRequest, long + 1);
             }
             if (object.storageListResponse != null) {
                 if (typeof object.storageListResponse !== "object")
                     throw TypeError(".PB.Main.storageListResponse: object expected");
-                message.storageListResponse = $root.PB_Storage.ListResponse.fromObject(object.storageListResponse);
+                message.storageListResponse = $root.PB_Storage.ListResponse.fromObject(object.storageListResponse, long + 1);
             }
             if (object.storageReadRequest != null) {
                 if (typeof object.storageReadRequest !== "object")
                     throw TypeError(".PB.Main.storageReadRequest: object expected");
-                message.storageReadRequest = $root.PB_Storage.ReadRequest.fromObject(object.storageReadRequest);
+                message.storageReadRequest = $root.PB_Storage.ReadRequest.fromObject(object.storageReadRequest, long + 1);
             }
             if (object.storageReadResponse != null) {
                 if (typeof object.storageReadResponse !== "object")
                     throw TypeError(".PB.Main.storageReadResponse: object expected");
-                message.storageReadResponse = $root.PB_Storage.ReadResponse.fromObject(object.storageReadResponse);
+                message.storageReadResponse = $root.PB_Storage.ReadResponse.fromObject(object.storageReadResponse, long + 1);
             }
             if (object.storageWriteRequest != null) {
                 if (typeof object.storageWriteRequest !== "object")
                     throw TypeError(".PB.Main.storageWriteRequest: object expected");
-                message.storageWriteRequest = $root.PB_Storage.WriteRequest.fromObject(object.storageWriteRequest);
+                message.storageWriteRequest = $root.PB_Storage.WriteRequest.fromObject(object.storageWriteRequest, long + 1);
             }
             if (object.storageDeleteRequest != null) {
                 if (typeof object.storageDeleteRequest !== "object")
                     throw TypeError(".PB.Main.storageDeleteRequest: object expected");
-                message.storageDeleteRequest = $root.PB_Storage.DeleteRequest.fromObject(object.storageDeleteRequest);
+                message.storageDeleteRequest = $root.PB_Storage.DeleteRequest.fromObject(object.storageDeleteRequest, long + 1);
             }
             if (object.storageMkdirRequest != null) {
                 if (typeof object.storageMkdirRequest !== "object")
                     throw TypeError(".PB.Main.storageMkdirRequest: object expected");
-                message.storageMkdirRequest = $root.PB_Storage.MkdirRequest.fromObject(object.storageMkdirRequest);
+                message.storageMkdirRequest = $root.PB_Storage.MkdirRequest.fromObject(object.storageMkdirRequest, long + 1);
             }
             if (object.storageMd5sumRequest != null) {
                 if (typeof object.storageMd5sumRequest !== "object")
                     throw TypeError(".PB.Main.storageMd5sumRequest: object expected");
-                message.storageMd5sumRequest = $root.PB_Storage.Md5sumRequest.fromObject(object.storageMd5sumRequest);
+                message.storageMd5sumRequest = $root.PB_Storage.Md5sumRequest.fromObject(object.storageMd5sumRequest, long + 1);
             }
             if (object.storageMd5sumResponse != null) {
                 if (typeof object.storageMd5sumResponse !== "object")
                     throw TypeError(".PB.Main.storageMd5sumResponse: object expected");
-                message.storageMd5sumResponse = $root.PB_Storage.Md5sumResponse.fromObject(object.storageMd5sumResponse);
+                message.storageMd5sumResponse = $root.PB_Storage.Md5sumResponse.fromObject(object.storageMd5sumResponse, long + 1);
             }
             if (object.storageRenameRequest != null) {
                 if (typeof object.storageRenameRequest !== "object")
                     throw TypeError(".PB.Main.storageRenameRequest: object expected");
-                message.storageRenameRequest = $root.PB_Storage.RenameRequest.fromObject(object.storageRenameRequest);
+                message.storageRenameRequest = $root.PB_Storage.RenameRequest.fromObject(object.storageRenameRequest, long + 1);
             }
             if (object.storageBackupCreateRequest != null) {
                 if (typeof object.storageBackupCreateRequest !== "object")
                     throw TypeError(".PB.Main.storageBackupCreateRequest: object expected");
-                message.storageBackupCreateRequest = $root.PB_Storage.BackupCreateRequest.fromObject(object.storageBackupCreateRequest);
+                message.storageBackupCreateRequest = $root.PB_Storage.BackupCreateRequest.fromObject(object.storageBackupCreateRequest, long + 1);
             }
             if (object.storageBackupRestoreRequest != null) {
                 if (typeof object.storageBackupRestoreRequest !== "object")
                     throw TypeError(".PB.Main.storageBackupRestoreRequest: object expected");
-                message.storageBackupRestoreRequest = $root.PB_Storage.BackupRestoreRequest.fromObject(object.storageBackupRestoreRequest);
+                message.storageBackupRestoreRequest = $root.PB_Storage.BackupRestoreRequest.fromObject(object.storageBackupRestoreRequest, long + 1);
             }
             if (object.storageTarExtractRequest != null) {
                 if (typeof object.storageTarExtractRequest !== "object")
                     throw TypeError(".PB.Main.storageTarExtractRequest: object expected");
-                message.storageTarExtractRequest = $root.PB_Storage.TarExtractRequest.fromObject(object.storageTarExtractRequest);
+                message.storageTarExtractRequest = $root.PB_Storage.TarExtractRequest.fromObject(object.storageTarExtractRequest, long + 1);
             }
             if (object.appStartRequest != null) {
                 if (typeof object.appStartRequest !== "object")
                     throw TypeError(".PB.Main.appStartRequest: object expected");
-                message.appStartRequest = $root.PB_App.StartRequest.fromObject(object.appStartRequest);
+                message.appStartRequest = $root.PB_App.StartRequest.fromObject(object.appStartRequest, long + 1);
             }
             if (object.appLockStatusRequest != null) {
                 if (typeof object.appLockStatusRequest !== "object")
                     throw TypeError(".PB.Main.appLockStatusRequest: object expected");
-                message.appLockStatusRequest = $root.PB_App.LockStatusRequest.fromObject(object.appLockStatusRequest);
+                message.appLockStatusRequest = $root.PB_App.LockStatusRequest.fromObject(object.appLockStatusRequest, long + 1);
             }
             if (object.appLockStatusResponse != null) {
                 if (typeof object.appLockStatusResponse !== "object")
                     throw TypeError(".PB.Main.appLockStatusResponse: object expected");
-                message.appLockStatusResponse = $root.PB_App.LockStatusResponse.fromObject(object.appLockStatusResponse);
+                message.appLockStatusResponse = $root.PB_App.LockStatusResponse.fromObject(object.appLockStatusResponse, long + 1);
             }
             if (object.appExitRequest != null) {
                 if (typeof object.appExitRequest !== "object")
                     throw TypeError(".PB.Main.appExitRequest: object expected");
-                message.appExitRequest = $root.PB_App.AppExitRequest.fromObject(object.appExitRequest);
+                message.appExitRequest = $root.PB_App.AppExitRequest.fromObject(object.appExitRequest, long + 1);
             }
             if (object.appLoadFileRequest != null) {
                 if (typeof object.appLoadFileRequest !== "object")
                     throw TypeError(".PB.Main.appLoadFileRequest: object expected");
-                message.appLoadFileRequest = $root.PB_App.AppLoadFileRequest.fromObject(object.appLoadFileRequest);
+                message.appLoadFileRequest = $root.PB_App.AppLoadFileRequest.fromObject(object.appLoadFileRequest, long + 1);
             }
             if (object.appButtonPressRequest != null) {
                 if (typeof object.appButtonPressRequest !== "object")
                     throw TypeError(".PB.Main.appButtonPressRequest: object expected");
-                message.appButtonPressRequest = $root.PB_App.AppButtonPressRequest.fromObject(object.appButtonPressRequest);
+                message.appButtonPressRequest = $root.PB_App.AppButtonPressRequest.fromObject(object.appButtonPressRequest, long + 1);
             }
             if (object.appButtonReleaseRequest != null) {
                 if (typeof object.appButtonReleaseRequest !== "object")
                     throw TypeError(".PB.Main.appButtonReleaseRequest: object expected");
-                message.appButtonReleaseRequest = $root.PB_App.AppButtonReleaseRequest.fromObject(object.appButtonReleaseRequest);
+                message.appButtonReleaseRequest = $root.PB_App.AppButtonReleaseRequest.fromObject(object.appButtonReleaseRequest, long + 1);
             }
             if (object.appButtonPressReleaseRequest != null) {
                 if (typeof object.appButtonPressReleaseRequest !== "object")
                     throw TypeError(".PB.Main.appButtonPressReleaseRequest: object expected");
-                message.appButtonPressReleaseRequest = $root.PB_App.AppButtonPressReleaseRequest.fromObject(object.appButtonPressReleaseRequest);
+                message.appButtonPressReleaseRequest = $root.PB_App.AppButtonPressReleaseRequest.fromObject(object.appButtonPressReleaseRequest, long + 1);
             }
             if (object.appGetErrorRequest != null) {
                 if (typeof object.appGetErrorRequest !== "object")
                     throw TypeError(".PB.Main.appGetErrorRequest: object expected");
-                message.appGetErrorRequest = $root.PB_App.GetErrorRequest.fromObject(object.appGetErrorRequest);
+                message.appGetErrorRequest = $root.PB_App.GetErrorRequest.fromObject(object.appGetErrorRequest, long + 1);
             }
             if (object.appGetErrorResponse != null) {
                 if (typeof object.appGetErrorResponse !== "object")
                     throw TypeError(".PB.Main.appGetErrorResponse: object expected");
-                message.appGetErrorResponse = $root.PB_App.GetErrorResponse.fromObject(object.appGetErrorResponse);
+                message.appGetErrorResponse = $root.PB_App.GetErrorResponse.fromObject(object.appGetErrorResponse, long + 1);
             }
             if (object.appDataExchangeRequest != null) {
                 if (typeof object.appDataExchangeRequest !== "object")
                     throw TypeError(".PB.Main.appDataExchangeRequest: object expected");
-                message.appDataExchangeRequest = $root.PB_App.DataExchangeRequest.fromObject(object.appDataExchangeRequest);
+                message.appDataExchangeRequest = $root.PB_App.DataExchangeRequest.fromObject(object.appDataExchangeRequest, long + 1);
             }
             if (object.guiStartScreenStreamRequest != null) {
                 if (typeof object.guiStartScreenStreamRequest !== "object")
                     throw TypeError(".PB.Main.guiStartScreenStreamRequest: object expected");
-                message.guiStartScreenStreamRequest = $root.PB_Gui.StartScreenStreamRequest.fromObject(object.guiStartScreenStreamRequest);
+                message.guiStartScreenStreamRequest = $root.PB_Gui.StartScreenStreamRequest.fromObject(object.guiStartScreenStreamRequest, long + 1);
             }
             if (object.guiStopScreenStreamRequest != null) {
                 if (typeof object.guiStopScreenStreamRequest !== "object")
                     throw TypeError(".PB.Main.guiStopScreenStreamRequest: object expected");
-                message.guiStopScreenStreamRequest = $root.PB_Gui.StopScreenStreamRequest.fromObject(object.guiStopScreenStreamRequest);
+                message.guiStopScreenStreamRequest = $root.PB_Gui.StopScreenStreamRequest.fromObject(object.guiStopScreenStreamRequest, long + 1);
             }
             if (object.guiScreenFrame != null) {
                 if (typeof object.guiScreenFrame !== "object")
                     throw TypeError(".PB.Main.guiScreenFrame: object expected");
-                message.guiScreenFrame = $root.PB_Gui.ScreenFrame.fromObject(object.guiScreenFrame);
+                message.guiScreenFrame = $root.PB_Gui.ScreenFrame.fromObject(object.guiScreenFrame, long + 1);
             }
             if (object.guiSendInputEventRequest != null) {
                 if (typeof object.guiSendInputEventRequest !== "object")
                     throw TypeError(".PB.Main.guiSendInputEventRequest: object expected");
-                message.guiSendInputEventRequest = $root.PB_Gui.SendInputEventRequest.fromObject(object.guiSendInputEventRequest);
+                message.guiSendInputEventRequest = $root.PB_Gui.SendInputEventRequest.fromObject(object.guiSendInputEventRequest, long + 1);
             }
             if (object.guiStartVirtualDisplayRequest != null) {
                 if (typeof object.guiStartVirtualDisplayRequest !== "object")
                     throw TypeError(".PB.Main.guiStartVirtualDisplayRequest: object expected");
-                message.guiStartVirtualDisplayRequest = $root.PB_Gui.StartVirtualDisplayRequest.fromObject(object.guiStartVirtualDisplayRequest);
+                message.guiStartVirtualDisplayRequest = $root.PB_Gui.StartVirtualDisplayRequest.fromObject(object.guiStartVirtualDisplayRequest, long + 1);
             }
             if (object.guiStopVirtualDisplayRequest != null) {
                 if (typeof object.guiStopVirtualDisplayRequest !== "object")
                     throw TypeError(".PB.Main.guiStopVirtualDisplayRequest: object expected");
-                message.guiStopVirtualDisplayRequest = $root.PB_Gui.StopVirtualDisplayRequest.fromObject(object.guiStopVirtualDisplayRequest);
+                message.guiStopVirtualDisplayRequest = $root.PB_Gui.StopVirtualDisplayRequest.fromObject(object.guiStopVirtualDisplayRequest, long + 1);
             }
             if (object.gpioSetPinMode != null) {
                 if (typeof object.gpioSetPinMode !== "object")
                     throw TypeError(".PB.Main.gpioSetPinMode: object expected");
-                message.gpioSetPinMode = $root.PB_Gpio.SetPinMode.fromObject(object.gpioSetPinMode);
+                message.gpioSetPinMode = $root.PB_Gpio.SetPinMode.fromObject(object.gpioSetPinMode, long + 1);
             }
             if (object.gpioSetInputPull != null) {
                 if (typeof object.gpioSetInputPull !== "object")
                     throw TypeError(".PB.Main.gpioSetInputPull: object expected");
-                message.gpioSetInputPull = $root.PB_Gpio.SetInputPull.fromObject(object.gpioSetInputPull);
+                message.gpioSetInputPull = $root.PB_Gpio.SetInputPull.fromObject(object.gpioSetInputPull, long + 1);
             }
             if (object.gpioGetPinMode != null) {
                 if (typeof object.gpioGetPinMode !== "object")
                     throw TypeError(".PB.Main.gpioGetPinMode: object expected");
-                message.gpioGetPinMode = $root.PB_Gpio.GetPinMode.fromObject(object.gpioGetPinMode);
+                message.gpioGetPinMode = $root.PB_Gpio.GetPinMode.fromObject(object.gpioGetPinMode, long + 1);
             }
             if (object.gpioGetPinModeResponse != null) {
                 if (typeof object.gpioGetPinModeResponse !== "object")
                     throw TypeError(".PB.Main.gpioGetPinModeResponse: object expected");
-                message.gpioGetPinModeResponse = $root.PB_Gpio.GetPinModeResponse.fromObject(object.gpioGetPinModeResponse);
+                message.gpioGetPinModeResponse = $root.PB_Gpio.GetPinModeResponse.fromObject(object.gpioGetPinModeResponse, long + 1);
             }
             if (object.gpioReadPin != null) {
                 if (typeof object.gpioReadPin !== "object")
                     throw TypeError(".PB.Main.gpioReadPin: object expected");
-                message.gpioReadPin = $root.PB_Gpio.ReadPin.fromObject(object.gpioReadPin);
+                message.gpioReadPin = $root.PB_Gpio.ReadPin.fromObject(object.gpioReadPin, long + 1);
             }
             if (object.gpioReadPinResponse != null) {
                 if (typeof object.gpioReadPinResponse !== "object")
                     throw TypeError(".PB.Main.gpioReadPinResponse: object expected");
-                message.gpioReadPinResponse = $root.PB_Gpio.ReadPinResponse.fromObject(object.gpioReadPinResponse);
+                message.gpioReadPinResponse = $root.PB_Gpio.ReadPinResponse.fromObject(object.gpioReadPinResponse, long + 1);
             }
             if (object.gpioWritePin != null) {
                 if (typeof object.gpioWritePin !== "object")
                     throw TypeError(".PB.Main.gpioWritePin: object expected");
-                message.gpioWritePin = $root.PB_Gpio.WritePin.fromObject(object.gpioWritePin);
+                message.gpioWritePin = $root.PB_Gpio.WritePin.fromObject(object.gpioWritePin, long + 1);
             }
             if (object.gpioGetOtgMode != null) {
                 if (typeof object.gpioGetOtgMode !== "object")
                     throw TypeError(".PB.Main.gpioGetOtgMode: object expected");
-                message.gpioGetOtgMode = $root.PB_Gpio.GetOtgMode.fromObject(object.gpioGetOtgMode);
+                message.gpioGetOtgMode = $root.PB_Gpio.GetOtgMode.fromObject(object.gpioGetOtgMode, long + 1);
             }
             if (object.gpioGetOtgModeResponse != null) {
                 if (typeof object.gpioGetOtgModeResponse !== "object")
                     throw TypeError(".PB.Main.gpioGetOtgModeResponse: object expected");
-                message.gpioGetOtgModeResponse = $root.PB_Gpio.GetOtgModeResponse.fromObject(object.gpioGetOtgModeResponse);
+                message.gpioGetOtgModeResponse = $root.PB_Gpio.GetOtgModeResponse.fromObject(object.gpioGetOtgModeResponse, long + 1);
             }
             if (object.gpioSetOtgMode != null) {
                 if (typeof object.gpioSetOtgMode !== "object")
                     throw TypeError(".PB.Main.gpioSetOtgMode: object expected");
-                message.gpioSetOtgMode = $root.PB_Gpio.SetOtgMode.fromObject(object.gpioSetOtgMode);
+                message.gpioSetOtgMode = $root.PB_Gpio.SetOtgMode.fromObject(object.gpioSetOtgMode, long + 1);
             }
             if (object.appStateResponse != null) {
                 if (typeof object.appStateResponse !== "object")
                     throw TypeError(".PB.Main.appStateResponse: object expected");
-                message.appStateResponse = $root.PB_App.AppStateResponse.fromObject(object.appStateResponse);
+                message.appStateResponse = $root.PB_App.AppStateResponse.fromObject(object.appStateResponse, long + 1);
             }
             if (object.propertyGetRequest != null) {
                 if (typeof object.propertyGetRequest !== "object")
                     throw TypeError(".PB.Main.propertyGetRequest: object expected");
-                message.propertyGetRequest = $root.PB_Property.GetRequest.fromObject(object.propertyGetRequest);
+                message.propertyGetRequest = $root.PB_Property.GetRequest.fromObject(object.propertyGetRequest, long + 1);
             }
             if (object.propertyGetResponse != null) {
                 if (typeof object.propertyGetResponse !== "object")
                     throw TypeError(".PB.Main.propertyGetResponse: object expected");
-                message.propertyGetResponse = $root.PB_Property.GetResponse.fromObject(object.propertyGetResponse);
+                message.propertyGetResponse = $root.PB_Property.GetResponse.fromObject(object.propertyGetResponse, long + 1);
             }
             if (object.desktopIsLockedRequest != null) {
                 if (typeof object.desktopIsLockedRequest !== "object")
                     throw TypeError(".PB.Main.desktopIsLockedRequest: object expected");
-                message.desktopIsLockedRequest = $root.PB_Desktop.IsLockedRequest.fromObject(object.desktopIsLockedRequest);
+                message.desktopIsLockedRequest = $root.PB_Desktop.IsLockedRequest.fromObject(object.desktopIsLockedRequest, long + 1);
             }
             if (object.desktopUnlockRequest != null) {
                 if (typeof object.desktopUnlockRequest !== "object")
                     throw TypeError(".PB.Main.desktopUnlockRequest: object expected");
-                message.desktopUnlockRequest = $root.PB_Desktop.UnlockRequest.fromObject(object.desktopUnlockRequest);
+                message.desktopUnlockRequest = $root.PB_Desktop.UnlockRequest.fromObject(object.desktopUnlockRequest, long + 1);
             }
             if (object.desktopStatusSubscribeRequest != null) {
                 if (typeof object.desktopStatusSubscribeRequest !== "object")
                     throw TypeError(".PB.Main.desktopStatusSubscribeRequest: object expected");
-                message.desktopStatusSubscribeRequest = $root.PB_Desktop.StatusSubscribeRequest.fromObject(object.desktopStatusSubscribeRequest);
+                message.desktopStatusSubscribeRequest = $root.PB_Desktop.StatusSubscribeRequest.fromObject(object.desktopStatusSubscribeRequest, long + 1);
             }
             if (object.desktopStatusUnsubscribeRequest != null) {
                 if (typeof object.desktopStatusUnsubscribeRequest !== "object")
                     throw TypeError(".PB.Main.desktopStatusUnsubscribeRequest: object expected");
-                message.desktopStatusUnsubscribeRequest = $root.PB_Desktop.StatusUnsubscribeRequest.fromObject(object.desktopStatusUnsubscribeRequest);
+                message.desktopStatusUnsubscribeRequest = $root.PB_Desktop.StatusUnsubscribeRequest.fromObject(object.desktopStatusUnsubscribeRequest, long + 1);
             }
             if (object.desktopStatus != null) {
                 if (typeof object.desktopStatus !== "object")
                     throw TypeError(".PB.Main.desktopStatus: object expected");
-                message.desktopStatus = $root.PB_Desktop.Status.fromObject(object.desktopStatus);
+                message.desktopStatus = $root.PB_Desktop.Status.fromObject(object.desktopStatus, long + 1);
             }
             return message;
         };
@@ -3963,7 +4243,7 @@ export const PB = $root.PB = (() => {
             this.bands = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -3989,12 +4269,18 @@ export const PB = $root.PB = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Region.decode = function decode(reader, length) {
+        Region.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.Region();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.countryCode = reader.bytes();
@@ -4003,11 +4289,11 @@ export const PB = $root.PB = (() => {
                 case 2: {
                         if (!(message.bands && message.bands.length))
                             message.bands = [];
-                        message.bands.push($root.PB.Region.Band.decode(reader, reader.uint32()));
+                        message.bands.push($root.PB.Region.Band.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4020,9 +4306,13 @@ export const PB = $root.PB = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        Region.verify = function verify(message) {
+        Region.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.countryCode != null && message.hasOwnProperty("countryCode"))
                 if (!(message.countryCode && typeof message.countryCode.length === "number" || $util.isString(message.countryCode)))
                     return "countryCode: buffer expected";
@@ -4030,7 +4320,7 @@ export const PB = $root.PB = (() => {
                 if (!Array.isArray(message.bands))
                     return "bands: array expected";
                 for (let i = 0; i < message.bands.length; ++i) {
-                    let error = $root.PB.Region.Band.verify(message.bands[i]);
+                    let error = $root.PB.Region.Band.verify(message.bands[i], long + 1);
                     if (error)
                         return "bands." + error;
                 }
@@ -4038,9 +4328,13 @@ export const PB = $root.PB = (() => {
             return null;
         };
 
-        Region.fromObject = function fromObject(object) {
+        Region.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB.Region)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB.Region();
             if (object.countryCode != null)
                 if (typeof object.countryCode === "string")
@@ -4054,7 +4348,7 @@ export const PB = $root.PB = (() => {
                 for (let i = 0; i < object.bands.length; ++i) {
                     if (typeof object.bands[i] !== "object")
                         throw TypeError(".PB.Region.bands: object expected");
-                    message.bands[i] = $root.PB.Region.Band.fromObject(object.bands[i]);
+                    message.bands[i] = $root.PB.Region.Band.fromObject(object.bands[i], long + 1);
                 }
             }
             return message;
@@ -4100,7 +4394,7 @@ export const PB = $root.PB = (() => {
             function Band(properties) {
                 if (properties)
                     for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                        if (properties[keys[i]] != null)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
                             this[keys[i]] = properties[keys[i]];
             }
 
@@ -4131,12 +4425,18 @@ export const PB = $root.PB = (() => {
                 return this.encode(message, writer).ldelim();
             };
 
-            Band.decode = function decode(reader, length) {
+            Band.decode = function decode(reader, length, error, long) {
                 if (!(reader instanceof $Reader))
                     reader = $Reader.create(reader);
+                if (long === undefined)
+                    long = 0;
+                if (long > $Reader.recursionLimit)
+                    throw Error("maximum nesting depth exceeded");
                 let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.Region.Band();
                 while (reader.pos < end) {
                     let tag = reader.uint32();
+                    if (tag === error)
+                        break;
                     switch (tag >>> 3) {
                     case 1: {
                             message.start = reader.uint32();
@@ -4155,7 +4455,7 @@ export const PB = $root.PB = (() => {
                             break;
                         }
                     default:
-                        reader.skipType(tag & 7);
+                        reader.skipType(tag & 7, long);
                         break;
                     }
                 }
@@ -4168,9 +4468,13 @@ export const PB = $root.PB = (() => {
                 return this.decode(reader, reader.uint32());
             };
 
-            Band.verify = function verify(message) {
+            Band.verify = function verify(message, long) {
                 if (typeof message !== "object" || message === null)
                     return "object expected";
+                if (long === undefined)
+                    long = 0;
+                if (long > $util.recursionLimit)
+                    return "maximum nesting depth exceeded";
                 if (message.start != null && message.hasOwnProperty("start"))
                     if (!$util.isInteger(message.start))
                         return "start: integer expected";
@@ -4186,9 +4490,13 @@ export const PB = $root.PB = (() => {
                 return null;
             };
 
-            Band.fromObject = function fromObject(object) {
+            Band.fromObject = function fromObject(object, long) {
                 if (object instanceof $root.PB.Region.Band)
                     return object;
+                if (long === undefined)
+                    long = 0;
+                if (long > $util.recursionLimit)
+                    throw Error("maximum nesting depth exceeded");
                 let message = new $root.PB.Region.Band();
                 if (object.start != null)
                     message.start = object.start >>> 0;
@@ -4251,7 +4559,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function File(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4285,12 +4593,18 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        File.decode = function decode(reader, length) {
+        File.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.File();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.type = reader.int32();
@@ -4313,7 +4627,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4326,9 +4640,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        File.verify = function verify(message) {
+        File.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.type != null && message.hasOwnProperty("type"))
                 switch (message.type) {
                 default:
@@ -4352,9 +4670,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return null;
         };
 
-        File.fromObject = function fromObject(object) {
+        File.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.File)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.File();
             switch (object.type) {
             default:
@@ -4442,7 +4764,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function InfoRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4464,19 +4786,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        InfoRequest.decode = function decode(reader, length) {
+        InfoRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.InfoRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4489,18 +4817,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        InfoRequest.verify = function verify(message) {
+        InfoRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
             return null;
         };
 
-        InfoRequest.fromObject = function fromObject(object) {
+        InfoRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.InfoRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.InfoRequest();
             if (object.path != null)
                 message.path = String(object.path);
@@ -4537,7 +4873,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function InfoResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4562,12 +4898,18 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        InfoResponse.decode = function decode(reader, length) {
+        InfoResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.InfoResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.totalSpace = reader.uint64();
@@ -4578,7 +4920,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4591,9 +4933,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        InfoResponse.verify = function verify(message) {
+        InfoResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.totalSpace != null && message.hasOwnProperty("totalSpace"))
                 if (!$util.isInteger(message.totalSpace) && !(message.totalSpace && $util.isInteger(message.totalSpace.low) && $util.isInteger(message.totalSpace.high)))
                     return "totalSpace: integer|Long expected";
@@ -4603,9 +4949,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return null;
         };
 
-        InfoResponse.fromObject = function fromObject(object) {
+        InfoResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.InfoResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.InfoResponse();
             if (object.totalSpace != null)
                 if ($util.Long)
@@ -4676,7 +5026,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function TimestampRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4698,19 +5048,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        TimestampRequest.decode = function decode(reader, length) {
+        TimestampRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.TimestampRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4723,18 +5079,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        TimestampRequest.verify = function verify(message) {
+        TimestampRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
             return null;
         };
 
-        TimestampRequest.fromObject = function fromObject(object) {
+        TimestampRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.TimestampRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.TimestampRequest();
             if (object.path != null)
                 message.path = String(object.path);
@@ -4771,7 +5135,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function TimestampResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4793,19 +5157,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        TimestampResponse.decode = function decode(reader, length) {
+        TimestampResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.TimestampResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.timestamp = reader.uint32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4818,18 +5188,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        TimestampResponse.verify = function verify(message) {
+        TimestampResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.timestamp != null && message.hasOwnProperty("timestamp"))
                 if (!$util.isInteger(message.timestamp))
                     return "timestamp: integer expected";
             return null;
         };
 
-        TimestampResponse.fromObject = function fromObject(object) {
+        TimestampResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.TimestampResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.TimestampResponse();
             if (object.timestamp != null)
                 message.timestamp = object.timestamp >>> 0;
@@ -4866,7 +5244,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function StatRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4888,19 +5266,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StatRequest.decode = function decode(reader, length) {
+        StatRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.StatRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -4913,18 +5297,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StatRequest.verify = function verify(message) {
+        StatRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
             return null;
         };
 
-        StatRequest.fromObject = function fromObject(object) {
+        StatRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.StatRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.StatRequest();
             if (object.path != null)
                 message.path = String(object.path);
@@ -4961,7 +5353,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function StatResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -4983,19 +5375,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StatResponse.decode = function decode(reader, length) {
+        StatResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.StatResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
-                        message.file = $root.PB_Storage.File.decode(reader, reader.uint32());
+                        message.file = $root.PB_Storage.File.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5008,25 +5406,33 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StatResponse.verify = function verify(message) {
+        StatResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.file != null && message.hasOwnProperty("file")) {
-                let error = $root.PB_Storage.File.verify(message.file);
+                let error = $root.PB_Storage.File.verify(message.file, long + 1);
                 if (error)
                     return "file." + error;
             }
             return null;
         };
 
-        StatResponse.fromObject = function fromObject(object) {
+        StatResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.StatResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.StatResponse();
             if (object.file != null) {
                 if (typeof object.file !== "object")
                     throw TypeError(".PB_Storage.StatResponse.file: object expected");
-                message.file = $root.PB_Storage.File.fromObject(object.file);
+                message.file = $root.PB_Storage.File.fromObject(object.file, long + 1);
             }
             return message;
         };
@@ -5061,7 +5467,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function ListRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5089,12 +5495,18 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ListRequest.decode = function decode(reader, length) {
+        ListRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.ListRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -5109,7 +5521,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5122,9 +5534,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        ListRequest.verify = function verify(message) {
+        ListRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
@@ -5137,9 +5553,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return null;
         };
 
-        ListRequest.fromObject = function fromObject(object) {
+        ListRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.ListRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.ListRequest();
             if (object.path != null)
                 message.path = String(object.path);
@@ -5188,7 +5608,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
             this.file = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5211,21 +5631,27 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ListResponse.decode = function decode(reader, length) {
+        ListResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.ListResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         if (!(message.file && message.file.length))
                             message.file = [];
-                        message.file.push($root.PB_Storage.File.decode(reader, reader.uint32()));
+                        message.file.push($root.PB_Storage.File.decode(reader, reader.uint32(), undefined, long + 1));
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5238,14 +5664,18 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        ListResponse.verify = function verify(message) {
+        ListResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.file != null && message.hasOwnProperty("file")) {
                 if (!Array.isArray(message.file))
                     return "file: array expected";
                 for (let i = 0; i < message.file.length; ++i) {
-                    let error = $root.PB_Storage.File.verify(message.file[i]);
+                    let error = $root.PB_Storage.File.verify(message.file[i], long + 1);
                     if (error)
                         return "file." + error;
                 }
@@ -5253,9 +5683,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return null;
         };
 
-        ListResponse.fromObject = function fromObject(object) {
+        ListResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.ListResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.ListResponse();
             if (object.file) {
                 if (!Array.isArray(object.file))
@@ -5264,7 +5698,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
                 for (let i = 0; i < object.file.length; ++i) {
                     if (typeof object.file[i] !== "object")
                         throw TypeError(".PB_Storage.ListResponse.file: object expected");
-                    message.file[i] = $root.PB_Storage.File.fromObject(object.file[i]);
+                    message.file[i] = $root.PB_Storage.File.fromObject(object.file[i], long + 1);
                 }
             }
             return message;
@@ -5303,7 +5737,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function ReadRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5325,19 +5759,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ReadRequest.decode = function decode(reader, length) {
+        ReadRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.ReadRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5350,18 +5790,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        ReadRequest.verify = function verify(message) {
+        ReadRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
             return null;
         };
 
-        ReadRequest.fromObject = function fromObject(object) {
+        ReadRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.ReadRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.ReadRequest();
             if (object.path != null)
                 message.path = String(object.path);
@@ -5398,7 +5846,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function ReadResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5420,19 +5868,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ReadResponse.decode = function decode(reader, length) {
+        ReadResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.ReadResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
-                        message.file = $root.PB_Storage.File.decode(reader, reader.uint32());
+                        message.file = $root.PB_Storage.File.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5445,25 +5899,33 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        ReadResponse.verify = function verify(message) {
+        ReadResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.file != null && message.hasOwnProperty("file")) {
-                let error = $root.PB_Storage.File.verify(message.file);
+                let error = $root.PB_Storage.File.verify(message.file, long + 1);
                 if (error)
                     return "file." + error;
             }
             return null;
         };
 
-        ReadResponse.fromObject = function fromObject(object) {
+        ReadResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.ReadResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.ReadResponse();
             if (object.file != null) {
                 if (typeof object.file !== "object")
                     throw TypeError(".PB_Storage.ReadResponse.file: object expected");
-                message.file = $root.PB_Storage.File.fromObject(object.file);
+                message.file = $root.PB_Storage.File.fromObject(object.file, long + 1);
             }
             return message;
         };
@@ -5498,7 +5960,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function WriteRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5523,23 +5985,29 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        WriteRequest.decode = function decode(reader, length) {
+        WriteRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.WriteRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
                         break;
                     }
                 case 2: {
-                        message.file = $root.PB_Storage.File.decode(reader, reader.uint32());
+                        message.file = $root.PB_Storage.File.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5552,30 +6020,38 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        WriteRequest.verify = function verify(message) {
+        WriteRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
             if (message.file != null && message.hasOwnProperty("file")) {
-                let error = $root.PB_Storage.File.verify(message.file);
+                let error = $root.PB_Storage.File.verify(message.file, long + 1);
                 if (error)
                     return "file." + error;
             }
             return null;
         };
 
-        WriteRequest.fromObject = function fromObject(object) {
+        WriteRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.WriteRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.WriteRequest();
             if (object.path != null)
                 message.path = String(object.path);
             if (object.file != null) {
                 if (typeof object.file !== "object")
                     throw TypeError(".PB_Storage.WriteRequest.file: object expected");
-                message.file = $root.PB_Storage.File.fromObject(object.file);
+                message.file = $root.PB_Storage.File.fromObject(object.file, long + 1);
             }
             return message;
         };
@@ -5614,7 +6090,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function DeleteRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5639,12 +6115,18 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DeleteRequest.decode = function decode(reader, length) {
+        DeleteRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.DeleteRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -5655,7 +6137,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5668,9 +6150,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        DeleteRequest.verify = function verify(message) {
+        DeleteRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
@@ -5680,9 +6166,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return null;
         };
 
-        DeleteRequest.fromObject = function fromObject(object) {
+        DeleteRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.DeleteRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.DeleteRequest();
             if (object.path != null)
                 message.path = String(object.path);
@@ -5725,7 +6215,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function MkdirRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5747,19 +6237,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        MkdirRequest.decode = function decode(reader, length) {
+        MkdirRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.MkdirRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5772,18 +6268,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        MkdirRequest.verify = function verify(message) {
+        MkdirRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
             return null;
         };
 
-        MkdirRequest.fromObject = function fromObject(object) {
+        MkdirRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.MkdirRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.MkdirRequest();
             if (object.path != null)
                 message.path = String(object.path);
@@ -5820,7 +6324,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function Md5sumRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5842,19 +6346,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Md5sumRequest.decode = function decode(reader, length) {
+        Md5sumRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.Md5sumRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5867,18 +6377,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        Md5sumRequest.verify = function verify(message) {
+        Md5sumRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.path != null && message.hasOwnProperty("path"))
                 if (!$util.isString(message.path))
                     return "path: string expected";
             return null;
         };
 
-        Md5sumRequest.fromObject = function fromObject(object) {
+        Md5sumRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.Md5sumRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.Md5sumRequest();
             if (object.path != null)
                 message.path = String(object.path);
@@ -5915,7 +6433,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function Md5sumResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -5937,19 +6455,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Md5sumResponse.decode = function decode(reader, length) {
+        Md5sumResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.Md5sumResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.md5sum = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -5962,18 +6486,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        Md5sumResponse.verify = function verify(message) {
+        Md5sumResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.md5sum != null && message.hasOwnProperty("md5sum"))
                 if (!$util.isString(message.md5sum))
                     return "md5sum: string expected";
             return null;
         };
 
-        Md5sumResponse.fromObject = function fromObject(object) {
+        Md5sumResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.Md5sumResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.Md5sumResponse();
             if (object.md5sum != null)
                 message.md5sum = String(object.md5sum);
@@ -6010,7 +6542,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function RenameRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6035,12 +6567,18 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        RenameRequest.decode = function decode(reader, length) {
+        RenameRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.RenameRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.oldPath = reader.string();
@@ -6051,7 +6589,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6064,9 +6602,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        RenameRequest.verify = function verify(message) {
+        RenameRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.oldPath != null && message.hasOwnProperty("oldPath"))
                 if (!$util.isString(message.oldPath))
                     return "oldPath: string expected";
@@ -6076,9 +6618,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return null;
         };
 
-        RenameRequest.fromObject = function fromObject(object) {
+        RenameRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.RenameRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.RenameRequest();
             if (object.oldPath != null)
                 message.oldPath = String(object.oldPath);
@@ -6121,7 +6667,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function BackupCreateRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6143,19 +6689,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        BackupCreateRequest.decode = function decode(reader, length) {
+        BackupCreateRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.BackupCreateRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.archivePath = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6168,18 +6720,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        BackupCreateRequest.verify = function verify(message) {
+        BackupCreateRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.archivePath != null && message.hasOwnProperty("archivePath"))
                 if (!$util.isString(message.archivePath))
                     return "archivePath: string expected";
             return null;
         };
 
-        BackupCreateRequest.fromObject = function fromObject(object) {
+        BackupCreateRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.BackupCreateRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.BackupCreateRequest();
             if (object.archivePath != null)
                 message.archivePath = String(object.archivePath);
@@ -6216,7 +6776,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function BackupRestoreRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6238,19 +6798,25 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        BackupRestoreRequest.decode = function decode(reader, length) {
+        BackupRestoreRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.BackupRestoreRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.archivePath = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6263,18 +6829,26 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        BackupRestoreRequest.verify = function verify(message) {
+        BackupRestoreRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.archivePath != null && message.hasOwnProperty("archivePath"))
                 if (!$util.isString(message.archivePath))
                     return "archivePath: string expected";
             return null;
         };
 
-        BackupRestoreRequest.fromObject = function fromObject(object) {
+        BackupRestoreRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.BackupRestoreRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.BackupRestoreRequest();
             if (object.archivePath != null)
                 message.archivePath = String(object.archivePath);
@@ -6311,7 +6885,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
         function TarExtractRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6336,12 +6910,18 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        TarExtractRequest.decode = function decode(reader, length) {
+        TarExtractRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.TarExtractRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.tarPath = reader.string();
@@ -6352,7 +6932,7 @@ export const PB_Storage = $root.PB_Storage = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6365,9 +6945,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        TarExtractRequest.verify = function verify(message) {
+        TarExtractRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.tarPath != null && message.hasOwnProperty("tarPath"))
                 if (!$util.isString(message.tarPath))
                     return "tarPath: string expected";
@@ -6377,9 +6961,13 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return null;
         };
 
-        TarExtractRequest.fromObject = function fromObject(object) {
+        TarExtractRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Storage.TarExtractRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Storage.TarExtractRequest();
             if (object.tarPath != null)
                 message.tarPath = String(object.tarPath);
@@ -6429,7 +7017,7 @@ export const PB_System = $root.PB_System = (() => {
         function PingRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6451,19 +7039,25 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PingRequest.decode = function decode(reader, length) {
+        PingRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PingRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.data = reader.bytes();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6476,18 +7070,26 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        PingRequest.verify = function verify(message) {
+        PingRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.data != null && message.hasOwnProperty("data"))
                 if (!(message.data && typeof message.data.length === "number" || $util.isString(message.data)))
                     return "data: buffer expected";
             return null;
         };
 
-        PingRequest.fromObject = function fromObject(object) {
+        PingRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.PingRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.PingRequest();
             if (object.data != null)
                 if (typeof object.data === "string")
@@ -6533,7 +7135,7 @@ export const PB_System = $root.PB_System = (() => {
         function PingResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6555,19 +7157,25 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PingResponse.decode = function decode(reader, length) {
+        PingResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PingResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.data = reader.bytes();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6580,18 +7188,26 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        PingResponse.verify = function verify(message) {
+        PingResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.data != null && message.hasOwnProperty("data"))
                 if (!(message.data && typeof message.data.length === "number" || $util.isString(message.data)))
                     return "data: buffer expected";
             return null;
         };
 
-        PingResponse.fromObject = function fromObject(object) {
+        PingResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.PingResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.PingResponse();
             if (object.data != null)
                 if (typeof object.data === "string")
@@ -6637,7 +7253,7 @@ export const PB_System = $root.PB_System = (() => {
         function RebootRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6659,19 +7275,25 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        RebootRequest.decode = function decode(reader, length) {
+        RebootRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.RebootRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.mode = reader.int32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6684,9 +7306,13 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        RebootRequest.verify = function verify(message) {
+        RebootRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.mode != null && message.hasOwnProperty("mode"))
                 switch (message.mode) {
                 default:
@@ -6699,9 +7325,13 @@ export const PB_System = $root.PB_System = (() => {
             return null;
         };
 
-        RebootRequest.fromObject = function fromObject(object) {
+        RebootRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.RebootRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.RebootRequest();
             switch (object.mode) {
             default:
@@ -6764,7 +7394,7 @@ export const PB_System = $root.PB_System = (() => {
         function DeviceInfoRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6782,15 +7412,21 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DeviceInfoRequest.decode = function decode(reader, length) {
+        DeviceInfoRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.DeviceInfoRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6803,15 +7439,23 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        DeviceInfoRequest.verify = function verify(message) {
+        DeviceInfoRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        DeviceInfoRequest.fromObject = function fromObject(object) {
+        DeviceInfoRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.DeviceInfoRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_System.DeviceInfoRequest();
         };
 
@@ -6838,7 +7482,7 @@ export const PB_System = $root.PB_System = (() => {
         function DeviceInfoResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6863,12 +7507,18 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DeviceInfoResponse.decode = function decode(reader, length) {
+        DeviceInfoResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.DeviceInfoResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.string();
@@ -6879,7 +7529,7 @@ export const PB_System = $root.PB_System = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6892,9 +7542,13 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        DeviceInfoResponse.verify = function verify(message) {
+        DeviceInfoResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.key != null && message.hasOwnProperty("key"))
                 if (!$util.isString(message.key))
                     return "key: string expected";
@@ -6904,9 +7558,13 @@ export const PB_System = $root.PB_System = (() => {
             return null;
         };
 
-        DeviceInfoResponse.fromObject = function fromObject(object) {
+        DeviceInfoResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.DeviceInfoResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.DeviceInfoResponse();
             if (object.key != null)
                 message.key = String(object.key);
@@ -6949,7 +7607,7 @@ export const PB_System = $root.PB_System = (() => {
         function FactoryResetRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -6967,15 +7625,21 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        FactoryResetRequest.decode = function decode(reader, length) {
+        FactoryResetRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.FactoryResetRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -6988,15 +7652,23 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        FactoryResetRequest.verify = function verify(message) {
+        FactoryResetRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        FactoryResetRequest.fromObject = function fromObject(object) {
+        FactoryResetRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.FactoryResetRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_System.FactoryResetRequest();
         };
 
@@ -7023,7 +7695,7 @@ export const PB_System = $root.PB_System = (() => {
         function GetDateTimeRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -7041,15 +7713,21 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetDateTimeRequest.decode = function decode(reader, length) {
+        GetDateTimeRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.GetDateTimeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -7062,15 +7740,23 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetDateTimeRequest.verify = function verify(message) {
+        GetDateTimeRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        GetDateTimeRequest.fromObject = function fromObject(object) {
+        GetDateTimeRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.GetDateTimeRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_System.GetDateTimeRequest();
         };
 
@@ -7097,7 +7783,7 @@ export const PB_System = $root.PB_System = (() => {
         function GetDateTimeResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -7119,19 +7805,25 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetDateTimeResponse.decode = function decode(reader, length) {
+        GetDateTimeResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.GetDateTimeResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
-                        message.datetime = $root.PB_System.DateTime.decode(reader, reader.uint32());
+                        message.datetime = $root.PB_System.DateTime.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -7144,25 +7836,33 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetDateTimeResponse.verify = function verify(message) {
+        GetDateTimeResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.datetime != null && message.hasOwnProperty("datetime")) {
-                let error = $root.PB_System.DateTime.verify(message.datetime);
+                let error = $root.PB_System.DateTime.verify(message.datetime, long + 1);
                 if (error)
                     return "datetime." + error;
             }
             return null;
         };
 
-        GetDateTimeResponse.fromObject = function fromObject(object) {
+        GetDateTimeResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.GetDateTimeResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.GetDateTimeResponse();
             if (object.datetime != null) {
                 if (typeof object.datetime !== "object")
                     throw TypeError(".PB_System.GetDateTimeResponse.datetime: object expected");
-                message.datetime = $root.PB_System.DateTime.fromObject(object.datetime);
+                message.datetime = $root.PB_System.DateTime.fromObject(object.datetime, long + 1);
             }
             return message;
         };
@@ -7197,7 +7897,7 @@ export const PB_System = $root.PB_System = (() => {
         function SetDateTimeRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -7219,19 +7919,25 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SetDateTimeRequest.decode = function decode(reader, length) {
+        SetDateTimeRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.SetDateTimeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
-                        message.datetime = $root.PB_System.DateTime.decode(reader, reader.uint32());
+                        message.datetime = $root.PB_System.DateTime.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -7244,25 +7950,33 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        SetDateTimeRequest.verify = function verify(message) {
+        SetDateTimeRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.datetime != null && message.hasOwnProperty("datetime")) {
-                let error = $root.PB_System.DateTime.verify(message.datetime);
+                let error = $root.PB_System.DateTime.verify(message.datetime, long + 1);
                 if (error)
                     return "datetime." + error;
             }
             return null;
         };
 
-        SetDateTimeRequest.fromObject = function fromObject(object) {
+        SetDateTimeRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.SetDateTimeRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.SetDateTimeRequest();
             if (object.datetime != null) {
                 if (typeof object.datetime !== "object")
                     throw TypeError(".PB_System.SetDateTimeRequest.datetime: object expected");
-                message.datetime = $root.PB_System.DateTime.fromObject(object.datetime);
+                message.datetime = $root.PB_System.DateTime.fromObject(object.datetime, long + 1);
             }
             return message;
         };
@@ -7297,7 +8011,7 @@ export const PB_System = $root.PB_System = (() => {
         function DateTime(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -7337,12 +8051,18 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DateTime.decode = function decode(reader, length) {
+        DateTime.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.DateTime();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.hour = reader.uint32();
@@ -7373,7 +8093,7 @@ export const PB_System = $root.PB_System = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -7386,9 +8106,13 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        DateTime.verify = function verify(message) {
+        DateTime.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.hour != null && message.hasOwnProperty("hour"))
                 if (!$util.isInteger(message.hour))
                     return "hour: integer expected";
@@ -7413,9 +8137,13 @@ export const PB_System = $root.PB_System = (() => {
             return null;
         };
 
-        DateTime.fromObject = function fromObject(object) {
+        DateTime.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.DateTime)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.DateTime();
             if (object.hour != null)
                 message.hour = object.hour >>> 0;
@@ -7483,7 +8211,7 @@ export const PB_System = $root.PB_System = (() => {
         function PlayAudiovisualAlertRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -7501,15 +8229,21 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PlayAudiovisualAlertRequest.decode = function decode(reader, length) {
+        PlayAudiovisualAlertRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PlayAudiovisualAlertRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -7522,15 +8256,23 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        PlayAudiovisualAlertRequest.verify = function verify(message) {
+        PlayAudiovisualAlertRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        PlayAudiovisualAlertRequest.fromObject = function fromObject(object) {
+        PlayAudiovisualAlertRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.PlayAudiovisualAlertRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_System.PlayAudiovisualAlertRequest();
         };
 
@@ -7557,7 +8299,7 @@ export const PB_System = $root.PB_System = (() => {
         function ProtobufVersionRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -7575,15 +8317,21 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ProtobufVersionRequest.decode = function decode(reader, length) {
+        ProtobufVersionRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.ProtobufVersionRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -7596,15 +8344,23 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        ProtobufVersionRequest.verify = function verify(message) {
+        ProtobufVersionRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        ProtobufVersionRequest.fromObject = function fromObject(object) {
+        ProtobufVersionRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.ProtobufVersionRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_System.ProtobufVersionRequest();
         };
 
@@ -7631,7 +8387,7 @@ export const PB_System = $root.PB_System = (() => {
         function ProtobufVersionResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -7656,12 +8412,18 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ProtobufVersionResponse.decode = function decode(reader, length) {
+        ProtobufVersionResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.ProtobufVersionResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.major = reader.uint32();
@@ -7672,7 +8434,7 @@ export const PB_System = $root.PB_System = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -7685,9 +8447,13 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        ProtobufVersionResponse.verify = function verify(message) {
+        ProtobufVersionResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.major != null && message.hasOwnProperty("major"))
                 if (!$util.isInteger(message.major))
                     return "major: integer expected";
@@ -7697,9 +8463,13 @@ export const PB_System = $root.PB_System = (() => {
             return null;
         };
 
-        ProtobufVersionResponse.fromObject = function fromObject(object) {
+        ProtobufVersionResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.ProtobufVersionResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.ProtobufVersionResponse();
             if (object.major != null)
                 message.major = object.major >>> 0;
@@ -7742,7 +8512,7 @@ export const PB_System = $root.PB_System = (() => {
         function UpdateRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -7764,19 +8534,25 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        UpdateRequest.decode = function decode(reader, length) {
+        UpdateRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.UpdateRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.updateManifest = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -7789,18 +8565,26 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        UpdateRequest.verify = function verify(message) {
+        UpdateRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.updateManifest != null && message.hasOwnProperty("updateManifest"))
                 if (!$util.isString(message.updateManifest))
                     return "updateManifest: string expected";
             return null;
         };
 
-        UpdateRequest.fromObject = function fromObject(object) {
+        UpdateRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.UpdateRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.UpdateRequest();
             if (object.updateManifest != null)
                 message.updateManifest = String(object.updateManifest);
@@ -7837,7 +8621,7 @@ export const PB_System = $root.PB_System = (() => {
         function UpdateResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -7859,19 +8643,25 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        UpdateResponse.decode = function decode(reader, length) {
+        UpdateResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.UpdateResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.code = reader.int32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -7884,9 +8674,13 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        UpdateResponse.verify = function verify(message) {
+        UpdateResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.code != null && message.hasOwnProperty("code"))
                 switch (message.code) {
                 default:
@@ -7907,9 +8701,13 @@ export const PB_System = $root.PB_System = (() => {
             return null;
         };
 
-        UpdateResponse.fromObject = function fromObject(object) {
+        UpdateResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.UpdateResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.UpdateResponse();
             switch (object.code) {
             default:
@@ -8012,7 +8810,7 @@ export const PB_System = $root.PB_System = (() => {
         function PowerInfoRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -8030,15 +8828,21 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PowerInfoRequest.decode = function decode(reader, length) {
+        PowerInfoRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PowerInfoRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -8051,15 +8855,23 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        PowerInfoRequest.verify = function verify(message) {
+        PowerInfoRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        PowerInfoRequest.fromObject = function fromObject(object) {
+        PowerInfoRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.PowerInfoRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_System.PowerInfoRequest();
         };
 
@@ -8086,7 +8898,7 @@ export const PB_System = $root.PB_System = (() => {
         function PowerInfoResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -8111,12 +8923,18 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PowerInfoResponse.decode = function decode(reader, length) {
+        PowerInfoResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PowerInfoResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.string();
@@ -8127,7 +8945,7 @@ export const PB_System = $root.PB_System = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -8140,9 +8958,13 @@ export const PB_System = $root.PB_System = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        PowerInfoResponse.verify = function verify(message) {
+        PowerInfoResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.key != null && message.hasOwnProperty("key"))
                 if (!$util.isString(message.key))
                     return "key: string expected";
@@ -8152,9 +8974,13 @@ export const PB_System = $root.PB_System = (() => {
             return null;
         };
 
-        PowerInfoResponse.fromObject = function fromObject(object) {
+        PowerInfoResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_System.PowerInfoResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_System.PowerInfoResponse();
             if (object.key != null)
                 message.key = String(object.key);
@@ -8234,7 +9060,7 @@ export const PB_Gui = $root.PB_Gui = (() => {
         function ScreenFrame(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -8259,12 +9085,18 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ScreenFrame.decode = function decode(reader, length) {
+        ScreenFrame.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.ScreenFrame();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.data = reader.bytes();
@@ -8275,7 +9107,7 @@ export const PB_Gui = $root.PB_Gui = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -8288,9 +9120,13 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        ScreenFrame.verify = function verify(message) {
+        ScreenFrame.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.data != null && message.hasOwnProperty("data"))
                 if (!(message.data && typeof message.data.length === "number" || $util.isString(message.data)))
                     return "data: buffer expected";
@@ -8307,9 +9143,13 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return null;
         };
 
-        ScreenFrame.fromObject = function fromObject(object) {
+        ScreenFrame.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gui.ScreenFrame)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gui.ScreenFrame();
             if (object.data != null)
                 if (typeof object.data === "string")
@@ -8383,7 +9223,7 @@ export const PB_Gui = $root.PB_Gui = (() => {
         function StartScreenStreamRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -8401,15 +9241,21 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StartScreenStreamRequest.decode = function decode(reader, length) {
+        StartScreenStreamRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.StartScreenStreamRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -8422,15 +9268,23 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StartScreenStreamRequest.verify = function verify(message) {
+        StartScreenStreamRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        StartScreenStreamRequest.fromObject = function fromObject(object) {
+        StartScreenStreamRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gui.StartScreenStreamRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_Gui.StartScreenStreamRequest();
         };
 
@@ -8457,7 +9311,7 @@ export const PB_Gui = $root.PB_Gui = (() => {
         function StopScreenStreamRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -8475,15 +9329,21 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StopScreenStreamRequest.decode = function decode(reader, length) {
+        StopScreenStreamRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.StopScreenStreamRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -8496,15 +9356,23 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StopScreenStreamRequest.verify = function verify(message) {
+        StopScreenStreamRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        StopScreenStreamRequest.fromObject = function fromObject(object) {
+        StopScreenStreamRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gui.StopScreenStreamRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_Gui.StopScreenStreamRequest();
         };
 
@@ -8531,7 +9399,7 @@ export const PB_Gui = $root.PB_Gui = (() => {
         function SendInputEventRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -8556,12 +9424,18 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SendInputEventRequest.decode = function decode(reader, length) {
+        SendInputEventRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.SendInputEventRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.int32();
@@ -8572,7 +9446,7 @@ export const PB_Gui = $root.PB_Gui = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -8585,9 +9459,13 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        SendInputEventRequest.verify = function verify(message) {
+        SendInputEventRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.key != null && message.hasOwnProperty("key"))
                 switch (message.key) {
                 default:
@@ -8614,9 +9492,13 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return null;
         };
 
-        SendInputEventRequest.fromObject = function fromObject(object) {
+        SendInputEventRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gui.SendInputEventRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gui.SendInputEventRequest();
             switch (object.key) {
             default:
@@ -8715,7 +9597,7 @@ export const PB_Gui = $root.PB_Gui = (() => {
         function StartVirtualDisplayRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -8740,15 +9622,21 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StartVirtualDisplayRequest.decode = function decode(reader, length) {
+        StartVirtualDisplayRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.StartVirtualDisplayRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
-                        message.firstFrame = $root.PB_Gui.ScreenFrame.decode(reader, reader.uint32());
+                        message.firstFrame = $root.PB_Gui.ScreenFrame.decode(reader, reader.uint32(), undefined, long + 1);
                         break;
                     }
                 case 2: {
@@ -8756,7 +9644,7 @@ export const PB_Gui = $root.PB_Gui = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -8769,11 +9657,15 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StartVirtualDisplayRequest.verify = function verify(message) {
+        StartVirtualDisplayRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.firstFrame != null && message.hasOwnProperty("firstFrame")) {
-                let error = $root.PB_Gui.ScreenFrame.verify(message.firstFrame);
+                let error = $root.PB_Gui.ScreenFrame.verify(message.firstFrame, long + 1);
                 if (error)
                     return "firstFrame." + error;
             }
@@ -8783,14 +9675,18 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return null;
         };
 
-        StartVirtualDisplayRequest.fromObject = function fromObject(object) {
+        StartVirtualDisplayRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gui.StartVirtualDisplayRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gui.StartVirtualDisplayRequest();
             if (object.firstFrame != null) {
                 if (typeof object.firstFrame !== "object")
                     throw TypeError(".PB_Gui.StartVirtualDisplayRequest.firstFrame: object expected");
-                message.firstFrame = $root.PB_Gui.ScreenFrame.fromObject(object.firstFrame);
+                message.firstFrame = $root.PB_Gui.ScreenFrame.fromObject(object.firstFrame, long + 1);
             }
             if (object.sendInput != null)
                 message.sendInput = Boolean(object.sendInput);
@@ -8831,7 +9727,7 @@ export const PB_Gui = $root.PB_Gui = (() => {
         function StopVirtualDisplayRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -8849,15 +9745,21 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StopVirtualDisplayRequest.decode = function decode(reader, length) {
+        StopVirtualDisplayRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.StopVirtualDisplayRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -8870,15 +9772,23 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        StopVirtualDisplayRequest.verify = function verify(message) {
+        StopVirtualDisplayRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        StopVirtualDisplayRequest.fromObject = function fromObject(object) {
+        StopVirtualDisplayRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gui.StopVirtualDisplayRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_Gui.StopVirtualDisplayRequest();
         };
 
@@ -8947,7 +9857,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function SetPinMode(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -8972,12 +9882,18 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SetPinMode.decode = function decode(reader, length) {
+        SetPinMode.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.SetPinMode();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
@@ -8988,7 +9904,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -9001,9 +9917,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        SetPinMode.verify = function verify(message) {
+        SetPinMode.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.pin != null && message.hasOwnProperty("pin"))
                 switch (message.pin) {
                 default:
@@ -9029,9 +9949,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return null;
         };
 
-        SetPinMode.fromObject = function fromObject(object) {
+        SetPinMode.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.SetPinMode)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gpio.SetPinMode();
             switch (object.pin) {
             default:
@@ -9126,7 +10050,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function SetInputPull(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -9151,12 +10075,18 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SetInputPull.decode = function decode(reader, length) {
+        SetInputPull.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.SetInputPull();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
@@ -9167,7 +10097,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -9180,9 +10110,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        SetInputPull.verify = function verify(message) {
+        SetInputPull.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.pin != null && message.hasOwnProperty("pin"))
                 switch (message.pin) {
                 default:
@@ -9209,9 +10143,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return null;
         };
 
-        SetInputPull.fromObject = function fromObject(object) {
+        SetInputPull.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.SetInputPull)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gpio.SetInputPull();
             switch (object.pin) {
             default:
@@ -9310,7 +10248,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function GetPinMode(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -9332,19 +10270,25 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetPinMode.decode = function decode(reader, length) {
+        GetPinMode.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.GetPinMode();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -9357,9 +10301,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetPinMode.verify = function verify(message) {
+        GetPinMode.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.pin != null && message.hasOwnProperty("pin"))
                 switch (message.pin) {
                 default:
@@ -9377,9 +10325,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return null;
         };
 
-        GetPinMode.fromObject = function fromObject(object) {
+        GetPinMode.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.GetPinMode)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gpio.GetPinMode();
             switch (object.pin) {
             default:
@@ -9454,7 +10406,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function GetPinModeResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -9476,19 +10428,25 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetPinModeResponse.decode = function decode(reader, length) {
+        GetPinModeResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.GetPinModeResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.mode = reader.int32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -9501,9 +10459,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetPinModeResponse.verify = function verify(message) {
+        GetPinModeResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.mode != null && message.hasOwnProperty("mode"))
                 switch (message.mode) {
                 default:
@@ -9515,9 +10477,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return null;
         };
 
-        GetPinModeResponse.fromObject = function fromObject(object) {
+        GetPinModeResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.GetPinModeResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gpio.GetPinModeResponse();
             switch (object.mode) {
             default:
@@ -9568,7 +10534,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function ReadPin(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -9590,19 +10556,25 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ReadPin.decode = function decode(reader, length) {
+        ReadPin.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.ReadPin();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -9615,9 +10587,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        ReadPin.verify = function verify(message) {
+        ReadPin.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.pin != null && message.hasOwnProperty("pin"))
                 switch (message.pin) {
                 default:
@@ -9635,9 +10611,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return null;
         };
 
-        ReadPin.fromObject = function fromObject(object) {
+        ReadPin.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.ReadPin)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gpio.ReadPin();
             switch (object.pin) {
             default:
@@ -9712,7 +10692,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function ReadPinResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -9734,19 +10714,25 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ReadPinResponse.decode = function decode(reader, length) {
+        ReadPinResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.ReadPinResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 2: {
                         message.value = reader.uint32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -9759,18 +10745,26 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        ReadPinResponse.verify = function verify(message) {
+        ReadPinResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.value != null && message.hasOwnProperty("value"))
                 if (!$util.isInteger(message.value))
                     return "value: integer expected";
             return null;
         };
 
-        ReadPinResponse.fromObject = function fromObject(object) {
+        ReadPinResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.ReadPinResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gpio.ReadPinResponse();
             if (object.value != null)
                 message.value = object.value >>> 0;
@@ -9807,7 +10801,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function WritePin(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -9832,12 +10826,18 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        WritePin.decode = function decode(reader, length) {
+        WritePin.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.WritePin();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
@@ -9848,7 +10848,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -9861,9 +10861,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        WritePin.verify = function verify(message) {
+        WritePin.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.pin != null && message.hasOwnProperty("pin"))
                 switch (message.pin) {
                 default:
@@ -9884,9 +10888,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return null;
         };
 
-        WritePin.fromObject = function fromObject(object) {
+        WritePin.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.WritePin)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gpio.WritePin();
             switch (object.pin) {
             default:
@@ -9967,7 +10975,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function GetOtgMode(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -9985,15 +10993,21 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetOtgMode.decode = function decode(reader, length) {
+        GetOtgMode.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.GetOtgMode();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -10006,15 +11020,23 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetOtgMode.verify = function verify(message) {
+        GetOtgMode.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             return null;
         };
 
-        GetOtgMode.fromObject = function fromObject(object) {
+        GetOtgMode.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.GetOtgMode)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             return new $root.PB_Gpio.GetOtgMode();
         };
 
@@ -10041,7 +11063,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function GetOtgModeResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -10063,19 +11085,25 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetOtgModeResponse.decode = function decode(reader, length) {
+        GetOtgModeResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.GetOtgModeResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.mode = reader.int32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -10088,9 +11116,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetOtgModeResponse.verify = function verify(message) {
+        GetOtgModeResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.mode != null && message.hasOwnProperty("mode"))
                 switch (message.mode) {
                 default:
@@ -10102,9 +11134,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return null;
         };
 
-        GetOtgModeResponse.fromObject = function fromObject(object) {
+        GetOtgModeResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.GetOtgModeResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gpio.GetOtgModeResponse();
             switch (object.mode) {
             default:
@@ -10155,7 +11191,7 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
         function SetOtgMode(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -10177,19 +11213,25 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SetOtgMode.decode = function decode(reader, length) {
+        SetOtgMode.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.SetOtgMode();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.mode = reader.int32();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -10202,9 +11244,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        SetOtgMode.verify = function verify(message) {
+        SetOtgMode.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.mode != null && message.hasOwnProperty("mode"))
                 switch (message.mode) {
                 default:
@@ -10216,9 +11262,13 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return null;
         };
 
-        SetOtgMode.fromObject = function fromObject(object) {
+        SetOtgMode.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Gpio.SetOtgMode)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Gpio.SetOtgMode();
             switch (object.mode) {
             default:
@@ -10276,7 +11326,7 @@ export const PB_Property = $root.PB_Property = (() => {
         function GetRequest(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -10298,19 +11348,25 @@ export const PB_Property = $root.PB_Property = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetRequest.decode = function decode(reader, length) {
+        GetRequest.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Property.GetRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.string();
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -10323,18 +11379,26 @@ export const PB_Property = $root.PB_Property = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetRequest.verify = function verify(message) {
+        GetRequest.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.key != null && message.hasOwnProperty("key"))
                 if (!$util.isString(message.key))
                     return "key: string expected";
             return null;
         };
 
-        GetRequest.fromObject = function fromObject(object) {
+        GetRequest.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Property.GetRequest)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Property.GetRequest();
             if (object.key != null)
                 message.key = String(object.key);
@@ -10371,7 +11435,7 @@ export const PB_Property = $root.PB_Property = (() => {
         function GetResponse(properties) {
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
+                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
                         this[keys[i]] = properties[keys[i]];
         }
 
@@ -10396,12 +11460,18 @@ export const PB_Property = $root.PB_Property = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetResponse.decode = function decode(reader, length) {
+        GetResponse.decode = function decode(reader, length, error, long) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
+            if (long === undefined)
+                long = 0;
+            if (long > $Reader.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Property.GetResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.string();
@@ -10412,7 +11482,7 @@ export const PB_Property = $root.PB_Property = (() => {
                         break;
                     }
                 default:
-                    reader.skipType(tag & 7);
+                    reader.skipType(tag & 7, long);
                     break;
                 }
             }
@@ -10425,9 +11495,13 @@ export const PB_Property = $root.PB_Property = (() => {
             return this.decode(reader, reader.uint32());
         };
 
-        GetResponse.verify = function verify(message) {
+        GetResponse.verify = function verify(message, long) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                return "maximum nesting depth exceeded";
             if (message.key != null && message.hasOwnProperty("key"))
                 if (!$util.isString(message.key))
                     return "key: string expected";
@@ -10437,9 +11511,13 @@ export const PB_Property = $root.PB_Property = (() => {
             return null;
         };
 
-        GetResponse.fromObject = function fromObject(object) {
+        GetResponse.fromObject = function fromObject(object, long) {
             if (object instanceof $root.PB_Property.GetResponse)
                 return object;
+            if (long === undefined)
+                long = 0;
+            if (long > $util.recursionLimit)
+                throw Error("maximum nesting depth exceeded");
             let message = new $root.PB_Property.GetResponse();
             if (object.key != null)
                 message.key = String(object.key);
