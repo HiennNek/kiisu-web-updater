@@ -32,7 +32,3 @@ frontend/src-capacitor/node_modules
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
-
-# Lock files
-frontend/*-lock.json
-frontend/*.lock
