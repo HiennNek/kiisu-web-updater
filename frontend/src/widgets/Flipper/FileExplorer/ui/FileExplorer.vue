@@ -106,7 +106,7 @@
             <q-item-label class="ellipsis">{{ item.name }}</q-item-label>
             <q-item-label class="ellipsis" caption>
               <span v-if="fullPath === '/' && item.name === 'int'"
-                >Flipper internal storage</span
+                >Kiisu internal storage</span
               >
               <span v-if="fullPath === '/' && item.name === 'ext'"
                 >SD card</span
@@ -129,18 +129,6 @@
               auto-close
             >
               <q-list style="min-width: 100px">
-                <q-item
-                  v-if="item.name.endsWith('.fap')"
-                  clickable
-                  @click="openApp(item)"
-                >
-                  <q-item-section avatar>
-                    <q-icon name="mdi-open-in-app" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Open</q-item-label>
-                  </q-item-section>
-                </q-item>
                 <q-item
                   v-if="
                     item.name.endsWith('.sub') ||
@@ -172,26 +160,7 @@
                   </q-item-section>
                   <q-item-section> Download </q-item-section>
                 </q-item>
-                <q-item
-                  v-if="
-                    item.name.endsWith('.sub') ||
-                    item.name.endsWith('.ir') ||
-                    item.name.endsWith('.ask.raw') ||
-                    item.name.endsWith('.psk.raw')
-                  "
-                  clickable
-                  @click="
-                    openFileIn({
-                      item,
-                      destination: { name: 'PulsePlotter' }
-                    })
-                  "
-                >
-                  <q-item-section avatar>
-                    <q-icon name="mdi-share-outline" />
-                  </q-item-section>
-                  <q-item-section> Open in Pulse plotter </q-item-section>
-                </q-item>
+
                 <q-item clickable @click="renameItem(item)">
                   <q-item-section avatar>
                     <q-icon name="mdi-pencil-outline" />
@@ -408,8 +377,6 @@ import {
   useTemplateRef
 } from 'vue'
 import { exportFile, debounce, type QList, type QItem } from 'quasar'
-import { type RouteLocationRaw, useRouter } from 'vue-router'
-const router = useRouter()
 
 import { FileEditor } from 'features/FileEditor'
 import { FileEditorModel } from 'entity/FileEditor'
@@ -427,10 +394,7 @@ import { ProgressBar } from 'shared/components/ProgressBar'
 import { FlipperModel, FlipperLib } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
 
-import { AppsModel } from 'entity/Apps'
-const appsStore = AppsModel.useAppsStore()
-
-const componentName = 'FlipperFileExplorer'
+const componentName = 'KiisuFileExplorer'
 
 type PathItem = FlipperModel.File & {
   path: string
@@ -896,29 +860,6 @@ const read = async ({
     return res
   }
 }
-const openFileIn = async ({
-  item,
-  destination
-}: {
-  item: FlipperModel.File
-  destination: RouteLocationRaw
-}) => {
-  const res = await read({
-    file: item,
-    preventDownload: true
-  })
-
-  if (res) {
-    flipperStore.openFileIn({
-      path: destination,
-      file: {
-        name: item.name,
-        data: res
-      }
-    })
-  }
-}
-
 interface FlipperFile extends FlipperModel.File {
   type: number
   path: string
@@ -1200,20 +1141,7 @@ const saveFile = (doc: string) => {
   }
 }
 
-const openApp = (app: FlipperModel.File) => {
-  const path = `${fullPath.value}/${app.name}`
 
-  appsStore
-    .openApp(path)
-    .then(() => {
-      flipperStore.expandView = true
-
-      router.push({ name: 'Device' })
-    })
-    .catch(() => {
-      console.log('error')
-    })
-}
 </script>
 
 <style lang="scss" scoped>

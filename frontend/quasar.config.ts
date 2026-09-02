@@ -260,7 +260,7 @@ export default defineConfig((ctx) => {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'com.flipperdevices.lab',
+        appId: 'com.kiisu.webupdater',
         artifactName: '${productName}-${version}-${arch}.${ext}',
         compression: ctx.dev ? 'store' : 'maximum',
         dmg: {
@@ -283,7 +283,7 @@ export default defineConfig((ctx) => {
           target: ['AppImage', 'deb', 'rpm', 'pacman']
         },
         win: {
-          publisherName: 'Flipper Devices Inc.',
+          publisherName: 'Kiisu',
 
           target: ['portable']
         },

@@ -12,15 +12,12 @@ import {
 } from 'shared/lib/utils/usePromiseQueue'
 
 import { FlipperModel } from 'entity/Flipper'
-import { CategoryModel } from 'entity/Category'
-import type { ActionAppOptions, InstallAppOptions } from './types'
 
 import readInfo from './utils/readInfo'
 import {
   getInstalledApps,
   onClearInstalledAppsList
 } from './utils/getInstalledApps'
-import { installApp, deleteApp } from './utils/appActions'
 
 import * as storage from './commands/storage'
 import * as system from './commands/system'
@@ -297,40 +294,6 @@ export default class Flipper {
           )
       }
     }
-  }
-
-  async ensureCategoryPaths(categories: CategoryModel.CategoryData[]) {
-    for (const category of categories) {
-      const dir = await this.RPC('storageStat', {
-        path: `/ext/apps/${category.name}`
-      }).catch((error: Error) =>
-        rpcErrorHandler({ componentName, error, command: 'storageStat' })
-      )
-      if (!dir) {
-        await this.RPC('storageMkdir', {
-          path: `/ext/apps/${category.name}`
-        }).catch((error: Error) =>
-          rpcErrorHandler({ componentName, error, command: 'storageMkdir' })
-        )
-      }
-    }
-  }
-
-  async installApp({
-    callback,
-    categoryName,
-    app,
-    catalogChannelProduction = true
-  }: InstallAppOptions) {
-    return installApp.bind(this)({
-      callback,
-      categoryName,
-      app,
-      catalogChannelProduction
-    })
-  }
-  async deleteApp({ callback, categoryName, app }: ActionAppOptions) {
-    return deleteApp.bind(this)({ callback, categoryName, app })
   }
 
   async addToQueue({ fn, params }: QueueItem) {

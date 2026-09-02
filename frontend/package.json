@@ -1,16 +1,14 @@
 {
-  "name": "lab.flipper.net",
+  "name": "kiisu-web-updater",
   "version": "0.4.9",
-  "description": "Web platform for your Flipper",
-  "productName": "Flipper Lab",
+  "description": "Web platform for your Kiisu",
+  "productName": "Kiisu web updater",
   "repository": {
     "type": "git",
-    "url": "https://github.com/flipperdevices/lab.flipper.net.git"
+    "url": "https://github.com/HiennNek/kiisu-web-updater.git"
   },
   "author": {
-    "name": "Flipper Devices Inc.",
-    "url": "https://flipperdevices.com/",
-    "email": "support@flipperdevices.com"
+    "name": "HiennNek"
   },
   "maintainers": [
     {

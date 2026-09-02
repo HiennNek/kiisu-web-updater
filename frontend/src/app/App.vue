@@ -21,14 +21,9 @@ const getPathToIcon = (file: string, path: string, viewBox?: string) => {
 }
 
 const myIcons: Icons = {
-  'flipper:apps': getPathToIcon('common-icons', 'apps'),
   'flipper:device': getPathToIcon('common-icons', 'device'),
   'flipper:files': getPathToIcon('common-icons', 'files'),
   'flipper:cli': getPathToIcon('common-icons', 'cli'),
-  'flipper:nfctools': getPathToIcon('common-icons', 'nfctools'),
-  'flipper:paint': getPathToIcon('common-icons', 'paint'),
-  'flipper:subtools': getPathToIcon('common-icons', 'subtools'),
-  'flipper:installed': getPathToIcon('common-icons', 'installed'),
   'flipper:delete': getPathToIcon('common-icons', 'delete'),
   'flipper:settings': getPathToIcon('common-icons', 'settings'),
   'flipper:switch': getPathToIcon('common-icons', 'switch'),

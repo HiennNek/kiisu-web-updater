@@ -7,15 +7,13 @@ import { FlipperWeb, FlipperElectron } from 'shared/lib/flipperJs'
 import { showNotif } from 'shared/lib/utils/useShowNotif'
 import { logger, type LogLevel } from 'shared/lib/utils/useLog'
 
-import { AppsModel } from 'entity/Apps'
 import {
   FlipperInfo,
-  PulseFile,
   DataFlipperElectron,
   DataDfuFlipperElectron
 } from './types'
 import { FlipperApi } from 'entity/Flipper'
-import { useRoute, useRouter, type RouteLocationRaw } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 // import type { Emitter, DefaultEvents } from 'nanoevents'
 // import { createNanoEvents } from 'nanoevents'
@@ -27,15 +25,12 @@ import {
   emitter as bridgeEmitter /* , getCurrentFlipper, getList, setCurrentFlipper */
 } from 'shared/lib/flipperJs/bridgeController'
 
-const componentName = 'FlipperStore'
+const componentName = 'KiisuStore'
 
 export const useFlipperStore = defineStore('flipper', () => {
   const isElectron = Platform.is.electron
 
   const route = useRoute()
-  const router = useRouter()
-
-  const appsStore = AppsModel.useAppsStore()
 
   const flags = reactive({
     connected: computed(() => flipper.value?.connected),
@@ -130,8 +125,6 @@ export const useFlipperStore = defineStore('flipper', () => {
           const unbind = flipper.value?.emitter.on(
             'disconnect',
             (e: { isUserAction: boolean }) => {
-              appsStore.onClearInstalledAppsList()
-
               if (flags.autoReconnect && !e.isUserAction) {
                 onAutoReconnect()
 
@@ -168,7 +161,6 @@ export const useFlipperStore = defineStore('flipper', () => {
         isUserAction
       })
       // flags.connected = false
-      appsStore.onClearInstalledAppsList()
     }
   }
 
@@ -200,22 +192,6 @@ export const useFlipperStore = defineStore('flipper', () => {
     }, 1000)
   }
 
-  const fileToPass = ref<PulseFile>()
-  const openFileIn = ({
-    path,
-    file
-  }: {
-    path: RouteLocationRaw
-    file: PulseFile
-  }) => {
-    logger.info({
-      context: componentName,
-      message: `Passing file ${file.name} to ${path}`
-    })
-    fileToPass.value = file
-    router.push(path)
-  }
-
   const availableFlippers = ref<DataFlipperElectron[]>([])
   const availableDfuFlippers = ref<DataDfuFlipperElectron[]>([])
 
@@ -245,7 +221,6 @@ export const useFlipperStore = defineStore('flipper', () => {
     if (flipper.value) {
       // flipper.value.flipperReady = false
       await flipper.value.disconnect()
-      appsStore.onClearInstalledAppsList()
       oldFlipper.value = unref(flipper.value)
     }
 
@@ -263,7 +238,7 @@ export const useFlipperStore = defineStore('flipper', () => {
 
     await localFlipper.connect(/* name, emitter */).catch(() => {
       showNotif({
-        message: `Failed to connect to Flipper ${_flipper.name}. Replug the device and try again.`,
+        message: `Failed to connect to Kiisu ${_flipper.name}. Replug the device and try again.`,
         color: 'negative'
       })
     })
@@ -343,7 +318,6 @@ export const useFlipperStore = defineStore('flipper', () => {
 
               if (flipper.value?.name === bridgeFlipper.name) {
                 flipper.value.disconnect()
-                appsStore.onClearInstalledAppsList()
 
                 if (!flags.updateInProgress) {
                   flipper.value = undefined
@@ -790,9 +764,6 @@ export const useFlipperStore = defineStore('flipper', () => {
     onUpdateStage,
     onAutoReconnect,
     reconnectInterval,
-
-    fileToPass,
-    openFileIn,
 
     availableFlippers,
     availableDfuFlippers,

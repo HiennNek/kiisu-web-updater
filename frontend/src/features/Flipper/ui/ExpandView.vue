@@ -308,7 +308,7 @@ const saveImage = (isClipboard = false) => {
             await navigator.clipboard.write([clipboardItem])
 
             showNotif({
-              message: 'Flipper screen copied to clipboard',
+              message: 'Kiisu screen copied to clipboard',
               color: 'info',
               timeout: 500
             })

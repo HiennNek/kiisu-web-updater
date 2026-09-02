@@ -48,22 +48,7 @@
                 @click="toggleAutoReconnect"
               />
             </q-item>
-            <q-item v-if="appsStore.flags.catalogCanSwitchChannel">
-              <q-toggle
-                v-model="appsStore.flags.catalogChannelProduction"
-                dense
-                label="Production Apps"
-                :disable="flipperStore.flags.disableNavigation"
-                @click="toggleCatalogChannel"
-              />
-            </q-item>
-            <q-item v-if="appsStore.flags.catalogCanInstallAllApps">
-              <q-toggle
-                v-model="appsStore.flags.catalogInstallAllApps"
-                dense
-                label="Install All Apps"
-              />
-            </q-item>
+
 
             <q-item
               v-if="flipperStore.isElectron"
@@ -112,14 +97,8 @@ import { RouterLink } from 'shared/components/RouterLink'
 import { FlipperConnectWebBtn } from 'features/Flipper'
 import { FlipperSwitch } from 'features/Flipper'
 
-import { PRODUCTION_NAME, DEVELOP_NAME } from 'shared/config'
-
 import { FlipperModel } from 'entity/Flipper'
-import { instance, getBaseUrl } from 'boot/axios'
 const flipperStore = FlipperModel.useFlipperStore()
-
-import { AppsModel } from 'entity/Apps'
-const appsStore = AppsModel.useAppsStore()
 
 const tab = ref('home')
 
@@ -133,15 +112,10 @@ const showHomeMenu = () => {
 
 const linksList = [
   {
-    title: 'My Flipper',
+    title: 'My Kiisu',
     icon: 'flipper:device',
     name: 'Device',
-    titleOverride: computed(() => flipperStore.flipperName || 'My Flipper')
-  },
-  {
-    title: 'Apps',
-    icon: 'flipper:apps',
-    name: 'Apps'
+    titleOverride: computed(() => flipperStore.flipperName || 'My Kiisu')
   },
   {
     title: 'Files',
@@ -152,21 +126,6 @@ const linksList = [
     title: 'CLI',
     icon: 'flipper:cli',
     name: 'Cli'
-  },
-  {
-    title: 'NFC tools',
-    icon: 'flipper:nfctools',
-    name: 'NfcTools'
-  },
-  {
-    title: 'Paint',
-    icon: 'flipper:paint',
-    name: 'Paint'
-  },
-  {
-    title: 'Pulse Plotter',
-    icon: 'flipper:subtools',
-    name: 'PulsePlotter'
   }
 ]
 
@@ -183,14 +142,6 @@ const toggleAutoReconnect = () => {
       flipperStore.onAutoReconnect()
     }
   }
-}
-
-const toggleCatalogChannel = () => {
-  const catalogChannel = appsStore.flags.catalogChannelProduction
-    ? PRODUCTION_NAME
-    : DEVELOP_NAME
-
-  instance.defaults.baseURL = getBaseUrl(catalogChannel)
 }
 
 const showLogsDialog = () => {

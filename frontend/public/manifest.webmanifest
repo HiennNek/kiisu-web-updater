@@ -1,13 +1,13 @@
 {
-    "name": "Flipper Lab",
-    "short_name": "Flipper Lab",
+    "name": "Kiisu web updater",
+    "short_name": "Kiisu web updater",
     "display": "standalone",
     "start_url": "/",
     "background_color": "#fff",
-    "theme_color": "#ff8200",
+    "theme_color": "#7c3aed",
     "lang": "en",
     "orientation": "any",
-    "description": "Flipper Zero is a fanatic's portable multi-tool in a toy-like body. This app helps you manage your device data, organize your keys and share it with other Flipper Zero users",
+    "description": "Kiisu is a fanatic's portable multi-tool in a card-sized form. This app helps you manage your device data, organize your keys and share it with other Kiisu users",
     "categories": [
         "developer tools",
         "developer",
@@ -17,22 +17,7 @@
     "launch_handler": {
         "client_mode": ["focus-existing", "auto"]
     },
-    "related_applications": [
-        {
-            "platform": "play",
-            "id": "com.flipperdevices.app",
-            "url": "https://play.google.com/store/apps/details?id=com.flipperdevices.app"
-        },
-        {
-            "platform": "itunes",
-            "url": "https://apps.apple.com/app/flipper-mobile-app/id1534655259"
-        }
-    ],
     "shortcuts": [
-        {
-            "name": "Apps",
-            "url": "/apps"
-        },
         {
             "name": "Files",
             "url": "/archive"
@@ -40,14 +25,6 @@
         {
             "name": "Cli",
             "url": "/cli"
-        },
-        {
-            "name": "NFC tools",
-            "url": "/nfc-tools"
-        },
-        {
-            "name": "Pulse plotter",
-            "url": "/pulse-plotter"
         }
     ],
     "icons": [
@@ -68,14 +45,7 @@
             "type": "image/png",
             "sizes": "540x720",
             "form_factor": "narrow",
-            "label": "View informations and update your Flipper Zero"
-        },
-        {
-            "src": "/screenshots/screenshot2.jpg",
-            "type": "image/jpeg",
-            "sizes": "540x720",
-            "form_factor": "narrow",
-            "label": "Find new applications in the Flipper Catalogue"
+            "label": "View informations and update your Kiisu"
         },
         {
             "src": "/screenshots/screenshot3.jpg",
@@ -89,14 +59,7 @@
             "type": "image/jpeg",
             "sizes": "1024x593",
             "form_factor": "wide",
-            "label": "View informations and update your Flipper Zero"
-        },
-        {
-            "src": "/screenshots/screenshot5.jpg",
-            "type": "image/jpeg",
-            "sizes": "1024x593",
-            "form_factor": "wide",
-            "label": "Find new applications in the Flipper Catalogue"
+            "label": "View informations and update your Kiisu"
         },
         {
             "src": "/screenshots/screenshot6.jpg",

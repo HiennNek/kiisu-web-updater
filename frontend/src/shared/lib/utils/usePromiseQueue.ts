@@ -1,9 +1,10 @@
-import { App, InstalledApp, ActionType } from 'entity/Apps/model'
 import { beforeunloadActive, beforeunloadDeactivate } from './useBeforeunload'
 
 export type QueueItem = {
-  fn: (app: App | InstalledApp, actionType: ActionType) => Promise<void>
-  params: [App | InstalledApp, ActionType]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fn: (...args: any[]) => Promise<void>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  params: any[]
 }
 
 let queue: QueueItem[] = []

@@ -18,7 +18,7 @@
       >
         <template v-if="flipperStore.flags.switchFlipper">
           <q-page class="flex flex-center" padding>
-            <Loading label="Switching Flipper..." />
+            <Loading label="Switching Kiisu..." />
           </q-page>
         </template>
         <template v-else-if="flipperStore.loadingInfo">
@@ -40,7 +40,7 @@
                   flipperStore.flags.flipperIsInitialized
                 "
               >
-                <Loading label="Flipper is initialized..." />
+                <Loading label="Kiisu is initialized..." />
               </template>
               <template v-else-if="flipperStore.availableDfuFlippers.length">
                 <q-list class="q-gutter-y-md full-width">
@@ -68,7 +68,7 @@
                   width="70px"
                   no-spinner
                 />
-                <div class="text-h6 q-my-sm">Flipper not connected</div>
+                <div class="text-h6 q-my-sm">Kiisu not connected</div>
               </template>
             </q-card-section>
           </q-card>
@@ -87,19 +87,15 @@
           @onFindMicroSd="flipperStore.findMicroSd"
         />
       </q-dialog>
-      <AppOutdatedFirmwareDialog
-        v-model="appsStore.dialogs.outdatedFirmwareDialog"
-        :persistent="appsStore.dialogs.outdatedFirmwareDialogPersistent"
-      />
       <FlipperConnectFlipperDialog
         v-model="flipperStore.dialogs.connectFlipper"
       >
         <template v-slot:description>
           <template v-if="flipperStore.isElectron">
-            <p>Plug in your Flipper and and wait for initialization</p>
+            <p>Plug in your Kiisu and and wait for initialization</p>
           </template>
           <template v-else>
-            <p>Plug in your Flipper and click the button below</p>
+            <p>Plug in your Kiisu and click the button below</p>
           </template>
         </template>
         <template v-slot:default>
@@ -160,8 +156,6 @@ import {
   FlipperBusyDialog,
   FlipperDfuItem
 } from 'entity/Flipper'
-import { AppsModel, AppOutdatedFirmwareDialog } from 'entity/Apps'
-const appsStore = AppsModel.useAppsStore()
 
 import {
   FlipperConnectWebBtn,

@@ -225,7 +225,7 @@ import { FlipperModel, FlipperApi } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
 const { fetchChannels, fetchRegions, fetchFirmware } = FlipperApi
 
-const componentName = 'FlipperUpdate'
+const componentName = 'KiisuUpdate'
 
 const outdated = ref<boolean | undefined>(false)
 const ableToUpdate = ref(true)
@@ -704,7 +704,7 @@ const loadFirmware = async () => {
           (e: { progress: number; total: number }) => {
             if (!flipperStore.flipper?.connected) {
               throw new Error(
-                `Flipper ${flipperStore.flipper?.name} not connected`
+                `Kiisu ${flipperStore.flipper?.name} not connected`
               )
             }
 
@@ -764,7 +764,7 @@ const loadFirmware = async () => {
         )
       })
 
-    updateStage.value = 'Update in progress, pay attention to your Flipper'
+    updateStage.value = 'Update in progress, pay attention to your Kiisu'
 
     await flipperStore.flipper
       ?.RPC('systemReboot', { mode: 'UPDATE' })

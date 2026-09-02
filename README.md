@@ -1,3 +1,3 @@
-# lab.flipper.net
+# kiisu-web-updater
 
-Web platform for your Flipper
+Web platform for your Kiisu
