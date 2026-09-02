@@ -15,7 +15,7 @@
         <div class="row justify-center items-center">
           <div
             class="relative-position bg-primary q-pa-sm rounded-borders q-mr-lg"
-            style="border: 3px solid #9e5823"
+            style="border: 3px solid #6b288a"
           >
             <canvas
               :width="128 * screenScale"
@@ -211,7 +211,7 @@
               anchor="bottom right"
               self="top right"
               :offset="[16, 20]"
-              style="border: 1px solid #662c00; background: #210f00"
+              style="border: 1px solid #6b288a; background: #1e0a2e"
             >
               <q-icon
                 name="flipper:steaming-help-mac"
@@ -340,7 +340,7 @@ const resizeCanvas = () => {
     const ctx = gridBackground.value.getContext('2d')
 
     if (ctx) {
-      ctx.strokeStyle = '#aa5115'
+      ctx.strokeStyle = '#6b288a'
       ctx.lineWidth = 2
 
       for (let yPos = cellSize; yPos < height; yPos += cellSize) {

@@ -2,7 +2,7 @@ const config = {
   width: 128,
   height: 64,
   activeColor: 'black',
-  inactiveColor: '#ff8201'
+  inactiveColor: '#6b288a'
 }
 
 export default class FrameRenderer {
