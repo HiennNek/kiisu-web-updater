@@ -14,7 +14,7 @@
       <q-card-section class="row col items-center justify-center q-pa-xl">
         <div class="row justify-center items-center">
           <div
-            class="relative-position bg-primary q-pa-sm rounded-borders q-mr-lg"
+            class="relative-position bg-black q-pa-sm rounded-borders q-mr-lg"
             style="border: 3px solid #000000"
           >
             <canvas
