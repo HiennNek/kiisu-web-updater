@@ -175,4 +175,20 @@ onMounted(() => {
     margin: auto;
   }
 }
+
+// Navigation buttons: normal and q-focus-helper to Kiisu green #0fff6b
+:deep(.menu-link .q-item) {
+  color: #0fff6b;
+}
+
+:deep(.menu-link .q-item .q-focus-helper) {
+  background: #0fff6b !important;
+  opacity: 0.2 !important;
+}
+
+:deep(.menu-link .q-item.q-router-link--active),
+:deep(.menu-link .q-item--active) {
+  color: #0fff6b !important;
+  background: rgba(15, 255, 107, 0.12) !important;
+}
 </style>

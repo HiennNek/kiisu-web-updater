@@ -6,7 +6,7 @@
     >
       <q-btn
         class="col-auto"
-        color="primary"
+        color="positive"
         icon="chevron_left"
         outline
         padding="sm"
@@ -34,7 +34,7 @@
       </q-breadcrumbs>
       <q-btn-dropdown
         class="col-auto q-mr-sm"
-        color="primary"
+        color="positive"
         dropdown-icon="add"
         no-icon-animation
         outline
@@ -66,7 +66,7 @@
       </q-btn-dropdown>
       <q-btn
         class="col-auto q-mr-sm"
-        color="primary"
+        color="positive"
         icon="mdi-refresh"
         outline
         padding="sm"

@@ -15,7 +15,7 @@
         <div class="row justify-center items-center">
           <div
             class="relative-position bg-primary q-pa-sm rounded-borders q-mr-lg"
-            style="border: 3px solid #6b288a"
+            style="border: 3px solid #000000"
           >
             <canvas
               :width="128 * screenScale"
@@ -193,7 +193,9 @@
           outline
           label="Back"
           icon="flipper:chevron-left"
-          color="primary"
+          color="positive"
+          text-color="positive"
+          style="color: #0fff6b; border-color: #0fff6b"
           @click="hideDialog"
           v-close-popup
         />
@@ -201,7 +203,9 @@
           outline
           label="Save screenshot"
           icon="flipper:save-symbolic"
-          color="primary"
+          color="positive"
+          text-color="positive"
+          style="color: #0fff6b; border-color: #0fff6b"
           @click="saveImage()"
         />
         <div class="column items-end">
@@ -488,4 +492,20 @@ const hideDialog = () => {
 
 <style lang="scss" scoped>
 @import 'styles';
+
+// Back + Save screenshot + navigation buttons: normal and q-focus-helper to #0fff6b
+:deep(.q-btn) {
+  color: #0fff6b !important;
+  border-color: #0fff6b !important;
+}
+
+:deep(.q-btn .q-focus-helper) {
+  background: #0fff6b !important;
+  opacity: 0.22 !important;
+}
+
+:deep(.q-btn .q-focus-helper::before),
+:deep(.q-btn .q-focus-helper::after) {
+  background: #0fff6b !important;
+}
 </style>
