@@ -193,9 +193,7 @@
           outline
           label="Back"
           icon="flipper:chevron-left"
-          color="positive"
-          text-color="positive"
-          style="color: #0fff6b; border-color: #0fff6b"
+          color="primary"
           @click="hideDialog"
           v-close-popup
         />
@@ -203,9 +201,7 @@
           outline
           label="Save screenshot"
           icon="flipper:save-symbolic"
-          color="positive"
-          text-color="positive"
-          style="color: #0fff6b; border-color: #0fff6b"
+          color="primary"
           @click="saveImage()"
         />
         <div class="column items-end">
@@ -492,20 +488,4 @@ const hideDialog = () => {
 
 <style lang="scss" scoped>
 @import 'styles';
-
-// Back + Save screenshot + navigation buttons: normal and q-focus-helper to #0fff6b
-:deep(.q-btn) {
-  color: #0fff6b !important;
-  border-color: #0fff6b !important;
-}
-
-:deep(.q-btn .q-focus-helper) {
-  background: #0fff6b !important;
-  opacity: 0.22 !important;
-}
-
-:deep(.q-btn .q-focus-helper::before),
-:deep(.q-btn .q-focus-helper::after) {
-  background: #0fff6b !important;
-}
 </style>

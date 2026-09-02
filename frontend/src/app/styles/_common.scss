@@ -2,6 +2,30 @@ body {
   overscroll-behavior: none;
 }
 
+// Override any remaining orange focus helper to use Kiisu purple
+body.desktop .q-focus-helper,
+body.desktop .q-focusable:focus > .q-focus-helper,
+body.desktop .q-hoverable:hover > .q-focus-helper,
+body.desktop .q-manual-focusable--focused > .q-focus-helper {
+  background: rgba(107, 40, 138, 0.15) !important; // #6b288a at 15%
+  opacity: 0.15 !important;
+}
+
+.q-focus-helper:before {
+  background: #000 !important;
+  opacity: 0.1 !important;
+}
+
+.q-focus-helper:after {
+  background: #fff !important;
+  opacity: 0.4 !important;
+}
+
+// Ensure no orange remains inside focus helper
+.q-focus-helper * {
+  background-color: transparent !important;
+}
+
 .dialog {
   padding: 16px;
 
