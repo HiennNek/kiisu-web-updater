@@ -169,6 +169,10 @@ onMounted(() => {
   height: 100%;
 }
 
+:deep(.q-drawer) {
+  background: $grey-2;
+}
+
 .menu-link {
   &__separator {
     width: 85%;

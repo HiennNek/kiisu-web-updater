@@ -2,23 +2,25 @@ body {
   overscroll-behavior: none;
 }
 
-// Override focus helper to only outline green, not background
-body.desktop .q-focus-helper,
+// Override focus helper to use Kiisu green on hover/focus
 body.desktop .q-focusable:focus > .q-focus-helper,
 body.desktop .q-hoverable:hover > .q-focus-helper,
 body.desktop .q-manual-focusable--focused > .q-focus-helper {
-  background: transparent !important;
-  border: 1px solid #0fff6b !important;
-  opacity: 1 !important;
+  background: rgba(15, 255, 107, 0.15) !important; // #0fff6b at 15%
+  opacity: 0.15 !important;
+
+  &:before {
+    background: #000 !important;
+    opacity: 0.1 !important;
+  }
+
+  &:after {
+    background: #fff !important;
+    opacity: 0.4 !important;
+  }
 }
 
-.q-focus-helper:before,
-.q-focus-helper:after {
-  background: transparent !important;
-  opacity: 0 !important;
-}
-
-// Ensure no orange remains inside focus helper and menu
+// Ensure no orange remains inside focus helper
 .q-focus-helper * {
   background-color: transparent !important;
 }
