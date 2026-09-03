@@ -62,9 +62,13 @@ async function fetchChannels(): Promise<Channel[]> {
   ]
 }
 
+function proxyUrl(url: string): string {
+  return `${GITHUB_RELEASES_URL}?download=${encodeURIComponent(url)}`
+}
+
 async function fetchFirmware(url: string) {
   return await instance
-    .get(url, { responseType: 'arraybuffer' })
+    .get(proxyUrl(url), { responseType: 'arraybuffer' })
     .then(async ({ data }) => {
       return unpack(data)
     })
@@ -79,7 +83,7 @@ async function fetchFirmware(url: string) {
 
 async function fetchFirmwareTar(url: string) {
   return await instance
-    .get(url, { responseType: 'arraybuffer' })
+    .get(proxyUrl(url), { responseType: 'arraybuffer' })
     .then(({ data }) => {
       return ungzip(data)
     })

@@ -5,11 +5,71 @@ interface Env {
   CACHE_TTL: number
 }
 
-const CORS_HEADERS = {
+const CORS_HEADERS: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Access-Control-Max-Age': '86400'
+}
+
+async function fetchRelease(env: Env): Promise<Response> {
+  const path = '/repos/HiennNek/kiisu-unlshd/releases/latest'
+
+  const cacheKey = new Request('https://kiisu-github-proxy/cache')
+  const cache = caches.default
+  const ttl = env.CACHE_TTL || 300
+
+  let response = await cache.match(cacheKey)
+
+  if (!response) {
+    const headers: Record<string, string> = {
+      'User-Agent': 'kiisu-web-updater',
+      Accept: 'application/vnd.github.v3+json'
+    }
+
+    if (env.GITHUB_TOKEN) {
+      headers['Authorization'] = `Bearer ${env.GITHUB_TOKEN}`
+    }
+
+    const ghResponse = await fetch(`${GITHUB_API}${path}`, { headers })
+    const body = await ghResponse.text()
+
+    response = new Response(body, {
+      status: ghResponse.status,
+      headers: {
+        ...CORS_HEADERS,
+        'Content-Type': 'application/json',
+        'Cache-Control': `public, max-age=${ttl}`
+      }
+    })
+
+    await cache.put(cacheKey, response.clone())
+  }
+
+  return response
+}
+
+async function proxyDownload(downloadUrl: string, env: Env): Promise<Response> {
+  const headers: Record<string, string> = {
+    'User-Agent': 'kiisu-web-updater'
+  }
+
+  if (env.GITHUB_TOKEN) {
+    headers['Authorization'] = `Bearer ${env.GITHUB_TOKEN}`
+  }
+
+  const ghResponse = await fetch(downloadUrl, { headers })
+
+  const responseHeaders: Record<string, string> = {
+    ...CORS_HEADERS,
+    'Content-Type': ghResponse.headers.get('Content-Type') || 'application/octet-stream',
+    'Content-Length': ghResponse.headers.get('Content-Length') || ''
+  }
+
+  return new Response(ghResponse.body, {
+    status: ghResponse.status,
+    headers: responseHeaders
+  })
 }
 
 export default {
@@ -18,43 +78,13 @@ export default {
       return new Response(null, { headers: CORS_HEADERS })
     }
 
-    const path = '/repos/HiennNek/kiisu-unlshd/releases/latest'
+    const url = new URL(request.url)
+    const downloadUrl = url.searchParams.get('download')
 
-    const cacheUrl = new URL(request.url)
-    cacheUrl.search = ''
-    const cacheKey = new Request(cacheUrl.toString(), request)
-
-    const cache = caches.default
-    const ttl = env.CACHE_TTL || 300
-
-    let response = await cache.match(cacheKey)
-
-    if (!response) {
-      const headers: Record<string, string> = {
-        'User-Agent': 'kiisu-web-updater',
-        Accept: 'application/vnd.github.v3+json'
-      }
-
-      if (env.GITHUB_TOKEN) {
-        headers['Authorization'] = `Bearer ${env.GITHUB_TOKEN}`
-      }
-
-      const ghResponse = await fetch(`${GITHUB_API}${path}`, { headers })
-
-      const body = await ghResponse.text()
-
-      response = new Response(body, {
-        status: ghResponse.status,
-        headers: {
-          ...CORS_HEADERS,
-          'Content-Type': 'application/json',
-          'Cache-Control': `public, max-age=${ttl}`
-        }
-      })
-
-      await cache.put(cacheKey, response.clone())
+    if (downloadUrl) {
+      return proxyDownload(downloadUrl, env)
     }
 
-    return response
+    return fetchRelease(env)
   }
 }
