@@ -205,13 +205,13 @@
           @click="saveImage()"
         />
         <div class="column items-end">
-          <q-btn flat padding="sm" icon="flipper:info-big" color="primary">
+          <q-btn flat padding="sm" icon="flipper:info-big" color="positive">
             <q-tooltip
               class="controlHelp"
               anchor="bottom right"
               self="top right"
               :offset="[16, 20]"
-              style="border: 1px solid #6b288a; background: #1e0a2e"
+              style="border: 1px solid #0fff6b; background: #1e0a2e"
             >
               <q-icon
                 name="flipper:steaming-help-mac"
@@ -340,7 +340,7 @@ const resizeCanvas = () => {
     const ctx = gridBackground.value.getContext('2d')
 
     if (ctx) {
-      ctx.strokeStyle = '#6b288a'
+      ctx.strokeStyle = '#0fff6b'
       ctx.lineWidth = 2
 
       for (let yPos = cellSize; yPos < height; yPos += cellSize) {
