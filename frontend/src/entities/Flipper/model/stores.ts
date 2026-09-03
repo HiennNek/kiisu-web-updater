@@ -539,8 +539,17 @@ export const useFlipperStore = defineStore('flipper', () => {
 
     // console.log(info)
     recoveryUpdateStage.value = 'Loading firmware bundle...'
+
+    const release = await FlipperApi.fetchLatestRelease()
+    const tgzAsset = release.assets.find((a: { name: string }) =>
+      a.name.endsWith('.tgz')
+    )
+    if (!tgzAsset) {
+      throw new Error('No .tgz asset found in latest release')
+    }
+
     const firmwareTar = await FlipperApi.fetchFirmwareTar(
-      `https://update.flipperzero.one/firmware/release/f${info.target}/update_tgz`
+      tgzAsset.browser_download_url
     )
 
     const saved = await window.fs.saveToTemp({

@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center full-width q-mt-xs q-pb-md">
       <p class="q-mb-none text-bold text-body1">Firmware Update</p>
       <q-btn
-        v-if="fwModel.changelog.trim().length"
+        v-if="getChannel('release')?.versions[0]!.changelog?.trim().length"
         @click="
           () => {
             changelogDialog = true
@@ -24,65 +24,21 @@
             Your firmware is out of date, newest release is
             {{ getChannel('release')?.versions[0]!.version }}.
           </span>
-          <span v-else-if="aheadOfRelease">
-            Your firmware is ahead of current release.
-          </span>
           <span v-else-if="flipperStore.info.firmware.version !== 'unknown'">
             Your firmware is up to date.
           </span>
         </p>
       </template>
-      <p v-if="getChannel('custom')">
-        Detected custom firmware
-        <b v-if="getChannel('custom')!.title !== 'Custom'">
-          "{{ getChannel('custom')!.title }}"
-        </b>
-        <span v-if="!isTgzCustomFile || !isTargetCustomFile"> with </span>
-        <span v-if="!isTgzCustomFile"> <b>unsupported</b> filetype </span>
-        <span v-if="!isTgzCustomFile && !isTargetCustomFile"> and </span>
-        <span v-if="!isTargetCustomFile"> <b>unsupported</b> target </span>
-      </p>
       <div class="column full-width">
         <div class="flex no-wrap justify-between items-center">
-          <p class="q-mb-none">Update Channel</p>
-          <q-select
-            v-model="fwModel"
-            :options="Object.values(fwOptions)"
-            borderless
-            dense
-            :disable="flipperStore.flags.updateInProgress"
-          >
-            <!-- :style="!$q.screen.xs ? 'width: 320px;' : 'width: 290px;'" -->
-            <template v-slot:selected>
-              <p class="q-mb-none" :class="`text-${fwModel.color}`">
-                {{ fwModel.label }}
-                {{ fwModel.version }}
-              </p>
-            </template>
-
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps">
-                <q-item-section class="items-start q-mr-md">
-                  <q-item-label>{{ scope.opt.selectLabel }}</q-item-label>
-                  <q-item-label class="text-no-wrap" caption>{{
-                    scope.opt.selectDescription
-                  }}</q-item-label>
-                </q-item-section>
-                <q-item-section class="items-end">
-                  <q-chip
-                    :color="scope.opt.color"
-                    text-color="white"
-                    :label="scope.opt.version"
-                  />
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
+          <p class="q-mb-none">Firmware</p>
+          <p class="q-mb-none text-positive">
+            Release {{ getChannel('release')?.versions[0]!.version || '...' }}
+          </p>
         </div>
         <div class="flex center">
           <template v-if="!flipperStore.flags.updateInProgress">
             <q-btn
-              v-if="fwModel"
               @click="update()"
               class="full-width q-mt-sm text-pixelated text-h5"
               unelevated
@@ -174,9 +130,8 @@
       <q-layout view="HHH lpr FFF" container class="bg-white">
         <q-header class="column flex-center q-py-sm bg-white text-black" reveal>
           <p class="q-mb-none text-h5 text-bold">What's New</p>
-          <p class="q-mb-none" :class="`text-${fwModel.color}`">
-            {{ fwModel.label }}
-            {{ fwModel.version }}
+          <p class="q-mb-none text-positive">
+            Release {{ getChannel('release')?.versions[0]!.version || '...' }}
           </p>
         </q-header>
         <q-page-container>
@@ -186,7 +141,7 @@
               no-html
               no-linkify
               no-typographer
-              :src="fwModel.changelog"
+              :src="getChannel('release')?.versions[0]!.changelog || ''"
             />
           </q-page>
         </q-page-container>
@@ -209,34 +164,29 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import semver from 'semver'
 import asyncSleep from 'simple-async-sleep'
 
-import { PB } from 'shared/lib/flipperJs/protobufCompiled'
 import { unpack } from 'shared/lib/utils/operation'
 
 import { showNotif } from 'shared/lib/utils/useShowNotif'
 import { logger } from 'shared/lib/utils/useLog'
 import { rpcErrorHandler } from 'shared/lib/utils/useRpcUtils'
-import { replaceGitHubLinksInMarkdown } from 'shared/lib/utils/useFormatUrl'
 
 import { ProgressBar } from 'shared/components/ProgressBar'
 import { FlipperModel, FlipperApi } from 'entity/Flipper'
 const flipperStore = FlipperModel.useFlipperStore()
-const { fetchChannels, fetchRegions, fetchFirmware } = FlipperApi
+const { fetchChannels, fetchFirmware } = FlipperApi
 
 const componentName = 'KiisuUpdate'
 
 const outdated = ref<boolean | undefined>(false)
 const ableToUpdate = ref(true)
-const aheadOfRelease = ref(false)
 
 const installFromFile = ref(true)
 const uploadedFile = ref<File>()
 const uploadPopup = ref(false)
 const changelogDialog = ref(false)
 
-const overrideDevRegion = ref(false)
 const updateError = ref(false)
 
 const channels = ref<FlipperModel.Channel[]>([])
@@ -247,46 +197,14 @@ const getChannel = (channelId: string) => {
 
   return undefined
 }
-const isTgzCustomFile = ref(false)
-const isTargetCustomFile = ref(false)
-
-const fwOptions = ref<FlipperModel.FwOptions>({
-  release: {
-    label: 'Release',
-    selectLabel: 'Release',
-    selectDescription: 'Stable release (recommended)',
-    value: 'release',
-    version: '',
-    changelog: '',
-    color: 'positive'
-  },
-  rc: {
-    label: 'RC',
-    selectLabel: 'Release-Candidate',
-    selectDescription: 'Pre-release under testing',
-    value: 'release-candidate',
-    version: '',
-    changelog: '',
-    color: 'accent'
-  },
-  dev: {
-    label: 'Dev',
-    selectLabel: 'Development',
-    selectDescription: 'Daily unstable build, lots of bugs',
-    value: 'development',
-    version: '',
-    changelog: '',
-    color: 'negative'
-  }
-})
-const fwModel = ref(fwOptions.value.release)
+const releaseVersion = ref('')
 
 const emit = defineEmits<{ (event: 'updateInProgress'): Promise<void> }>()
 
 onMounted(async () => {
   channels.value = await fetchChannels().catch((error) => {
     showNotif({
-      message: 'Unable to load firmware channels from the build server.',
+      message: 'Unable to load firmware from GitHub releases.',
       color: 'negative',
       actions: [
         {
@@ -300,114 +218,34 @@ onMounted(async () => {
     })
     logger.error({
       context: componentName,
-      message: 'failed to fetch update channels'
+      message: 'failed to fetch firmware release'
     })
     throw error
   })
 
   if (channels.value.length) {
-    fwOptions.value.release.version =
+    releaseVersion.value =
       getChannel('release')?.versions[0]!.version || ''
-    fwOptions.value.rc.version =
-      getChannel('release-candidate')?.versions[0]!.version || ''
-    fwOptions.value.dev.version =
-      getChannel('development')?.versions[0]!.version || ''
-
-    fwOptions.value.release.changelog = replaceGitHubLinksInMarkdown(
-      getChannel('release')?.versions[0]!.changelog || ''
-    )
-    fwOptions.value.rc.changelog = replaceGitHubLinksInMarkdown(
-      getChannel('release-candidate')?.versions[0]!.changelog || ''
-    )
-    fwOptions.value.dev.changelog = replaceGitHubLinksInMarkdown(
-      getChannel('development')?.versions[0]!.changelog || ''
-    )
-
-    const customChannel = getChannel('custom')
-    const customFile = customChannel?.versions[0]?.files.find((_file) =>
-      _file.url.endsWith('tgz')
-    )
-    if (customFile) {
-      isTgzCustomFile.value = true
-
-      if (customFile.target === flipperStore.target) {
-        isTargetCustomFile.value = true
-      } else {
-        isTargetCustomFile.value = false
-      }
-    } else {
-      isTgzCustomFile.value = false
-    }
-    if (
-      customChannel &&
-      customFile &&
-      isTgzCustomFile.value &&
-      isTargetCustomFile.value
-    ) {
-      fwOptions.value.custom = {
-        label: customChannel.title,
-        selectLabel: customChannel.title,
-        selectDescription: '',
-        value: 'custom',
-        version: customChannel.versions[0]!.version,
-        changelog: '',
-        color: 'dark'
-      }
-
-      fwModel.value = fwOptions.value.custom
-    }
   }
 
   compareVersions()
-
-  if (
-    new URLSearchParams(location.search).get('overrideDevRegion') === 'true'
-  ) {
-    overrideDevRegion.value = true
-  }
 })
 
 const compareVersions = () => {
-  if (
-    semver.lt(
-      flipperStore.info?.protobuf.version.major +
-        '.' +
-        flipperStore.info?.protobuf.version.minor +
-        '.0',
-      '0.6.0'
-    )
-  ) {
-    ableToUpdate.value = false
-  }
-  if (flipperStore.info?.firmware.version) {
-    if (
-      flipperStore.info.firmware.version !== 'unknown' &&
-      semver.valid(flipperStore.info.firmware.version)
-    ) {
-      const releaseVersion = getChannel('release')?.versions[0]!.version
-
-      if (releaseVersion) {
-        if (semver.eq(flipperStore.info.firmware.version, releaseVersion)) {
-          outdated.value = false
-        } else if (
-          semver.gt(flipperStore.info.firmware.version, releaseVersion)
-        ) {
-          outdated.value = false
-          aheadOfRelease.value = true
-        } else {
-          outdated.value = true
-        }
-      } else {
-        outdated.value = true
-      }
+  if (flipperStore.info?.firmware.commit?.hash) {
+    const deviceHash = flipperStore.info.firmware.commit.hash
+    if (releaseVersion.value) {
+      outdated.value = deviceHash !== releaseVersion.value
     } else {
-      outdated.value = undefined
+      outdated.value = true
     }
+  } else {
+    outdated.value = undefined
   }
 }
 
 const getTextButton = computed(() => {
-  if (fwModel.value.version === flipperStore.info?.firmware.version) {
+  if (outdated.value === false) {
     return 'Reinstall'
   }
 
@@ -465,86 +303,7 @@ const write = ref({
 const loadFirmware = async () => {
   updateStage.value = 'Loading firmware bundle...'
 
-  if (flipperStore.info?.hardware.region !== '0' || overrideDevRegion.value) {
-    const regions: FlipperModel.Regions = await fetchRegions().catch(
-      (error) => {
-        showNotif({
-          message: 'Failed to fetch regional update information',
-          color: 'negative',
-          actions: [
-            {
-              label: 'Reload',
-              color: 'white',
-              handler: () => {
-                location.reload()
-              }
-            }
-          ]
-        })
-        logger.error({
-          context: componentName,
-          message: `Failed to fetch regional update information: ${error.toString()}`
-        })
-        throw error
-      }
-    )
-
-    let bands
-    if (regions.countries[regions.country]) {
-      bands = regions.countries[regions.country]!.map((e) => regions.bands[e])
-    } else {
-      bands = regions.default.map((e) => regions.bands[e])
-      regions.country = 'JP'
-    }
-    const options: {
-      countryCode: string | Uint8Array
-      bands: InstanceType<typeof PB.Region.Band>[]
-    } = {
-      countryCode: regions.country,
-      bands: []
-    }
-
-    for (const band of bands) {
-      const bandOptions = {
-        start: band!.start,
-        end: band!.end,
-        powerLimit: band!.max_power,
-        dutyCycle: band!.duty_cycle
-      }
-      const message = PB.Region.Band.create(bandOptions)
-      options.bands.push(message)
-    }
-
-    if (updateError.value) {
-      return
-    }
-
-    options.countryCode = new TextEncoder().encode(regions.country)
-    const message = PB.Region.create(options)
-    const encoded = new Uint8Array(
-      PB.Region.encodeDelimited(message).finish()
-    ).slice(1)
-
-    await flipperStore.flipper
-      ?.RPC('storageWrite', {
-        path: '/int/.region_data',
-        buffer: encoded
-      })
-      .catch((error: Error) => {
-        const command = 'storageWrite'
-        rpcErrorHandler({ componentName, error, command })
-
-        throw new Error(
-          `${componentName}: RPC error in command '${command}': ${error.toString()}`
-        )
-      })
-  }
-
-  if (updateError.value) {
-    return
-  }
-
-  const channel = getChannel(fwModel.value.value)
+  const channel = getChannel('release')
 
   if (uploadedFile.value || channel) {
     let files
@@ -559,8 +318,7 @@ const loadFirmware = async () => {
       })
     } else {
       const file = channel?.versions[0]!.files.find(
-        (_file) =>
-          _file.target === flipperStore.target && _file.type === 'update_tgz'
+        (_file) => _file.type === 'update_tgz'
       )
 
       if (file) {

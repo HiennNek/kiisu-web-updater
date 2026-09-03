@@ -1,65 +1,65 @@
 import { instance } from 'boot/axios'
 import { unpack, ungzip } from 'shared/lib/utils/operation'
-// import { Channel } from '../model/types'
+import type { Channel } from '../model/types'
 
-async function fetchChannels(/* target: string */) {
-  return await instance
-    .get('https://update.flipperzero.one/firmware/directory.json')
-    .then(({ data }) => {
-      const params = new URLSearchParams(location.search)
-      const customSource = {
-        url: params.get('url'),
-        channel: params.get('channel'),
-        version: params.get('version'),
-        target: params.get('target')
-      }
+const GITHUB_RELEASES_URL =
+  'https://api.github.com/repos/HiennNek/kiisu-unlshd/releases/latest'
 
-      if (customSource.url) {
-        data.channels.push({
-          id: 'custom',
-          title: customSource.channel || 'Custom',
-          versions: [
-            {
-              version: customSource.version || 'unknown',
-              timestamp: Date.now(),
-              files: [
-                {
-                  url: customSource.url,
-                  type: 'update_tgz',
-                  target: customSource.target || 'f7'
-                }
-              ]
-            }
-          ]
-        })
-      }
-
-      return data.channels
-    })
-    .catch((err) => {
-      const data = err.response.data
-
-      console.error(err)
-
-      return data
-    })
+interface GitHubAsset {
+  name: string
+  browser_download_url: string
 }
 
-async function fetchRegions() {
+interface GitHubRelease {
+  tag_name: string
+  body: string
+  published_at: string
+  assets: GitHubAsset[]
+}
+
+function extractCommitHash(tgzName: string): string {
+  const match = tgzName.match(/kiisu-unlshd_([a-f0-9]+)_/)
+  return match ? match[1]! : tgzName
+}
+
+async function fetchLatestRelease(): Promise<GitHubRelease> {
   return await instance
-    .get('https://update.flipperzero.one/regions/api/v0/bundle')
-    .then(({ data }) => {
-      if (data.error) {
-        throw new Error(data.error.text)
-      } else if (data.success) {
-        return data.success
-      }
-    })
-    .catch(({ status }) => {
-      if (status >= 400) {
-        throw new Error('Failed to fetch region (' + status + ')')
-      }
-    })
+    .get(GITHUB_RELEASES_URL)
+    .then(({ data }) => data)
+}
+
+async function fetchChannels(): Promise<Channel[]> {
+  const release = await fetchLatestRelease()
+
+  const tgzAsset = release.assets.find((a) => a.name.endsWith('.tgz'))
+  if (!tgzAsset) {
+    throw new Error('No .tgz asset found in latest release')
+  }
+
+  const commitHash = extractCommitHash(tgzAsset.name)
+
+  return [
+    {
+      id: 'release',
+      title: 'Release',
+      description: release.body,
+      versions: [
+        {
+          version: commitHash,
+          timestamp: new Date(release.published_at).getTime(),
+          changelog: release.body,
+          files: [
+            {
+              url: tgzAsset.browser_download_url,
+              type: 'update_tgz',
+              target: 'f7',
+              sha256: ''
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 
 async function fetchFirmware(url: string) {
@@ -94,7 +94,7 @@ async function fetchFirmwareTar(url: string) {
 
 export const api = {
   fetchChannels,
-  fetchRegions,
+  fetchLatestRelease,
   fetchFirmware,
   fetchFirmwareTar
 }
