@@ -17,21 +17,31 @@
         no-caps
       />
     </div>
-    <p class="q-mb-sm text-caption text-grey">
-      Select your firmware fork
-    </p>
-    <q-btn-toggle
-      v-model="firmwareOrigin"
-      :options="[
-        { label: 'Unleashed (Kiisu-UNLSHD)', value: 'unleashed' },
-        { label: 'Momentum (Kiisu-MNTM)', value: 'momentum' }
-      ]"
-      toggle-color="positive"
-      outline
-      class="q-mb-md full-width"
-      :disable="flipperStore.flags.updateInProgress"
-      @update:model-value="setFirmwareOrigin"
-    />
+    <div class="q-mb-md full-width">
+      <p class="q-mb-xs text-caption text-grey text-center">
+        Select your firmware fork
+      </p>
+      <q-btn-group
+        spread
+        outline
+        class="full-width rounded-borders overflow-hidden"
+        :disable="flipperStore.flags.updateInProgress"
+      >
+        <q-btn
+          v-for="origin in [
+            { label: 'Unleashed (Kiisu-UNLSHD)', value: 'unleashed' },
+            { label: 'Momentum (Kiisu-MNTM)', value: 'momentum' }
+          ]"
+          :key="origin.value"
+          :label="origin.label"
+          no-caps
+          :color="firmwareOrigin === origin.value ? 'positive' : 'grey-3'"
+          :text-color="firmwareOrigin === origin.value ? 'white' : 'grey-8'"
+          class="col"
+          @click="setFirmwareOrigin(origin.value)"
+        />
+      </q-btn-group>
+    </div>
     <template v-if="ableToUpdate && flipperStore.info?.storage.sdcard?.status">
       <template v-if="outdated !== undefined">
         <p class="q-mb-sm">
