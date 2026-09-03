@@ -193,7 +193,7 @@
           outline
           label="Back"
           icon="flipper:chevron-left"
-          color="primary"
+          color="positive"
           @click="hideDialog"
           v-close-popup
         />
@@ -201,7 +201,7 @@
           outline
           label="Save screenshot"
           icon="flipper:save-symbolic"
-          color="primary"
+          color="positive"
           @click="saveImage()"
         />
         <div class="column items-end">

@@ -2,12 +2,12 @@ body {
   overscroll-behavior: none;
 }
 
-// Override any remaining orange focus helper to use Kiisu purple
+// Override any remaining orange focus helper to use Kiisu green
 body.desktop .q-focus-helper,
 body.desktop .q-focusable:focus > .q-focus-helper,
 body.desktop .q-hoverable:hover > .q-focus-helper,
 body.desktop .q-manual-focusable--focused > .q-focus-helper {
-  background: rgba(107, 40, 138, 0.15) !important; // #6b288a at 15%
+  background: rgba(15, 255, 107, 0.15) !important; // #0fff6b at 15%
   opacity: 0.15 !important;
 }
 
