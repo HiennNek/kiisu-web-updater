@@ -38,7 +38,7 @@
           :color="firmwareOrigin === origin.value ? 'positive' : 'grey-3'"
           :text-color="firmwareOrigin === origin.value ? 'white' : 'grey-8'"
           class="col"
-          @click="setFirmwareOrigin(origin.value)"
+          @click="setFirmwareOrigin(origin.value as FirmwareOriginId)"
         />
       </q-btn-group>
     </div>
