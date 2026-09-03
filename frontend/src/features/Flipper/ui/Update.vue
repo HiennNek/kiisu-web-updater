@@ -17,6 +17,21 @@
         no-caps
       />
     </div>
+    <p class="q-mb-sm text-caption text-grey">
+      Select your firmware fork
+    </p>
+    <q-btn-toggle
+      v-model="firmwareOrigin"
+      :options="[
+        { label: 'Unleashed (Kiisu-UNLSHD)', value: 'unleashed' },
+        { label: 'Momentum (Kiisu-MNTM)', value: 'momentum' }
+      ]"
+      toggle-color="positive"
+      outline
+      class="q-mb-md full-width"
+      :disable="flipperStore.flags.updateInProgress"
+      @update:model-value="setFirmwareOrigin"
+    />
     <template v-if="ableToUpdate && flipperStore.info?.storage.sdcard?.status">
       <template v-if="outdated !== undefined">
         <p class="q-mb-sm">
@@ -174,10 +189,23 @@ import { rpcErrorHandler } from 'shared/lib/utils/useRpcUtils'
 
 import { ProgressBar } from 'shared/components/ProgressBar'
 import { FlipperModel, FlipperApi } from 'entity/Flipper'
+import {
+  type FirmwareOriginId
+} from 'entity/Flipper/api/index'
 const flipperStore = FlipperModel.useFlipperStore()
 const { fetchChannels, fetchFirmware } = FlipperApi
 
 const componentName = 'KiisuUpdate'
+
+const FIRMWARE_ORIGIN_KEY = 'kiisu-firmware-origin'
+const firmwareOrigin = ref<FirmwareOriginId>(
+  (localStorage.getItem(FIRMWARE_ORIGIN_KEY) as FirmwareOriginId) || 'unleashed'
+)
+const setFirmwareOrigin = (origin: FirmwareOriginId) => {
+  firmwareOrigin.value = origin
+  localStorage.setItem(FIRMWARE_ORIGIN_KEY, origin)
+  loadRelease()
+}
 
 const outdated = ref<boolean | undefined>(false)
 const ableToUpdate = ref(true)
@@ -201,8 +229,8 @@ const releaseVersion = ref('')
 
 const emit = defineEmits<{ (event: 'updateInProgress'): Promise<void> }>()
 
-onMounted(async () => {
-  channels.value = await fetchChannels().catch((error) => {
+const loadRelease = async () => {
+  channels.value = await fetchChannels(firmwareOrigin.value).catch((error) => {
     showNotif({
       message: 'Unable to load firmware from GitHub releases.',
       color: 'negative',
@@ -229,7 +257,9 @@ onMounted(async () => {
   }
 
   compareVersions()
-})
+}
+
+onMounted(loadRelease)
 
 const compareVersions = () => {
   if (flipperStore.info?.firmware.commit?.hash) {

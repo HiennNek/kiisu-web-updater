@@ -1,4 +1,5 @@
 const GITHUB_API = 'https://api.github.com'
+const DEFAULT_REPO = 'HiennNek/kiisu-unlshd'
 
 interface Env {
   GITHUB_TOKEN: string
@@ -12,10 +13,10 @@ const CORS_HEADERS: Record<string, string> = {
   'Access-Control-Max-Age': '86400'
 }
 
-async function fetchRelease(env: Env): Promise<Response> {
-  const path = '/repos/HiennNek/kiisu-unlshd/releases/latest'
+async function fetchRelease(repo: string, env: Env): Promise<Response> {
+  const path = `/repos/${repo}/releases/latest`
 
-  const cacheKey = new Request('https://kiisu-github-proxy/cache')
+  const cacheKey = new Request(`https://kiisu-github-proxy/cache/${repo}`)
   const cache = caches.default
   const ttl = env.CACHE_TTL || 300
 
@@ -80,11 +81,12 @@ export default {
 
     const url = new URL(request.url)
     const downloadUrl = url.searchParams.get('download')
+    const repo = url.searchParams.get('repo') || DEFAULT_REPO
 
     if (downloadUrl) {
       return proxyDownload(downloadUrl, env)
     }
 
-    return fetchRelease(env)
+    return fetchRelease(repo, env)
   }
 }

@@ -540,7 +540,11 @@ export const useFlipperStore = defineStore('flipper', () => {
     // console.log(info)
     recoveryUpdateStage.value = 'Loading firmware bundle...'
 
-    const release = await FlipperApi.fetchLatestRelease()
+    const savedOrigin = localStorage.getItem('kiisu-firmware-origin') as
+      | 'unleashed'
+      | 'momentum'
+      | null
+    const release = await FlipperApi.fetchLatestRelease(savedOrigin || 'unleashed')
     const tgzAsset = release.assets.find((a: { name: string }) =>
       a.name.endsWith('.tgz')
     )

@@ -2,8 +2,24 @@ import { instance } from 'boot/axios'
 import { unpack, ungzip } from 'shared/lib/utils/operation'
 import type { Channel } from '../model/types'
 
-const GITHUB_RELEASES_URL =
-  'https://kiisu-github-proxy.hiennek.workers.dev/'
+const WORKER_URL = 'https://kiisu-github-proxy.hiennek.workers.dev'
+
+export const FIRMWARE_ORIGINS = {
+  unleashed: {
+    id: 'unleashed',
+    label: 'Unleashed',
+    repo: 'HiennNek/kiisu-unlshd',
+    prefix: 'kiisu-unlshd'
+  },
+  momentum: {
+    id: 'momentum',
+    label: 'Momentum',
+    repo: 'HiennNek/kiisu-mntm',
+    prefix: 'kiisu-mntm'
+  }
+} as const
+
+export type FirmwareOriginId = keyof typeof FIRMWARE_ORIGINS
 
 interface GitHubAsset {
   name: string
@@ -17,31 +33,38 @@ interface GitHubRelease {
   assets: GitHubAsset[]
 }
 
-function extractCommitHash(tgzName: string): string {
-  const match = tgzName.match(/kiisu-unlshd_([a-f0-9]+)_/)
+function extractCommitHash(tgzName: string, prefix: string): string {
+  const regex = new RegExp(`${prefix}_([a-f0-9]+)_`)
+  const match = tgzName.match(regex)
   return match ? match[1]! : tgzName
 }
 
-async function fetchLatestRelease(): Promise<GitHubRelease> {
+async function fetchLatestRelease(
+  origin: FirmwareOriginId = 'unleashed'
+): Promise<GitHubRelease> {
+  const repo = FIRMWARE_ORIGINS[origin].repo
   return await instance
-    .get(GITHUB_RELEASES_URL)
+    .get(`${WORKER_URL}?repo=${encodeURIComponent(repo)}`)
     .then(({ data }) => data)
 }
 
-async function fetchChannels(): Promise<Channel[]> {
-  const release = await fetchLatestRelease()
+async function fetchChannels(
+  origin: FirmwareOriginId = 'unleashed'
+): Promise<Channel[]> {
+  const release = await fetchLatestRelease(origin)
+  const originConfig = FIRMWARE_ORIGINS[origin]
 
   const tgzAsset = release.assets.find((a) => a.name.endsWith('.tgz'))
   if (!tgzAsset) {
     throw new Error('No .tgz asset found in latest release')
   }
 
-  const commitHash = extractCommitHash(tgzAsset.name)
+  const commitHash = extractCommitHash(tgzAsset.name, originConfig.prefix)
 
   return [
     {
       id: 'release',
-      title: 'Release',
+      title: originConfig.label,
       description: release.body,
       versions: [
         {
@@ -63,7 +86,7 @@ async function fetchChannels(): Promise<Channel[]> {
 }
 
 function proxyUrl(url: string): string {
-  return `${GITHUB_RELEASES_URL}?download=${encodeURIComponent(url)}`
+  return `${WORKER_URL}?download=${encodeURIComponent(url)}`
 }
 
 async function fetchFirmware(url: string) {
