@@ -3,7 +3,7 @@ import { unpack, ungzip } from 'shared/lib/utils/operation'
 import type { Channel } from '../model/types'
 
 const GITHUB_RELEASES_URL =
-  'https://api.github.com/repos/HiennNek/kiisu-unlshd/releases/latest'
+  'https://kiisu-github-proxy.hiennek.workers.dev/'
 
 interface GitHubAsset {
   name: string
